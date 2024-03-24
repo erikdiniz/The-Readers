@@ -1,6 +1,22 @@
-module Menu.MenuLogin (teste) where
+module Menu.MenuLogin where
 
 import System.Exit (exitSuccess)
+import Controller.Usuario (cadastraUsuario)
 
-teste :: IO ()
-teste = putStrLn "Olá mundo"
+
+menuLogin :: IO ()
+menuLogin = do
+     putStrLn "Escolher opção: [C] Cadastro de Usuario"
+     opcao <- getLine 
+     selecionaAcao opcao
+
+
+selecionaAcao :: String -> IO ()
+selecionaAcao "C" = do
+    putStrLn "Insira seu nome de login: "
+    login <- getLine
+
+    putStrLn "Insira sua senha: "
+    senha <- getLine
+    cadastraUsuario login senha
+    putStrLn "Usuário Cadastrado!"

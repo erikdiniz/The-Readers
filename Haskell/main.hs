@@ -1,3 +1,6 @@
+import Menu.MenuLogin
+
+
 main :: IO()
 main = do
-    putStrLn "Olá, mundo!"
+    menuLogin
