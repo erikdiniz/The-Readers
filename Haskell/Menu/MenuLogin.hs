@@ -12,8 +12,12 @@ menuLogin = do
 
 
 selecionaAcao :: String -> IO ()
-selecionaAcao "c" = do
+selecionaAcao "C" = do
+    putStrLn "Insira seu nome de login: "
     login <- getLine
+
+    putStrLn "Insira sua senha: "
     senha <- getLine
     cadastraUsuario login senha
+    putStrLn "Usuário Cadastrado!"
 
