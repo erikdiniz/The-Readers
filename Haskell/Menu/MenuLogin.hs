@@ -6,7 +6,7 @@ import Controller.Usuario (cadastraUsuario)
 
 menuLogin :: IO ()
 menuLogin = do
-     putStrLn "Escolher opção: [C] Cadastro de Usuario"
+     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login "
      opcao <- getLine 
      selecionaAcao opcao
 
@@ -20,4 +20,16 @@ selecionaAcao "C" = do
     senha <- getLine
     cadastraUsuario login senha
     putStrLn "Usuário Cadastrado!"
+
+selecionaAcao "L" = do
+     putStrLn "Nome de usuário: "
+     login <- getLine
+
+     putStrLn "Senha: "
+     senha <- getLine
+     putStrLn "Login realizado!"
+
+selecionaAcao "" = do
+     putStrLn "Opção Inválida"
+     menuLogin
 
