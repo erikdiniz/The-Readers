@@ -20,7 +20,6 @@ selecionaAcao "C" = do
     senha <- getLine
     cadastraUsuario login senha
     putStrLn "Usuário Cadastrado!"
-
 selecionaAcao "L" = do
      putStrLn "Nome de usuário: "
      login <- getLine
