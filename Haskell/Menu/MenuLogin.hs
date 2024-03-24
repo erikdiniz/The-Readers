@@ -20,4 +20,3 @@ selecionaAcao "C" = do
     senha <- getLine
     cadastraUsuario login senha
     putStrLn "Usuário Cadastrado!"
-
