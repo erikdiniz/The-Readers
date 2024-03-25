@@ -1,0 +1,20 @@
+[
+    {
+        "autor": "Tolkien",
+        "genero": "Aventura e Fantasia",
+        "n_paginas": 1200,
+        "nome": "O Hobbit"
+    },
+    {
+        "autor": "a",
+        "genero": "a",
+        "n_paginas": 2,
+        "nome": "A"
+    },
+    {
+        "autor": "George R R Martin",
+        "genero": "Aventura",
+        "n_paginas": 700,
+        "nome": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos"
+    }
+]

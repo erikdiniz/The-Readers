@@ -2,11 +2,12 @@ module Menu.MenuLogin where
 
 import Controller.Usuario 
 import Menu.MenuLogado
+import Controller.Livro(cadastraLivro)
 
 
 menuLogin :: IO ()
 menuLogin = do
-     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login\n[S] Sair do Sistema "
+     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login\n[D] Cadastro de Livro\n[S] Sair do Sistema "
      opcao <- getLine 
      selecionaAcao opcao
 
@@ -39,6 +40,22 @@ selecionaAcao "L" = do
 selecionaAcao "S" = do
      putStrLn "Obrigado!"
 
+selecionaAcao "D" = do
+     putStrLn "Nome do livro: "
+     nome <- getLine
+
+     putStrLn "Autor: "
+     autor <- getLine
+
+     putStrLn "Número de páginas: "
+     input <- getLine
+     let n_paginas = read input :: Int  
+
+     putStrLn "Gênero: "
+     genero <- getLine
+
+     cadastraLivro nome autor n_paginas genero
+     
 selecionaAcao "" = do
      putStrLn "Opção Inválida"
      menuLogin
