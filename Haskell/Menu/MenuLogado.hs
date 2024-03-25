@@ -6,7 +6,7 @@ import Controller.Usuario
 exibeMenuLogado :: Usuario -> IO()
 exibeMenuLogado usuario = do
     putStrLn "Bem vindo ao The Readers \n [S] sair "
-    let opcao = getLine
+    opcao <- getLine
     selecionaAcaoLogin opcao
 
 selecionaAcaoLogin :: String -> IO ()
