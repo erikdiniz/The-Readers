@@ -44,6 +44,27 @@ escreveLivro listaLivros livro = do
     removeFile "Data/livros.json"
     renameFile "Data/temp.json" "Data/livros.json"
 
+
+deletaLivro :: String -> IO ()
+deletaLivro nomeLivro = do
+    if livroJaExiste nomeLivro getListaLivros then do
+        maybeListaLivros <- getListaLivros
+        let listaLivros = fromMaybe [] maybeListaLivros
+        let novaListaLivros = removeLivro nomeLivro listaLivros
+        BL.writeFile "Data/temp.json" (encodePretty novaListaLivros)
+        removeFile "Data/livros.json"
+        renameFile "Data/temp.json" "Data/livros.json"
+        putStrLn "Livro excluido com sucesso."
+    else
+        putStrLn "Livro não existe no sistema."
+
+removeLivro :: String -> [Livro] -> [Livro]
+removeLivro _ [] = []
+removeLivro nomeLivro (h:t)
+    |nome h == nomeLivro = t
+    |otherwise = h : removeLivro nomeLivro t
+
+
 getListaLivros :: IO (Maybe [Livro])
 getListaLivros = do
     arquivo <- BL.readFile "Data/livros.json"

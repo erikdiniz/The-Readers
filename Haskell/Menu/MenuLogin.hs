@@ -2,12 +2,13 @@ module Menu.MenuLogin where
 
 import Controller.Usuario 
 import Menu.MenuLogado
-import Controller.Livro(cadastraLivro)
-
+import Controller.Livro(cadastraLivro,deletaLivro)
+import Prelude (putStrLn, getLine, IO, String, Int, read)
+import Data.Maybe
 
 menuLogin :: IO ()
 menuLogin = do
-     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login\n[D] Cadastro de Livro\n[S] Sair do Sistema "
+     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login\n[D] Cadastro de Livro\n[E] Excluir um livro\n[S] Sair do Sistema "
      opcao <- getLine 
      selecionaAcao opcao
 
@@ -55,7 +56,12 @@ selecionaAcao "D" = do
      genero <- getLine
 
      cadastraLivro nome autor n_paginas genero
-     
+
+selecionaAcao "E" = do
+     putStrLn "Nome do livro a ser excluido: "
+     nomeLivro <- getLine
+     deletaLivro nomeLivro 
+
 selecionaAcao "" = do
      putStrLn "Opção Inválida"
      menuLogin
