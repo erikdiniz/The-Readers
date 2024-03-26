@@ -29,32 +29,32 @@ adicionaLivro nome estante = do
         case estante of
             Lendo ->
                 adicionaLivro nome estante = do
-                let novoLivro = encodePretty (entrada : estante)
-                BS.writefile "Data/temp.json" novoLivro
-                removeFile "Data/lendo.json"
-                renameFile "Data/temp.json" "Data/lendo.json"
-                putStrLn "Livro adicionado à estante dos livros que você está lendo atualmente."
+                    let novoLivro = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novoLivro
+                    removeFile "Data/lendo.json"
+                    renameFile "Data/temp.json" "Data/lendo.json"
+                    putStrLn "Livro adicionado à estante dos livros que você está lendo atualmente."
             Lidos ->
                 adicionaLivro nome estante = do
-                let novoLivro = encodePretty (entrada : estante)
-                BS.writefile "Data/temp.json" novoLivro
-                removeFile "Data/lidos.json"
-                renameFile "Data/temp.json" "Data/lidos.json"
-                putStrLn "Livro adicionado à estante dos livros que você está já leu."   
+                    let novoLivro = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novoLivro
+                    removeFile "Data/lidos.json"
+                    renameFile "Data/temp.json" "Data/lidos.json"
+                    putStrLn "Livro adicionado à estante dos livros que você está já leu."   
             Pretendo_Ler ->
                 adicionaLivro nome estante = do
-                let novoLivro = encodePretty (entrada : estante)
-                BS.writefile "Data/temp.json" novoLivro
-                removeFile "Data/pretendo_ler.json"
-                renameFile "Data/temp.json" "Data/pretendo_ler.json"
-                putStrLn "Livro adicionado à estante dos livros que você ainda pretende ler."
+                    let novoLivro = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novoLivro
+                    removeFile "Data/pretendo_ler.json"
+                    renameFile "Data/temp.json" "Data/pretendo_ler.json"
+                    putStrLn "Livro adicionado à estante dos livros que você ainda pretende ler."
             Abandonados ->
                 adicionaLivro nome estante = do
-                let novoLivro = encodePretty (entrada : estante)
-                BS.writefile "Data/temp.json" novoLivro
-                removeFile "Data/abandonados.json"
-                renameFile "Data/temp.json" "Data/abandonados.json"
-                putStrLn "Livro adicionado à estante dos livros que você abandonou a leitura." 
+                    let novoLivro = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novoLivro
+                    removeFile "Data/abandonados.json"
+                    renameFile "Data/temp.json" "Data/abandonados.json"
+                    putStrLn "Livro adicionado à estante dos livros que você abandonou a leitura." 
 
 {-Verifica se o livro já está cadastrado no sistema bem como se já foi adicionado a alguma das estantes-}
 verificaLivro :: String -> Bool
