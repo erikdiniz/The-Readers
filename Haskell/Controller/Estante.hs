@@ -12,7 +12,7 @@ import System.IO.Unsafe
 import System.IO
 import Data.Bool (Bool)
 import Data.Maybe (fromMaybe)
-import Haskell.Controller.Livro
+import Controller.Livro
 
 {-Criando estabtes, que podem ser dos subtipos: Lendo, Lidos, Pretendo Ler e Abandonados-}
 data Estante = Lendo | Lidos | Pretendo_Ler | Abandonados {
