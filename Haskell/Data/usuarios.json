@@ -1,5 +1,11 @@
 [
     {
+        "idUsuario": "teste123",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "123123"
+    },
+    {
         "idUsuario": "queemocao",
         "seguidores": [],
         "seguindo": [],

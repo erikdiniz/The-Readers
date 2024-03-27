@@ -14,7 +14,7 @@ import Data.Bool (Bool)
 import Data.Maybe (fromMaybe)
 import Controller.Livro
 
-{-Criando estabtes, que podem ser dos subtipos: Lendo, Lidos, Pretendo Ler e Abandonados-}
+{-Criando estantes, que podem ser dos subtipos: Lendo, Lidos, Pretendo Ler e Abandonados-}
 data Estante = Lendo | Lidos | Pretendo_Ler | Abandonados {
     livros :: [Livro],
 } deriving (Show, Generic)
