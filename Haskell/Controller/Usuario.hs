@@ -10,12 +10,14 @@ import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
 import Controller.Perfil
+import Controller.Estante
 
 data Usuario = Usuario {
     idUsuario :: String,
     senha :: String,
     seguidores :: [Usuario],
     seguindo :: [Usuario]
+    estantes :: Estante
 } deriving (Show, Generic)
 
 instance ToJSON Usuario 
