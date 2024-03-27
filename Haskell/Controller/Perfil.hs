@@ -27,7 +27,6 @@ criarPerfil nome biografia = do
   let perfil = Perfil nome biografia
   maybeJson <- recuperaPerfis
   salvaPerfil (fromJust maybeJson) perfil
-  putStrLn "Perfil salvo com sucesso!"
 
 -- Cria um perfil no arquivo Json
 salvaPerfil :: [Perfil] -> Perfil -> IO ()

@@ -24,6 +24,7 @@ selecionaOpcao "E" = do
     biografia <- getLine
 
     criarPerfil nome biografia
+    putStrLn "Perfil salvo com sucesso!"
 
     menuPerfil
 
