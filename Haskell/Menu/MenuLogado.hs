@@ -7,7 +7,7 @@ import Controller.Livro
 exibeMenuLogado :: Usuario -> IO()
 exibeMenuLogado usuario = do
     putStrLn $ "--------------------------------------" ++ "\n"
-    putStrLn $ "|       Bem vindo ao The Readers      |" ++ "\n"
+    putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "--------------------------------------" ++ "\n"
     putStrLn "\n [P] Meu Perfil\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
     opcao <- getLine
