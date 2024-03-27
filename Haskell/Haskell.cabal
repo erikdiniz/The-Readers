@@ -17,7 +17,7 @@ cabal-version:       >=1.10
 
 executable Haskell
   main-is:             main.hs
-  other-modules: Menu.MenuLogin, Controller.Usuario, Menu.MenuLogado, Menu.MenuPerfil, Controller.Perfil
+  other-modules: Menu.MenuLogin, Controller.Usuario, Menu.MenuLogado, Menu.MenuPerfil, Controller.Perfil, Controller.Livro
   
   -- other-extensions:
   build-depends:       base >=4.12 && <4.18, aeson, bytestring, directory, aeson-pretty
