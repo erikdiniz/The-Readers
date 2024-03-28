@@ -2,7 +2,8 @@ module Menu.MenuLogin where
 
 import Controller.Usuario 
 import Menu.MenuLogado
-
+import Prelude (putStrLn, getLine, IO, String, Int, read)
+import Data.Maybe
 
 menuLogin :: IO ()
 menuLogin = do

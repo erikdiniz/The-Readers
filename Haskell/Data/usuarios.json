@@ -1,5 +1,29 @@
 [
     {
+        "idUsuario": "maisumteste",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "123"
+    },
+    {
+        "idUsuario": "bibizinha",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "1234"
+    },
+    {
+        "idUsuario": "teste123",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "123123"
+    },
+    {
+        "idUsuario": "queemocao",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "moabehocara"
+    },
+    {
         "idUsuario": "moab",
         "seguidores": [],
         "seguindo": [],
