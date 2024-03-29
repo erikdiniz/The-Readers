@@ -85,15 +85,17 @@ seguirUsuario usuarioLogado idUsuarioASeguir = do
         
 atualizaSeguindo :: Usuario -> String -> IO()
 atualizaSeguindo usuario novoSeguindo= do
-
-    let updateSeguindo = Usuario (idUsuario usuario) (senha usuario) (seguidores usuario) (seguindo usuario ++ [novoSeguindo])
-
+    {-busca nos dados o objeto com o usuario seguido-}
     let outro = procuraUsuarioUnsafe novoSeguindo recuperaUsuariosUnsafe
 
-    let updateSeguidor = Usuario (idUsuario outro) (senha outro) (seguidores outro ++ [idUsuario usuario]) (seguindo outro)
+    {-Cria novos objetos atualizados-}
+    let updateSeguindo = usuario {seguindo = seguindo usuario ++ [novoSeguindo]}
+    let updateSeguidor = outro {seguidores = seguidores outro ++ [idUsuario usuario]}
 
+    {-Remove os antigos-}
     let usuariosAtualizados = removeUsuarios recuperaUsuariosUnsafe [updateSeguindo, updateSeguidor]
 
+    {-Adiciona os novos-}
     adicionaUsuario (usuariosAtualizados ++ [updateSeguindo]) updateSeguidor
 
 
