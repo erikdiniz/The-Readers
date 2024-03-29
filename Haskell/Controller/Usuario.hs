@@ -10,8 +10,7 @@ import GHC.Generics
 import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
-import Controller.Perfil
-import Controller.Estante
+-- import Controller.Estante --
 
 data Usuario = Usuario {
     idUsuario :: String,
@@ -31,7 +30,6 @@ cadastraUsuario nome senha = do
     let usuario = Usuario nome senha [] []
     maybeJson <- recuperaUsuarios
     adicionaUsuario (fromJust maybeJson) usuario
-    criarPerfil nome ""
 
 loginUsuario :: String -> String -> Maybe Usuario
 loginUsuario nome senha = do

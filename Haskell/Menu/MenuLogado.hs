@@ -10,7 +10,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -19,7 +19,7 @@ selecionaAcaoLogin usuario "S" = do
     putStrLn "Obrigado"
 
 selecionaAcaoLogin usuario "P" = do
-     menuPerfil
+     menuPerfil usuario
 
 selecionaAcaoLogin usuario "+" = do
     putStrLn "Nome do livro: "

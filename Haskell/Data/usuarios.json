@@ -1,18 +1,20 @@
 [
     {
+        "idUsuario": "moab",
+        "seguidores": [
+            "queemocao"
+        ],
+        "seguindo": [],
+        "senha": "4545"
+    },
+    {
         "idUsuario": "maisumteste",
         "seguidores": [],
         "seguindo": [],
         "senha": "123"
     },
     {
-        "idUsuario": "bibizinha",
-        "seguidores": [],
-        "seguindo": [],
-        "senha": "1234"
-    },
-    {
-        "idUsuario": "teste123",
+        "idUsuario": "bibi",
         "seguidores": [],
         "seguindo": [],
         "senha": "123123"
@@ -20,19 +22,9 @@
     {
         "idUsuario": "queemocao",
         "seguidores": [],
-        "seguindo": [],
+        "seguindo": [
+            "moab"
+        ],
         "senha": "moabehocara"
-    },
-    {
-        "idUsuario": "moab",
-        "seguidores": [],
-        "seguindo": [],
-        "senha": "4545"
-    },
-    {
-        "idUsuario": "bibi",
-        "seguidores": [],
-        "seguindo": [],
-        "senha": "123123"
     }
 ]

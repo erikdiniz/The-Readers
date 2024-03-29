@@ -1,37 +1,37 @@
 module Menu.MenuPerfil where
 import Controller.Perfil
+import Controller.Usuario
 
-
-menuPerfil :: IO ()
-menuPerfil = do
-     putStrLn "\nEscolher opção: \n[V] Visão geral \n[E] Editar perfil\n[S] Voltar ao menu principal"
+menuPerfil :: Usuario -> IO()
+menuPerfil usuario = do
+     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar perfil\n [S] Voltar ao menu principal"
      opcao <- getLine
-     selecionaOpcao opcao
+     selecionaOpcao usuario opcao
 
 
-selecionaOpcao :: String -> IO ()
+selecionaOpcao :: Usuario -> String -> IO ()
 
-selecionaOpcao "V" = do
-    visaoGeral
+selecionaOpcao usuario "V" = do
+    visaoGeral (idUsuario usuario)
     putStrLn $ "\n--------------------------------------" ++ "\n"
-    menuPerfil
+    menuPerfil usuario
 
-selecionaOpcao "E" = do
+selecionaOpcao usuario "E" = do
     putStrLn "Escolha seu nome: "
     nome <- getLine
 
     putStrLn "Escolha sua biografia: "
     biografia <- getLine
 
-    criarPerfil nome biografia
+    criarPerfil nome biografia (idUsuario usuario)
     putStrLn "Perfil salvo com sucesso!"
 
-    menuPerfil
+    menuPerfil usuario
 
-selecionaOpcao "S" = do
+selecionaOpcao usuario "S" = do
      putStrLn "calma que jaja chega!"
 
-selecionaOpcao "" = do
+selecionaOpcao usuario "" = do
      putStrLn "Opção Inválida"
-     menuPerfil
+     menuPerfil usuario
 
