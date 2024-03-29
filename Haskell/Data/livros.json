@@ -1,19 +1,7 @@
 [
     {
-        "autor": "a",
-        "genero": "a",
-        "n_paginas": 2,
-        "nome": "a"
-    },
-    {
-        "autor": "iorrinha",
-        "genero": "ficção",
-        "n_paginas": 3,
-        "nome": "livro teste"
-    },
-    {
         "autor": "George R R Martin",
-        "genero": "Aventura",
+        "genero": "Aventura", 
         "n_paginas": 700,
         "nome": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos"
     }

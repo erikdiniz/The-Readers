@@ -9,9 +9,9 @@ import Data.Maybe
 import qualified Data.ByteString.Lazy as BL
 import Data.Aeson.Encode.Pretty (encodePretty)
 import System.IO.Unsafe
-import System.IO
 import Data.Bool (Bool)
 import Data.Maybe (fromMaybe)
+import Text.ParserCombinators.ReadP (get)
 
 instance FromJSON Livro
 instance ToJSON Livro
@@ -84,6 +84,10 @@ getLivro nomeProcurado (h:t)
     | nome h == nomeProcurado = Just h
     | otherwise = getLivro nomeProcurado t
 
+-- |Método recursivo que recupera o nome de todos os Livros cadastrados no sistema.
+getNomeLivros :: [Livro] -> [String] -> [String]
+getNomeLivros [] nomesLivros =  nomesLivros
+getNomeLivros (h:t) nomesLivros = getNomeLivros t (nomesLivros ++ [nome h])
 
 -- |Método Interativo que verifica se um Livro já existe no sistema.
 livroJaExiste :: String -> IO(Maybe [Livro]) -> Bool
