@@ -2,7 +2,8 @@
     {
         "idUsuario": "moab",
         "seguidores": [
-            "queemocao"
+            "queemocao",
+            "bibi"
         ],
         "seguindo": [],
         "senha": "4545"
@@ -14,17 +15,19 @@
         "senha": "123"
     },
     {
-        "idUsuario": "bibi",
-        "seguidores": [],
-        "seguindo": [],
-        "senha": "123123"
-    },
-    {
         "idUsuario": "queemocao",
         "seguidores": [],
         "seguindo": [
             "moab"
         ],
         "senha": "moabehocara"
+    },
+    {
+        "idUsuario": "bibi",
+        "seguidores": [],
+        "seguindo": [
+            "moab"
+        ],
+        "senha": "123123"
     }
 ]

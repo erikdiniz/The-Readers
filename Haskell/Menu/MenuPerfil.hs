@@ -12,7 +12,7 @@ menuPerfil usuario = do
 selecionaOpcao :: Usuario -> String -> IO ()
 
 selecionaOpcao usuario "V" = do
-    visaoGeral (idUsuario usuario)
+    visaoGeral (idUsuario usuario) (seguidores usuario) (seguindo usuario)
     putStrLn $ "\n--------------------------------------" ++ "\n"
     menuPerfil usuario
 

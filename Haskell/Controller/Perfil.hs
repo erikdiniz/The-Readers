@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 module Controller.Perfil where
-import Controller.Usuario
+
 import System.Directory
 import GHC.Generics
 import Data.Aeson
@@ -42,8 +42,8 @@ recuperaPerfis = do
   arquivo <- BL.readFile "Data/perfis.json"
   return (decode arquivo)
 
-visaoGeral :: String -> IO ()
-visaoGeral userId = do
+visaoGeral :: String -> [String] -> [String] -> IO ()
+visaoGeral userId seguidores seguindo = do
     maybePerfis <- recuperaPerfis
     case maybePerfis of
       Nothing -> putStrLn "Perfil não encontrado."
@@ -55,6 +55,7 @@ visaoGeral userId = do
 
         putStrLn $ "MEU NOME: " ++ nome perfilUsuario
         putStrLn $ "SOBRE MIM... " ++ biografia perfilUsuario
+        putStrLn $ "SOU SEGUIDO POR " ++ show (length seguidores) ++ " E ACOMPANHO " ++ show (length seguindo) ++ " READERS"
 
 visaoStalker :: String -> IO ()
 visaoStalker userVisitado = do
@@ -69,7 +70,6 @@ visaoStalker userVisitado = do
 
         putStrLn $ "NOME: " ++ nome perfilVisitado
         putStrLn $ "SOBRE..." ++ biografia perfilVisitado
-
 
 procuraPerfilUnsafe :: String -> [Perfil] -> IO Perfil
 procuraPerfilUnsafe userId [] = error "Usuário não encontrado."
