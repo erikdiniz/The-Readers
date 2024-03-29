@@ -62,7 +62,7 @@ adicionaLivro nome nomeestante estante = do
 colocaLivroEstante :: String -> Estante -> String -> Estante
 colocaLivroEstante nomeLivro estante nomeestante = do
     let jacadastrado = verificaLivro nomeLivro estante
-    if jacadastrado = False then
+    if jacadastrado == False then
         case nomeestante of
             "lidos" -> 
                 let listadelivros = lidos estante
