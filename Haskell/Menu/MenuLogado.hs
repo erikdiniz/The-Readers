@@ -2,6 +2,7 @@ module Menu.MenuLogado where
 import Menu.MenuPerfil
 import Controller.Usuario
 import Controller.Livro
+import Data.Typeable
 
 
 exibeMenuLogado :: Usuario -> IO()
@@ -9,18 +10,18 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
     opcao <- getLine
-    selecionaAcaoLogin opcao
+    selecionaAcaoLogin usuario opcao
 
-selecionaAcaoLogin :: String -> IO ()
-selecionaAcaoLogin "S" = do
+selecionaAcaoLogin :: Usuario -> String -> IO ()
+selecionaAcaoLogin usuario "S" = do
     putStrLn "Obrigado"
 
-selecionaAcaoLogin "P" = do
+selecionaAcaoLogin usuario "P" = do
      menuPerfil
 
-selecionaAcaoLogin "+" = do
+selecionaAcaoLogin usuario "+" = do
     putStrLn "Nome do livro: "
     nome <- getLine
 
@@ -36,8 +37,39 @@ selecionaAcaoLogin "+" = do
 
     cadastraLivro nome autor n_paginas genero
 
-selecionaAcaoLogin "-" = do
+selecionaAcaoLogin usuario "-" = do
     putStrLn "Nome do livro a ser excluido: "
     nomeLivro <- getLine
     deletaLivro nomeLivro
 
+selecionaAcaoLogin usuario "U" = do
+    let nomesUsuarios = recuperaNomeDeUsuarios recuperaUsuariosUnsafe []
+    let nomesFiltrados = (removeElementos nomesUsuarios ([idUsuario usuario] ++ seguindo usuario))
+    putStrLn "Usuários: "
+    putStrLn ""
+    imprimeLista nomesFiltrados
+    putStrLn "Seguir usuário: "
+    seguir <- getLine
+    tentaSeguir usuario nomesFiltrados seguir
+
+tentaSeguir :: Usuario -> [[Char]] -> String -> IO()
+tentaSeguir usuario validos seguir = do
+    case (seguir `elem` validos) of
+        True -> do
+            atualizaSeguindo usuario seguir 
+            putStrLn "Usuário seguido com sucesso!"
+            exibeMenuLogado usuario
+        False -> do 
+            putStrLn "Usuário inválido"
+            exibeMenuLogado usuario
+    
+    
+imprimeLista :: [[Char]] -> IO()
+imprimeLista [] = putStrLn ""
+imprimeLista (x:xs) = do
+     putStr "- " 
+     putStrLn(x) 
+     imprimeLista xs
+
+removeElementos :: [String] -> [String] -> [String]
+removeElementos listaTotal remover = [nome | nome <- listaTotal, not (nome `elem` remover)]
