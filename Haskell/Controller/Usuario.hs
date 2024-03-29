@@ -4,6 +4,7 @@ module Controller.Usuario where
 
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
+import Data.List (unwords)
 import Data.Maybe
 import GHC.Generics
 import qualified Data.ByteString.Lazy as BS
@@ -15,13 +16,14 @@ import Controller.Estante
 data Usuario = Usuario {
     idUsuario :: String,
     senha :: String,
-    seguidores :: [Usuario],
-    seguindo :: [Usuario]
-    estantes :: Estante
+    seguidores :: [String],
+    seguindo :: [String]
 } deriving (Show, Generic)
 
 instance ToJSON Usuario 
 instance FromJSON Usuario
+instance Eq Usuario where 
+    (Usuario nome1 senha1 seguidores1 seguindo1) == (Usuario nome2 senha2 seguidores2 seguindo2) = nome1 == nome2
 
 {- Cria um usuário e chama o método de adicionar ele nos cadastrados-}
 cadastraUsuario ::  String->  String-> IO ()
@@ -73,5 +75,35 @@ procuraUsuario :: String -> [Usuario] -> Maybe Usuario
 procuraUsuario nome [] = Nothing 
 procuraUsuario nome (x:xs) = if idUsuario x == nome then Just x else procuraUsuario nome xs 
 
+recuperaNomeDeUsuarios :: [Usuario] -> [String] -> [String]
+recuperaNomeDeUsuarios [] nomes = nomes
+recuperaNomeDeUsuarios (x:xs) nomes = recuperaNomeDeUsuarios xs (nomes ++ [idUsuario x]) 
+    
+seguirUsuario :: Usuario -> String -> IO()
+seguirUsuario usuarioLogado idUsuarioASeguir = do
+    atualizaSeguindo usuarioLogado idUsuarioASeguir
+        
+atualizaSeguindo :: Usuario -> String -> IO()
+atualizaSeguindo usuario novoSeguindo= do
+
+    let updateSeguindo = Usuario (idUsuario usuario) (senha usuario) (seguidores usuario) (seguindo usuario ++ [novoSeguindo])
+
+    let outro = procuraUsuarioUnsafe novoSeguindo recuperaUsuariosUnsafe
+
+    let updateSeguidor = Usuario (idUsuario outro) (senha outro) (seguidores outro ++ [idUsuario usuario]) (seguindo outro)
+
+    let usuariosAtualizados = removeUsuarios recuperaUsuariosUnsafe [updateSeguindo, updateSeguidor]
+
+    adicionaUsuario (usuariosAtualizados ++ [updateSeguindo]) updateSeguidor
 
 
+
+removeElementosString :: [String] -> [String] -> [String]
+removeElementosString listaTotal remover = [nome | nome <- listaTotal, not (nome `elem` remover)]
+
+removeUsuarios :: [Usuario] -> [Usuario] -> [Usuario]
+removeUsuarios usuariosTotais usuariosRemovidos = [usuarios | usuarios <- usuariosTotais, not (usuarios `elem` usuariosRemovidos)]
+
+procuraUsuarioUnsafe :: String -> [Usuario] -> Usuario
+procuraUsuarioUnsafe nome [] = Usuario "falha" "falha" [] []
+procuraUsuarioUnsafe nome (x:xs) = if idUsuario x == nome then x else procuraUsuarioUnsafe nome xs 
