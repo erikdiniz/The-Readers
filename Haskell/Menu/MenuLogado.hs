@@ -11,7 +11,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [S] Sair"
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -104,8 +104,17 @@ selecionaOpcao usuario "E" = do
 
     menuPerfil usuario
 
+selecionaOpcao usuario "M" do
+    menuEstante usuario    
+
+menuEstante :: Usuario -> IO()
+menuEstante usuario = do
+    putStrLn "\nEscolher opção: \n [+] Adicionar Livro \n [L] Lidos\n [E] Lendo\n [P] Pretendo Ler\n [A] Abandonados\n [S] Voltar para menu principal"
+    opcao <- getLine
+    selecionaOpcao usuario opcao    
+
 selecionaOpcao usuario "S" = do
-    exibeMenuLogado usuario
+exibeMenuLogado usuario
 
 selecionaOpcao usuario "" = do
      putStrLn "Opção Inválida"
