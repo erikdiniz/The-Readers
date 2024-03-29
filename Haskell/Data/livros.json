@@ -1,5 +1,17 @@
 [
     {
+        "autor": "a",
+        "genero": "a",
+        "n_paginas": 2,
+        "nome": "a"
+    },
+    {
+        "autor": "iorrinha",
+        "genero": "ficção",
+        "n_paginas": 3,
+        "nome": "livro teste"
+    },
+    {
         "autor": "George R R Martin",
         "genero": "Aventura",
         "n_paginas": 700,
