@@ -7,7 +7,7 @@ import Data.Maybe
 
 menuLogin :: IO ()
 menuLogin = do
-     putStrLn "Escolher opção: \n[C] Cadastro de Usuario \n[L] Realizar Login\n[S] Sair do Sistema "
+     putStrLn "Escolher opção: \n [C] Cadastro de Usuario \n [L] Realizar Login\n [S] Sair do Sistema "
      opcao <- getLine 
      selecionaAcao opcao
 

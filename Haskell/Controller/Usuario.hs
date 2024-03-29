@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
 module Controller.Usuario where
-
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.List (unwords)
@@ -11,6 +10,8 @@ import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
 import Controller.Perfil
+import Controller.Estante
+
 
 data Usuario = Usuario {
     idUsuario :: String,
@@ -30,7 +31,7 @@ cadastraUsuario nome senha = do
     let usuario = Usuario nome senha [] []
     maybeJson <- recuperaUsuarios
     adicionaUsuario (fromJust maybeJson) usuario
-    criarPerfil nome ""
+    criarPerfil "" "" nome
 
 loginUsuario :: String -> String -> Maybe Usuario
 loginUsuario nome senha = do
@@ -98,7 +99,6 @@ atualizaSeguindo usuario novoSeguindo= do
     adicionaUsuario (usuariosAtualizados ++ [updateSeguindo]) updateSeguidor
 
 
-
 removeElementosString :: [String] -> [String] -> [String]
 removeElementosString listaTotal remover = [nome | nome <- listaTotal, not (nome `elem` remover)]
 
@@ -107,4 +107,5 @@ removeUsuarios usuariosTotais usuariosRemovidos = [usuarios | usuarios <- usuari
 
 procuraUsuarioUnsafe :: String -> [Usuario] -> Usuario
 procuraUsuarioUnsafe nome [] = Usuario "falha" "falha" [] []
-procuraUsuarioUnsafe nome (x:xs) = if idUsuario x == nome then x else procuraUsuarioUnsafe nome xs 
+procuraUsuarioUnsafe nome (x:xs) = if idUsuario x == nome then x else procuraUsuarioUnsafe nome xs
+

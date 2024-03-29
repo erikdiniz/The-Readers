@@ -1,8 +1,9 @@
-module Menu.MenuLogado where 
-import Menu.MenuPerfil
+module Menu.MenuLogado where
 import Controller.Usuario
 import Controller.Livro
+import Controller.Perfil
 import Data.Typeable
+
 
 
 exibeMenuLogado :: Usuario -> IO()
@@ -10,7 +11,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -19,7 +20,7 @@ selecionaAcaoLogin usuario "S" = do
     putStrLn "Obrigado"
 
 selecionaAcaoLogin usuario "P" = do
-     menuPerfil
+     menuPerfil usuario
 
 selecionaAcaoLogin usuario "+" = do
     putStrLn "Nome do livro: "
@@ -41,6 +42,9 @@ selecionaAcaoLogin usuario "-" = do
     putStrLn "Nome do livro a ser excluido: "
     nomeLivro <- getLine
     deletaLivro nomeLivro
+
+selecionaAcaoLogin usuario "B" = do
+    menuPerfilStalker usuario
 
 selecionaAcaoLogin usuario "U" = do
     let nomesUsuarios = recuperaNomeDeUsuarios recuperaUsuariosUnsafe []
@@ -73,3 +77,43 @@ imprimeLista (x:xs) = do
 
 removeElementos :: [String] -> [String] -> [String]
 removeElementos listaTotal remover = [nome | nome <- listaTotal, not (nome `elem` remover)]
+
+menuPerfil :: Usuario -> IO()
+menuPerfil usuario = do
+     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [S] Voltar ao menu principal"
+     opcao <- getLine
+     selecionaOpcao usuario opcao
+
+
+selecionaOpcao :: Usuario -> String -> IO ()
+
+selecionaOpcao usuario "V" = do
+    visaoGeral (idUsuario usuario) (seguidores usuario) (seguindo usuario)
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    menuPerfil usuario
+
+selecionaOpcao usuario "E" = do
+    putStrLn "Escolha seu nome: "
+    nome <- getLine
+
+    putStrLn "Escolha sua biografia: "
+    biografia <- getLine
+
+    criarPerfil nome biografia (idUsuario usuario)
+    putStrLn "Perfil salvo com sucesso!"
+
+    menuPerfil usuario
+
+selecionaOpcao usuario "S" = do
+    exibeMenuLogado usuario
+
+selecionaOpcao usuario "" = do
+     putStrLn "Opção Inválida"
+     menuPerfil usuario
+
+menuPerfilStalker :: Usuario -> IO()
+menuPerfilStalker usuario = do
+     putStrLn "Digite o login do perfil que você deseja visitar:"
+     userVisitado <- getLine
+     visaoStalker userVisitado
+     menuPerfil usuario
