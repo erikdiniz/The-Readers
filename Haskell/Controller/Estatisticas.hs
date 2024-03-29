@@ -10,7 +10,6 @@ import Data.List (group, sortBy, maximumBy)
 import Data.Function (on)
 import Data.Ord (comparing)
 
-{- Definindo os tipos de dados para representar um livro. -}
 data Livro = Livro {
     titulo :: String,
     autor :: String,

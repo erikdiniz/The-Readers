@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
 module Controller.Usuario where
-import Controller.Perfil
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.List (unwords)
@@ -10,7 +9,9 @@ import GHC.Generics
 import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
--- import Controller.Estante --
+import Controller.Perfil
+import Controller.Estante
+
 
 data Usuario = Usuario {
     idUsuario :: String,
