@@ -10,7 +10,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -41,6 +41,9 @@ selecionaAcaoLogin usuario "-" = do
     putStrLn "Nome do livro a ser excluido: "
     nomeLivro <- getLine
     deletaLivro nomeLivro
+
+selecionaAcaoLogin usuario "B" = do
+    menuPerfilStalker usuario
 
 selecionaAcaoLogin usuario "U" = do
     let nomesUsuarios = recuperaNomeDeUsuarios recuperaUsuariosUnsafe []

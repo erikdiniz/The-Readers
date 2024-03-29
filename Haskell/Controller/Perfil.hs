@@ -56,6 +56,21 @@ visaoGeral userId = do
         putStrLn $ "MEU NOME: " ++ nome perfilUsuario
         putStrLn $ "SOBRE MIM... " ++ biografia perfilUsuario
 
+visaoStalker :: String -> IO ()
+visaoStalker userVisitado = do
+    maybePerfis <- recuperaPerfis
+    case maybePerfis of
+      Nothing -> putStrLn "Perfil não encontrado."
+      Just perfis -> do
+        perfilVisitado <- procuraPerfilUnsafe userVisitado perfis
+        putStrLn $ "--------------------------------------" ++ "\n"
+        putStrLn $ "|        CONHEÇA ESSE READER :)       |" ++ "\n"
+        putStrLn $ "--------------------------------------" ++ "\n"
+
+        putStrLn $ "NOME: " ++ nome perfilVisitado
+        putStrLn $ "SOBRE..." ++ biografia perfilVisitado
+
+
 procuraPerfilUnsafe :: String -> [Perfil] -> IO Perfil
 procuraPerfilUnsafe userId [] = error "Usuário não encontrado."
 procuraPerfilUnsafe userId (x:xs) = if (Controller.Perfil.id) x == userId then return x else procuraPerfilUnsafe userId xs

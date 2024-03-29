@@ -4,7 +4,7 @@ import Controller.Usuario
 
 menuPerfil :: Usuario -> IO()
 menuPerfil usuario = do
-     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar perfil\n [S] Voltar ao menu principal"
+     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [S] Voltar ao menu principal"
      opcao <- getLine
      selecionaOpcao usuario opcao
 
@@ -35,3 +35,9 @@ selecionaOpcao usuario "" = do
      putStrLn "Opção Inválida"
      menuPerfil usuario
 
+menuPerfilStalker :: Usuario -> IO()
+menuPerfilStalker usuario = do
+     putStrLn "Digite o login do perfil que você deseja visitar:"
+     userVisitado <- getLine
+     visaoStalker userVisitado
+     menuPerfil usuario
