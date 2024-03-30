@@ -6,10 +6,10 @@ module Controller.Estatisticas where
 import Data.Aeson
 import GHC.Generics
 import qualified Data.ByteString.Lazy as B
-import Data.List (group, sortBy, maximumBy)
+import Data.List (group, sortBy, maximumBy, sort)
+import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
-import Data.List (unfoldr)
 
 import Controller.Leitura
 import Controller.Usuario
@@ -146,3 +146,26 @@ estatisticasGerais usuario = do
     mapM_ putStrLn $ map (\line -> "|" ++ centerString 35 line ++ "|") livroTitulo
     putStrLn $ "|" ++ centerString 35 ("Nota " ++ livroNota) ++ "|" ++ "\n"
     putStrLn $ "-------------------------------------"
+
+{- AUTORES -}
+
+{- Retorna a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
+autoresQuantidadeLivrosUsuario :: Usuario -> [(String, Int)]
+autoresQuantidadeLivrosUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        autores = listaAutores leiturasUsuario usuarioId
+        agrupados = group (sort autores)
+    in map (\xs -> (head xs, length xs)) agrupados
+
+{- Formata a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
+exibeAutoresQuantidadeLivrosUsuario :: Usuario -> IO ()
+exibeAutoresQuantidadeLivrosUsuario usuario = do
+    let usuarioId = idUsuario usuario
+        leituras = recuperaLeituraUnsafe
+        autoresQuantidade = autoresQuantidadeLivrosUsuario usuario
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|              Autores              |"
+    putStrLn $ "|                                   |"
+    mapM_ (\(autor, quantidade) -> putStrLn $ "|" ++ centerString 34 (autor ++ " - " ++ show quantidade ++ " livro(s)") ++ " |" ++ "\n|                                   |") autoresQuantidade
+    putStrLn $ "\n" ++ "-------------------------------------"
