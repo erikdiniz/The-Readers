@@ -11,6 +11,7 @@
     {
         "autor_lido": "Brandon Sanderson",
         "dataLeitura": "1212",
+        "dataLeitura": "10/01/2023",
         "genero_lido": "Fantasia",
         "idUsuario_lido": "maisumteste",
         "nota": 1,
@@ -19,21 +20,12 @@
     },
     {
         "autor_lido": "R.F. Kuang",
-        "dataLeitura": "12/15/4545",
+        "dataLeitura": "12/15/1886",
         "genero_lido": "Ficção",
         "idUsuario_lido": "maisumteste",
         "nota": 1,
         "numPaginas": 500,
         "titulo_lido": "Babel"
-    },
-    {
-        "autor_lido": "Brandon Sanderson",
-        "dataLeitura": "15/08/2021",
-        "genero_lido": "Fantasia",
-        "idUsuario_lido": "moab",
-        "nota": 5,
-        "numPaginas": 1000,
-        "titulo_lido": "The Way of Kings"
     },
     {
         "autor_lido": "Frank Herbert",

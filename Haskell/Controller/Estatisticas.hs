@@ -6,9 +6,11 @@ module Controller.Estatisticas where
 import Data.Aeson
 import GHC.Generics
 import qualified Data.ByteString.Lazy as B
-import Data.List (group, sortBy, maximumBy)
+import Data.List (group, sortBy, maximumBy, sort, groupBy)
+import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
+import Data.Char (toUpper)
 
 import Controller.Leitura
 import Controller.Usuario
@@ -55,7 +57,6 @@ listaGeneros leituras idUsuario = go leituras []
         | idUsuario == idUsuario_lido h && notElem (genero_lido h) generos = go t (genero_lido h : generos)
         | otherwise = go t generos
 
-
 {- Função que retorna o gênero mais lido pelo usuário com o ID especificado -}
 generoMaisLido :: [Leitura] -> String -> String
 generoMaisLido leituras idUsuario =
@@ -97,7 +98,6 @@ melhorLivro leituras idUsuario =
         (livro:_) -> livro
         _ -> error "Nenhum livro lido pelo usuário encontrado."
 
-
 {- Função para centralizar uma string em uma largura específica -}
 centerString :: Int -> String -> String
 centerString width str
@@ -105,6 +105,13 @@ centerString width str
     | otherwise = let padding = replicate ((width - length str) `div` 2) ' '
                       extra = if odd (width - length str) then " " else ""
                   in padding ++ str ++ padding ++ extra
+
+{- Define a função wrapText -}
+wrapText :: Int -> String -> [String]
+wrapText width = unfoldr $ \s ->
+    if null s
+        then Nothing
+        else Just (splitAt width s)
 
 {- Exibição das estatísticas gerais do usuário -}
 estatisticasGerais :: Usuario -> IO()
@@ -114,9 +121,9 @@ estatisticasGerais usuario = do
         totalLivros = getTotalLivros leituras usuarioId
         totalPaginas = getTotalPag leituras usuarioId
         generoLido = generoMaisLido leituras usuarioId
-        autorLido = autorMaisLido leituras usuarioId
+        autorLido = wrapText 33 (autorMaisLido leituras usuarioId)
         livroPreferido = melhorLivro leituras usuarioId
-        livroTitulo = titulo_lido livroPreferido
+        livroTitulo = wrapText 33 (titulo_lido livroPreferido)
         livroNota = show (nota livroPreferido)
 
     putStrLn $ "-------------------------------------" ++ "\n"
@@ -132,9 +139,92 @@ estatisticasGerais usuario = do
     putStrLn $ "|" ++ centerString 35 generoLido ++ "|"
     putStrLn $ "|" ++ centerString 35 "" ++ "|"
     putStrLn $ "|" ++ centerString 35 "Autor mais lido:" ++ "|"
-    putStrLn $ "|" ++ centerString 35 autorLido ++ "|"
+    mapM_ putStrLn $ map (\line -> "|" ++ centerString 35 line ++ "|") autorLido
     putStrLn $ "|" ++ centerString 35 "" ++ "|"
     putStrLn $ "|" ++ centerString 35 "Livro preferido:" ++ "|"
-    putStrLn $ "|" ++ centerString 35 livroTitulo ++ "|"
+    mapM_ putStrLn $ map (\line -> "|" ++ centerString 35 line ++ "|") livroTitulo
     putStrLn $ "|" ++ centerString 35 ("Nota " ++ livroNota) ++ "|" ++ "\n"
+    putStrLn $ "-------------------------------------"
+
+{- AUTORES -}
+
+{- Retorna a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
+autoresQuantidadeLivrosUsuario :: Usuario -> [(String, Int)]
+autoresQuantidadeLivrosUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        autores = listaAutores leiturasUsuario usuarioId
+        agrupados = group (sort autores)
+    in map (\xs -> (head xs, length xs)) agrupados
+
+{- Formata a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
+exibeAutoresQuantidadeLivrosUsuario :: Usuario -> IO ()
+exibeAutoresQuantidadeLivrosUsuario usuario = do
+    let usuarioId = idUsuario usuario
+        leituras = recuperaLeituraUnsafe
+        autoresQuantidade = autoresQuantidadeLivrosUsuario usuario
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|              Autores              |"
+    putStrLn $ "|                                   |"
+    mapM_ (\(autor, quantidade) -> putStrLn $ "|" ++ centerString 34 (autor ++ " - " ++ show quantidade ++ " livro(s)") ++ " |" ++ "\n|                                   |") autoresQuantidade
+    putStrLn $ "\n" ++ "-------------------------------------"
+
+{- GÊNEROS -}
+
+{- Retorna uma lista de tuplas onde o primeiro elemento é o gênero e o segundo elemento é uma lista de livros desse gênero lidos pelo usuário. -}
+generosLivrosUsuario :: Usuario -> [(String, [String])]
+generosLivrosUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        generos = listaGeneros leiturasUsuario usuarioId
+        livrosPorGenero = groupByGenero leiturasUsuario generos
+    in map (\gen -> (gen, livrosPorGenero gen)) generos
+
+{- Função auxiliar que agrupa os livros lidos por gênero. -}
+groupByGenero :: [Leitura] -> [String] -> String -> [String]
+groupByGenero leituras generos gen =
+    let livros = map titulo_lido $ filter (\leitura -> genero_lido leitura == gen) leituras
+    in sort livros
+
+{- Exibe os livros lidos por cada gênero -}
+exibeLivrosPorGenero :: Usuario -> IO ()
+exibeLivrosPorGenero usuario = do
+    let usuarioId = idUsuario usuario
+        leituras = recuperaLeituraUnsafe
+        generosLivros = generosLivrosUsuario usuario
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|              Gêneros              |" ++ "\n"
+    mapM_ (\(genero, livros) -> do
+        let generoUpper = map toUpper genero
+        putStrLn $ "|" ++ centerString 35 generoUpper ++ "|"
+        mapM_ (\livro -> mapM_ (\line -> putStrLn $ "|" ++ centerString 35 line ++ "|") (wrapText 33 livro)) livros
+        putStrLn $ "") generosLivros
+    putStrLn $ "-------------------------------------"
+
+{- LIDOS POR ANO -}
+
+-- Função para extrair o ano de uma data no formato "dd/mm/aaaa"
+anoDaData :: String -> String
+anoDaData dataStr = drop 6 dataStr
+
+-- Função para agrupar os livros por ano
+livrosPorAnoUsuario :: Usuario -> [(String, [String])]
+livrosPorAnoUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        leiturasOrdenadas = reverse $ sortBy (compare `on` dataLeitura) leiturasUsuario
+        leiturasAgrupadas = groupBy ((==) `on` anoDaData . dataLeitura) leiturasOrdenadas
+        livrosPorAno = map (\grupo -> (anoDaData (dataLeitura (head grupo)), map titulo_lido grupo)) leiturasAgrupadas
+    in livrosPorAno
+
+exibeLivrosPorAno :: Usuario -> IO ()
+exibeLivrosPorAno usuario = do
+    let usuarioId = idUsuario usuario
+        livrosPorAno = sortBy (flip compare `on` fst) $ livrosPorAnoUsuario usuario -- Ordena por ano
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|           Livros por Ano          |" ++ "\n"
+    mapM_ (\(ano, livros) -> do
+        putStrLn $ "|" ++ centerString 35 ano ++ "|"
+        mapM_ (\livro -> mapM_ (\line -> putStrLn $ "|" ++ centerString 35 line ++ "|") (wrapText 33 livro)) livros
+        putStrLn $ "") livrosPorAno
     putStrLn $ "-------------------------------------"
