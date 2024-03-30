@@ -1,0 +1,26 @@
+[
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "The Way of Kings",
+        "nota_avaliada": 1,
+        "resenha": "muito bom",
+        "usuarioId": "maisumteste"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "Duna",
+        "nota_avaliada": 5,
+        "resenha": "gostei",
+        "usuarioId": "moab"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos",
+        "nota_avaliada": 5,
+        "resenha": "gostei muito",
+        "usuarioId": "maisumteste"
+    }
+]
