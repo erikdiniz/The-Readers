@@ -3,6 +3,7 @@ import Controller.Usuario
 import Controller.Livro
 import Controller.Perfil
 import Controller.Leitura
+import Menu.MenuEstatisticas
 import Data.Maybe
 
 
@@ -12,7 +13,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [L] Cadastrar Leitura\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [L] Cadastrar Leitura\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
 
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
@@ -68,7 +69,13 @@ selecionaAcaoLogin usuario "L" = do
     maybeListaLivros <- getListaLivros
     let listaLivros = fromMaybe [] maybeListaLivros
     let maybeLivro = getLivro nomeLivro listaLivros
-    tentaCadastrar usuario maybeLivro dataLeitura nota 
+    tentaCadastrar usuario maybeLivro dataLeitura nota
+
+selecionaAcaoLogin usuario "E" = do
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|            Estatísticas           |" ++ "\n"
+    putStrLn $ "-------------------------------------" ++ "\n"
+    menuEstatisticas usuario
 
 tentaCadastrar :: Usuario -> Maybe Livro -> String -> Int -> IO()
 tentaCadastrar usuario maybeLivro dataLeitura nota = do

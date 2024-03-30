@@ -1,41 +1,5 @@
 [
     {
-        "autor_lido": "Brandon Sanderson",
-        "dataLeitura": "1212",
-        "genero_lido": "Fantasia",
-        "idUsuario_lido": "maisumteste",
-        "nota": 1,
-        "numPaginas": 1000,
-        "titulo_lido": "The Way of Kings"
-    },
-    {
-        "autor_lido": "R.F. Kuang",
-        "dataLeitura": "12/15/4545",
-        "genero_lido": "Ficção",
-        "idUsuario_lido": "maisumteste",
-        "nota": 1,
-        "numPaginas": 500,
-        "titulo_lido": "Babel"
-    },
-    {
-        "autor_lido": "Brandon Sanderson",
-        "dataLeitura": "15/08/2021",
-        "genero_lido": "Fantasia",
-        "idUsuario_lido": "moab",
-        "nota": 5,
-        "numPaginas": 1000,
-        "titulo_lido": "The Way of Kings"
-    },
-    {
-        "autor_lido": "Frank Herbert",
-        "dataLeitura": "21/12/2020",
-        "genero_lido": "Ficção Científica",
-        "idUsuario_lido": "moab",
-        "nota": 5,
-        "numPaginas": 700,
-        "titulo_lido": "Duna"
-    },
-    {
         "autor_lido": "George R R Martin",
         "dataLeitura": "21/02/2021",
         "genero_lido": "Aventura",
