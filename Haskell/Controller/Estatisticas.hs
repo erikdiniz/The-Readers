@@ -6,7 +6,7 @@ module Controller.Estatisticas where
 import Data.Aeson
 import GHC.Generics
 import qualified Data.ByteString.Lazy as B
-import Data.List (group, sortBy, maximumBy, sort)
+import Data.List (group, sortBy, maximumBy, sort, groupBy)
 import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
@@ -186,6 +186,7 @@ groupByGenero leituras generos gen =
     let livros = map titulo_lido $ filter (\leitura -> genero_lido leitura == gen) leituras
     in sort livros
 
+{- Exibe os livros lidos por cada gênero -}
 exibeLivrosPorGenero :: Usuario -> IO ()
 exibeLivrosPorGenero usuario = do
     let usuarioId = idUsuario usuario
@@ -200,9 +201,30 @@ exibeLivrosPorGenero usuario = do
         putStrLn $ "") generosLivros
     putStrLn $ "-------------------------------------"
 
+{- LIDOS POR ANO -}
 
+-- Função para extrair o ano de uma data no formato "dd/mm/aaaa"
+anoDaData :: String -> String
+anoDaData dataStr = drop 6 dataStr
 
+-- Função para agrupar os livros por ano
+livrosPorAnoUsuario :: Usuario -> [(String, [String])]
+livrosPorAnoUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        leiturasOrdenadas = reverse $ sortBy (compare `on` dataLeitura) leiturasUsuario
+        leiturasAgrupadas = groupBy ((==) `on` anoDaData . dataLeitura) leiturasOrdenadas
+        livrosPorAno = map (\grupo -> (anoDaData (dataLeitura (head grupo)), map titulo_lido grupo)) leiturasAgrupadas
+    in livrosPorAno
 
-
-
-
+exibeLivrosPorAno :: Usuario -> IO ()
+exibeLivrosPorAno usuario = do
+    let usuarioId = idUsuario usuario
+        livrosPorAno = sortBy (flip compare `on` fst) $ livrosPorAnoUsuario usuario -- Ordena por ano
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|           Livros por Ano          |" ++ "\n"
+    mapM_ (\(ano, livros) -> do
+        putStrLn $ "|" ++ centerString 35 ano ++ "|"
+        mapM_ (\livro -> mapM_ (\line -> putStrLn $ "|" ++ centerString 35 line ++ "|") (wrapText 33 livro)) livros
+        putStrLn $ "") livrosPorAno
+    putStrLn $ "-------------------------------------"
