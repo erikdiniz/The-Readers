@@ -132,7 +132,13 @@ selecionaOpcao usuario "E" = do
     putStrLn "Perfil salvo com sucesso!"
 
     menuPerfil usuario
-   
+
+selecionaOpcao usuario "S" = do
+    exibeMenuLogado usuario
+
+selecionaOpcao usuario "" = do
+     putStrLn "Opção Inválida"
+     menuPerfil usuario
 
 menuEstante :: Usuario -> IO()
 menuEstante usuario = do
