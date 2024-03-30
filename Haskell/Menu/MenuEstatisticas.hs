@@ -5,7 +5,7 @@ import Controller.Usuario
 
 menuEstatisticas :: Usuario -> IO ()
 menuEstatisticas usuario = do
-    putStrLn $ "\nEscolher opção:\n[V] Visão Geral\n[A] Autores\n[G] Gêneros\n[S] Voltar ao menu"
+    putStrLn $ "\nEscolher opção:\n[V] Visão Geral\n[A] Autores\n[G] Gêneros \n[Y] Lidos por ano \n[S] Voltar ao menu"
 
     x <- getLine
     selecionaAcao usuario x 
@@ -21,6 +21,10 @@ selecionaAcao usuario "A" = do
 
 selecionaAcao usuario "G" = do
     exibeLivrosPorGenero usuario
+    menuEstatisticas usuario
+
+selecionaAcao usuario "Y" = do
+    exibeLivrosPorAno usuario
     menuEstatisticas usuario
 
 selecionaAcao usario "S" = putStrLn ""
