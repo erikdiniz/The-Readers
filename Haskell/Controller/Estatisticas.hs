@@ -9,6 +9,7 @@ import qualified Data.ByteString.Lazy as B
 import Data.List (group, sortBy, maximumBy)
 import Data.Function (on)
 import Data.Ord (comparing)
+import Data.List (unfoldr)
 
 import Controller.Leitura
 import Controller.Usuario
@@ -106,6 +107,13 @@ centerString width str
                       extra = if odd (width - length str) then " " else ""
                   in padding ++ str ++ padding ++ extra
 
+{- Define a função wrapText -}
+wrapText :: Int -> String -> [String]
+wrapText width = unfoldr $ \s ->
+    if null s
+        then Nothing
+        else Just (splitAt width s)
+
 {- Exibição das estatísticas gerais do usuário -}
 estatisticasGerais :: Usuario -> IO()
 estatisticasGerais usuario = do 
@@ -114,9 +122,9 @@ estatisticasGerais usuario = do
         totalLivros = getTotalLivros leituras usuarioId
         totalPaginas = getTotalPag leituras usuarioId
         generoLido = generoMaisLido leituras usuarioId
-        autorLido = autorMaisLido leituras usuarioId
+        autorLido = wrapText 33 (autorMaisLido leituras usuarioId)
         livroPreferido = melhorLivro leituras usuarioId
-        livroTitulo = titulo_lido livroPreferido
+        livroTitulo = wrapText 33 (titulo_lido livroPreferido)
         livroNota = show (nota livroPreferido)
 
     putStrLn $ "-------------------------------------" ++ "\n"
@@ -132,9 +140,9 @@ estatisticasGerais usuario = do
     putStrLn $ "|" ++ centerString 35 generoLido ++ "|"
     putStrLn $ "|" ++ centerString 35 "" ++ "|"
     putStrLn $ "|" ++ centerString 35 "Autor mais lido:" ++ "|"
-    putStrLn $ "|" ++ centerString 35 autorLido ++ "|"
+    mapM_ putStrLn $ map (\line -> "|" ++ centerString 35 line ++ "|") autorLido
     putStrLn $ "|" ++ centerString 35 "" ++ "|"
     putStrLn $ "|" ++ centerString 35 "Livro preferido:" ++ "|"
-    putStrLn $ "|" ++ centerString 35 livroTitulo ++ "|"
+    mapM_ putStrLn $ map (\line -> "|" ++ centerString 35 line ++ "|") livroTitulo
     putStrLn $ "|" ++ centerString 35 ("Nota " ++ livroNota) ++ "|" ++ "\n"
     putStrLn $ "-------------------------------------"

@@ -77,6 +77,7 @@ selecionaAcaoLogin usuario "E" = do
     putStrLn $ "|            Estatísticas           |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
     menuEstatisticas usuario
+    exibeMenuLogado usuario
 
 selecionaAcaoLogin usuario "R" = do
     putStrLn "Qual leitura você deseja resenhar:"
