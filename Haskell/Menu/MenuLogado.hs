@@ -3,7 +3,6 @@ import Menu.MenuPerfil
 import Controller.Usuario
 import Controller.Livro
 import Controller.Leitura
-import Data.Typeable
 import Data.Maybe
 
 
@@ -80,9 +79,6 @@ tentaCadastrar usuario maybeLivro dataLeitura nota = do
         Nothing -> do
             putStrLn "Livro não encontrado no sistema"
             exibeMenuLogado usuario
-    
- 
-
 
 tentaSeguir :: Usuario -> [[Char]] -> String -> IO()
 tentaSeguir usuario validos seguir = do
