@@ -1,26 +1,8 @@
 [
     {
-        "autor": "Brandon Sanderson",
-        "genero": "Fantasia",
-        "n_paginas": 1000,
-        "nome": "The Way of Kings"
-    },
-    {
-        "autor": "R.F. Kuang",
-        "genero": "Ficção",
-        "n_paginas": 500,
-        "nome": "Babel"
-    },
-    {
         "autor": "George R R Martin",
-        "genero": "Aventura",
+        "genero": "Aventura", 
         "n_paginas": 700,
         "nome": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos"
-    },
-    {
-        "autor": "Frank Herbert",
-        "genero": "Ficção Científica",
-        "n_paginas": 700,
-        "nome": "Duna"
     }
 ]
