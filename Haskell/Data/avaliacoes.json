@@ -2,6 +2,14 @@
     {
         "comentarios": [],
         "curtida": 0,
+        "livroId": "Duna",
+        "nota_avaliada": 5,
+        "resenha": "gostei",
+        "usuarioId": "moab"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
         "livroId": "The Way of Kings",
         "nota_avaliada": 1,
         "resenha": "muito bom",
@@ -9,10 +17,10 @@
     },
     {
         "comentarios": [],
-        "curtida": 0,
-        "livroId": "Duna",
+        "curtida": 3,
+        "livroId": "The Way of Kings",
         "nota_avaliada": 5,
-        "resenha": "gostei",
+        "resenha": "incrivel",
         "usuarioId": "moab"
     }
 ]

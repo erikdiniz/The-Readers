@@ -1,6 +1,15 @@
 [
     {
         "autor_lido": "Brandon Sanderson",
+        "dataLeitura": "12/12/2012",
+        "genero_lido": "Fantasia",
+        "idUsuario_lido": "moab",
+        "nota": 5,
+        "numPaginas": 1000,
+        "titulo_lido": "The Way of Kings"
+    },
+    {
+        "autor_lido": "Brandon Sanderson",
         "dataLeitura": "1212",
         "genero_lido": "Fantasia",
         "idUsuario_lido": "maisumteste",
