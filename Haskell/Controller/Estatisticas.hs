@@ -10,6 +10,7 @@ import Data.List (group, sortBy, maximumBy, sort)
 import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
+import Data.Char (toUpper)
 
 import Controller.Leitura
 import Controller.Usuario
@@ -56,7 +57,6 @@ listaGeneros leituras idUsuario = go leituras []
         | idUsuario == idUsuario_lido h && notElem (genero_lido h) generos = go t (genero_lido h : generos)
         | otherwise = go t generos
 
-
 {- Função que retorna o gênero mais lido pelo usuário com o ID especificado -}
 generoMaisLido :: [Leitura] -> String -> String
 generoMaisLido leituras idUsuario =
@@ -97,7 +97,6 @@ melhorLivro leituras idUsuario =
     in case sortedLivros of
         (livro:_) -> livro
         _ -> error "Nenhum livro lido pelo usuário encontrado."
-
 
 {- Função para centralizar uma string em uma largura específica -}
 centerString :: Int -> String -> String
@@ -169,3 +168,41 @@ exibeAutoresQuantidadeLivrosUsuario usuario = do
     putStrLn $ "|                                   |"
     mapM_ (\(autor, quantidade) -> putStrLn $ "|" ++ centerString 34 (autor ++ " - " ++ show quantidade ++ " livro(s)") ++ " |" ++ "\n|                                   |") autoresQuantidade
     putStrLn $ "\n" ++ "-------------------------------------"
+
+{- GÊNEROS -}
+
+{- Retorna uma lista de tuplas onde o primeiro elemento é o gênero e o segundo elemento é uma lista de livros desse gênero lidos pelo usuário. -}
+generosLivrosUsuario :: Usuario -> [(String, [String])]
+generosLivrosUsuario usuario =
+    let usuarioId = idUsuario usuario
+        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        generos = listaGeneros leiturasUsuario usuarioId
+        livrosPorGenero = groupByGenero leiturasUsuario generos
+    in map (\gen -> (gen, livrosPorGenero gen)) generos
+
+{- Função auxiliar que agrupa os livros lidos por gênero. -}
+groupByGenero :: [Leitura] -> [String] -> String -> [String]
+groupByGenero leituras generos gen =
+    let livros = map titulo_lido $ filter (\leitura -> genero_lido leitura == gen) leituras
+    in sort livros
+
+exibeLivrosPorGenero :: Usuario -> IO ()
+exibeLivrosPorGenero usuario = do
+    let usuarioId = idUsuario usuario
+        leituras = recuperaLeituraUnsafe
+        generosLivros = generosLivrosUsuario usuario
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|              Gêneros              |" ++ "\n"
+    mapM_ (\(genero, livros) -> do
+        let generoUpper = map toUpper genero
+        putStrLn $ "|" ++ centerString 35 generoUpper ++ "|"
+        mapM_ (\livro -> mapM_ (\line -> putStrLn $ "|" ++ centerString 35 line ++ "|") (wrapText 33 livro)) livros
+        putStrLn $ "") generosLivros
+    putStrLn $ "-------------------------------------"
+
+
+
+
+
+
+
