@@ -2,7 +2,9 @@ module Menu.MenuLogado where
 import Menu.MenuPerfil
 import Controller.Usuario
 import Controller.Livro
+import Controller.Leitura
 import Data.Typeable
+import Data.Maybe
 
 
 exibeMenuLogado :: Usuario -> IO()
@@ -10,7 +12,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [L] Cadastrar Leitura\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] sair"
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -52,6 +54,36 @@ selecionaAcaoLogin usuario "U" = do
     seguir <- getLine
     tentaSeguir usuario nomesFiltrados seguir
 
+selecionaAcaoLogin usuario "L" = do
+    putStrLn "Nome do livro: "
+    nomeLivro <- getLine
+    putStrLn "Data da leitura: "
+    dataLeitura <- getLine
+    putStrLn "Nota da leitura (1 - 5)"
+    nota <- readLn :: IO Int
+    maybeListaLivros <- getListaLivros
+    let listaLivros = fromMaybe [] maybeListaLivros
+    let maybeLivro = getLivro nomeLivro listaLivros
+    tentaCadastrar usuario maybeLivro dataLeitura nota 
+
+tentaCadastrar :: Usuario -> Maybe Livro -> String -> Int -> IO()
+tentaCadastrar usuario maybeLivro dataLeitura nota = do
+    case maybeLivro of 
+        Just livro -> do
+            if nota >= 1 && nota <= 5 then do
+                cadastrarLeitura (idUsuario usuario) livro dataLeitura nota
+                putStrLn "Livro cadastrado!"
+                exibeMenuLogado usuario
+            else do 
+                putStrLn "Nota invalida"
+                exibeMenuLogado usuario
+        Nothing -> do
+            putStrLn "Livro não encontrado no sistema"
+            exibeMenuLogado usuario
+    
+ 
+
+
 tentaSeguir :: Usuario -> [[Char]] -> String -> IO()
 tentaSeguir usuario validos seguir = do
     case (seguir `elem` validos) of
@@ -63,7 +95,7 @@ tentaSeguir usuario validos seguir = do
             putStrLn "Usuário inválido"
             exibeMenuLogado usuario
     
-    
+
 imprimeLista :: [[Char]] -> IO()
 imprimeLista [] = putStrLn ""
 imprimeLista (x:xs) = do
