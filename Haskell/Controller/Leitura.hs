@@ -1,5 +1,10 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Controller.Leitura where
+module Controller.Leitura (
+    -- outros exports
+    Leitura(..),
+    recuperaLeituraDoUsuario,
+    FromJSON(..)
+) where
 
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
