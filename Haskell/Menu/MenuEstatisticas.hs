@@ -14,4 +14,4 @@ selecionaAcao :: Usuario -> String -> IO ()
 selecionaAcao usuario "V" =  do
     estatisticasGerais usuario
     menuEstatisticas usuario
-selecionaAcao usario "S" = putStrLn $ "Obrigado!"
+selecionaAcao usario "S" = putStrLn $ ""
