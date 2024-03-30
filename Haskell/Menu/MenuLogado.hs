@@ -14,7 +14,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [F] Feed\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
 
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
@@ -59,6 +59,14 @@ selecionaAcaoLogin usuario "U" = do
     putStrLn "Seguir usuário: "
     seguir <- getLine
     tentaSeguir usuario nomesFiltrados seguir
+
+selecionaAcaoLogin usuario "F" = do
+    maybeAvaliacoes <- recuperaAvaliacoesSafe
+    let avaliacoes = fromJust maybeAvaliacoes
+    seguindo <- recuperaSeguidores usuario
+    let avaliacoesSeguindo = recuperaAvaliacoesPorNome (seguindo) avaliacoes
+    simuladorFeed usuario avaliacoesSeguindo
+    exibeMenuLogado usuario
 
 selecionaAcaoLogin usuario "L" = do
     putStrLn "Nome do livro: "
@@ -154,7 +162,7 @@ removeElementos listaTotal remover = [nome | nome <- listaTotal, not (nome `elem
 
 menuPerfil :: Usuario -> IO()
 menuPerfil usuario = do
-     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [S] Voltar ao menu principal"
+     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [M] Minhas Resenhas\n [S] Voltar ao menu principal"
      opcao <- getLine
      selecionaOpcao usuario opcao
 
@@ -181,9 +189,37 @@ selecionaOpcao usuario "E" = do
 selecionaOpcao usuario "S" = do
     exibeMenuLogado usuario
 
+selecionaOpcao usuario "M" = do
+    carregaAvaliacoes usuario
+
 selecionaOpcao usuario "" = do
      putStrLn "Opção Inválida"
      menuPerfil usuario
+
+
+
+{-Carrega as Resenhas do Usuário Logado-}
+carregaAvaliacoes :: Usuario -> IO()
+carregaAvaliacoes usuario = do
+    avaliacoes <- recuperaAvaliacoesSafe
+    case avaliacoes of
+        Just avaliacoes -> do
+            let minhasAvaliacoes = recuperaAvaliacoesUsuario [usuario] avaliacoes
+            putStrLn "----------- RESENHAS ----------"
+            imprimeAvaliacoes minhasAvaliacoes
+            menuPerfil usuario
+        Nothing -> do
+            putStrLn "Nenhuma avaliação"
+            menuPerfil usuario
+
+{-Itera imprimindo cada avaliação-}
+imprimeAvaliacoes :: [Avaliacao] -> IO()
+imprimeAvaliacoes [] = putStrLn "------------- FIM -------------"
+imprimeAvaliacoes (x:xs) = do 
+    let string = mostraAvaliacao x 
+    putStrLn "-------------------------------"
+    putStrLn string
+    imprimeAvaliacoes xs
 
 menuEstante :: Usuario -> IO()
 menuEstante usuario = do

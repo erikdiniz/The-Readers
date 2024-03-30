@@ -50,6 +50,14 @@ adicionaUsuario usuarios usuario = do
     removeFile "Data/usuarios.json"
     renameFile "Data/temp.json" "Data/usuarios.json"
 
+
+recuperaSeguidores :: Usuario -> IO([String])
+recuperaSeguidores usuario = do
+    usuariosMaybe <- recuperaUsuarios
+    let usuarios = fromJust usuariosMaybe
+    let usuarioAtualizado = fromJust (procuraUsuario (idUsuario usuario) usuarios)
+    return (seguindo usuarioAtualizado)
+
 {- Pega a lista inteira de usuários cadastrados -}
 recuperaUsuarios :: IO (Maybe [Usuario])
 recuperaUsuarios = do
