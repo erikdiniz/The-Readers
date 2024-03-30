@@ -1,10 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-module Controller.Leitura (
-    -- outros exports
-    Leitura(..),
-    recuperaLeituraDoUsuario,
-    FromJSON(..)
-) where
+module Controller.Leitura where
 
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
@@ -40,11 +35,43 @@ cadastrarLeitura idUsuario livro dataLeitura nota = do
 
 recuperaLeituraUnsafe :: [Leitura]
 recuperaLeituraUnsafe = do
-    let arquivo = unsafePerformIO $ BS.readFile "Data/usuarios.json"
+    let arquivo = unsafePerformIO $ BS.readFile "Data/leituras.json"
     let maybeJson = (decode arquivo) :: Maybe [Leitura]
     case maybeJson of
         Nothing -> []
         Just leituras -> leituras
 
+recuperaLeitura :: String -> String -> Maybe Leitura
+recuperaLeitura idUsuario titulo_leitura = do
+    let leituras = recuperaLeituraDoUsuario idUsuario
+    let maybeLeitura = fromJust (procuraLeitura idUsuario titulo_leitura leituras)
+    return maybeLeitura
+
+recuperaLeituraSafe :: IO (Maybe [Leitura])
+recuperaLeituraSafe = do
+    arquivo <- BS.readFile "Data/leituras.json"
+    return (decode arquivo)
+
+
+procuraLeitura :: String -> String -> [Leitura] -> Maybe Leitura
+procuraLeitura idUsuario titulo_leitura [] = Nothing
+procuraLeitura idUsuario titulo_leitura (x:xs) = if (idUsuario_lido x) == idUsuario && (titulo_lido x == titulo_leitura) then Just x else  procuraLeitura idUsuario titulo_leitura xs 
+
 recuperaLeituraDoUsuario :: String -> [Leitura]
-recuperaLeituraDoUsuario idUsuario = [lido_por | lido_por <- recuperaLeituraUnsafe, idUsuario == (idUsuario_lido lido_por)]
+recuperaLeituraDoUsuario idUsuario = do 
+    let tudo = recuperaLeituraUnsafe
+    [lido_por | lido_por <- tudo, idUsuario == (idUsuario_lido lido_por)]
+
+recuperaLeituraDoUsuarioSafe :: String -> [Leitura] -> [Leitura]
+recuperaLeituraDoUsuarioSafe idUsuario todasAsLeituras = [lido_por | lido_por <- todasAsLeituras, idUsuario == (idUsuario_lido lido_por)]
+
+
+recuperaNomeDasLeiturasDoUsuario :: String -> [String]
+recuperaNomeDasLeiturasDoUsuario idUsuario = do
+    let leituras = recuperaLeituraDoUsuario idUsuario
+    let lista = concatenaLidos leituras []
+    lista
+
+concatenaLidos :: [Leitura] -> [String] -> [String]
+concatenaLidos [x] titulos = titulos ++ [titulo_lido x]
+concatenaLidos (x:xs) titulos = concatenaLidos xs (titulos ++ [titulo_lido x]) 
