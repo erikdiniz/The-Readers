@@ -2,8 +2,9 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Controller.Estante where
 
-import System.Directory
+
 import GHC.Generics
+import System.Directory
 import Data.Aeson
 import Data.Maybe
 import qualified Data.ByteString.Lazy as BL

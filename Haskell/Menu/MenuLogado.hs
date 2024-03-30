@@ -2,7 +2,8 @@ module Menu.MenuLogado where
 import Controller.Usuario
 import Controller.Livro
 import Controller.Perfil
-import Data.Typeable
+import Controller.Leitura
+import Data.Maybe
 
 
 
@@ -11,7 +12,8 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [L] Cadastrar Leitura\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [S] Sair"
+
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -56,6 +58,33 @@ selecionaAcaoLogin usuario "U" = do
     seguir <- getLine
     tentaSeguir usuario nomesFiltrados seguir
 
+selecionaAcaoLogin usuario "L" = do
+    putStrLn "Nome do livro: "
+    nomeLivro <- getLine
+    putStrLn "Data da leitura: "
+    dataLeitura <- getLine
+    putStrLn "Nota da leitura (1 - 5)"
+    nota <- readLn :: IO Int
+    maybeListaLivros <- getListaLivros
+    let listaLivros = fromMaybe [] maybeListaLivros
+    let maybeLivro = getLivro nomeLivro listaLivros
+    tentaCadastrar usuario maybeLivro dataLeitura nota 
+
+tentaCadastrar :: Usuario -> Maybe Livro -> String -> Int -> IO()
+tentaCadastrar usuario maybeLivro dataLeitura nota = do
+    case maybeLivro of 
+        Just livro -> do
+            if nota >= 1 && nota <= 5 then do
+                cadastrarLeitura (idUsuario usuario) livro dataLeitura nota
+                putStrLn "Livro cadastrado!"
+                exibeMenuLogado usuario
+            else do 
+                putStrLn "Nota invalida"
+                exibeMenuLogado usuario
+        Nothing -> do
+            putStrLn "Livro não encontrado no sistema"
+            exibeMenuLogado usuario
+
 tentaSeguir :: Usuario -> [[Char]] -> String -> IO()
 tentaSeguir usuario validos seguir = do
     case (seguir `elem` validos) of
@@ -67,7 +96,7 @@ tentaSeguir usuario validos seguir = do
             putStrLn "Usuário inválido"
             exibeMenuLogado usuario
     
-    
+
 imprimeLista :: [[Char]] -> IO()
 imprimeLista [] = putStrLn ""
 imprimeLista (x:xs) = do
@@ -103,9 +132,7 @@ selecionaOpcao usuario "E" = do
     putStrLn "Perfil salvo com sucesso!"
 
     menuPerfil usuario
-
-selecionaOpcao usuario "M" do
-    menuEstante usuario    
+   
 
 menuEstante :: Usuario -> IO()
 menuEstante usuario = do
@@ -113,12 +140,6 @@ menuEstante usuario = do
     opcao <- getLine
     selecionaOpcao usuario opcao    
 
-selecionaOpcao usuario "S" = do
-exibeMenuLogado usuario
-
-selecionaOpcao usuario "" = do
-     putStrLn "Opção Inválida"
-     menuPerfil usuario
 
 menuPerfilStalker :: Usuario -> IO()
 menuPerfilStalker usuario = do
