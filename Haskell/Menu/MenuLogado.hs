@@ -3,6 +3,7 @@ import Controller.Usuario
 import Controller.Livro
 import Controller.Perfil
 import Controller.Leitura
+import Controller.Avaliacao
 import Menu.MenuEstatisticas
 import Data.Maybe
 
@@ -13,7 +14,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [L] Cadastrar Leitura\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
 
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
@@ -76,6 +77,42 @@ selecionaAcaoLogin usuario "E" = do
     putStrLn $ "|            Estatísticas           |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
     menuEstatisticas usuario
+
+selecionaAcaoLogin usuario "R" = do
+    putStrLn "Qual leitura você deseja resenhar:"
+    todasLeituras <- recuperaLeituraSafe
+    case todasLeituras of
+        Just leituras -> do 
+            let lista_leituras = recuperaLeituraDoUsuarioSafe (idUsuario usuario) leituras 
+            let nomes_das_leituras = concatenaLidos lista_leituras []
+
+            imprimeLista nomes_das_leituras
+
+            nomeLeitura <- getLine
+
+            let maybeLeitura = procuraLeitura (idUsuario usuario) nomeLeitura (recuperaLeituraDoUsuarioSafe (idUsuario usuario) leituras)
+
+            putStrLn "Escreva sua resenha: "
+            resenha <- getLine
+            
+            tentaResenhar usuario maybeLeitura resenha
+        Nothing -> putStrLn "Falha no JSON"
+    
+    
+    
+
+tentaResenhar :: Usuario -> Maybe Leitura -> String -> IO()
+tentaResenhar usuario maybeLeitura resenha = 
+    case maybeLeitura of
+        Just leitura -> do
+            fazAvaliacao (idUsuario usuario) leitura resenha
+            putStrLn "Resenha cadastrada!"
+            exibeMenuLogado usuario
+        Nothing -> do
+            putStrLn "Título não lido"
+            exibeMenuLogado usuario
+
+
 
 tentaCadastrar :: Usuario -> Maybe Livro -> String -> Int -> IO()
 tentaCadastrar usuario maybeLivro dataLeitura nota = do
