@@ -19,4 +19,8 @@ selecionaAcao usuario "A" = do
     exibeAutoresQuantidadeLivrosUsuario usuario
     menuEstatisticas usuario
 
+selecionaAcao usuario "G" = do
+    exibeLivrosPorGenero usuario
+    menuEstatisticas usuario
+
 selecionaAcao usario "S" = putStrLn ""
