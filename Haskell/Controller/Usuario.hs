@@ -1,7 +1,6 @@
 {-# LANGUAGE DeriveGeneric #-}
 
 module Controller.Usuario where
-
 import Data.Aeson 
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.List (unwords)
@@ -12,6 +11,7 @@ import System.Directory
 import System.IO.Unsafe
 import Controller.Perfil
 import Controller.Estante
+
 
 data Usuario = Usuario {
     idUsuario :: String,
@@ -31,7 +31,7 @@ cadastraUsuario nome senha = do
     let usuario = Usuario nome senha [] []
     maybeJson <- recuperaUsuarios
     adicionaUsuario (fromJust maybeJson) usuario
-    criarPerfil nome ""
+    criarPerfil "" "" nome
 
 loginUsuario :: String -> String -> Maybe Usuario
 loginUsuario nome senha = do
@@ -85,17 +85,18 @@ seguirUsuario usuarioLogado idUsuarioASeguir = do
         
 atualizaSeguindo :: Usuario -> String -> IO()
 atualizaSeguindo usuario novoSeguindo= do
-
-    let updateSeguindo = Usuario (idUsuario usuario) (senha usuario) (seguidores usuario) (seguindo usuario ++ [novoSeguindo])
-
+    {-busca nos dados o objeto com o usuario seguido-}
     let outro = procuraUsuarioUnsafe novoSeguindo recuperaUsuariosUnsafe
 
-    let updateSeguidor = Usuario (idUsuario outro) (senha outro) (seguidores outro ++ [idUsuario usuario]) (seguindo outro)
+    {-Cria novos objetos atualizados-}
+    let updateSeguindo = usuario {seguindo = seguindo usuario ++ [novoSeguindo]}
+    let updateSeguidor = outro {seguidores = seguidores outro ++ [idUsuario usuario]}
 
+    {-Remove os antigos-}
     let usuariosAtualizados = removeUsuarios recuperaUsuariosUnsafe [updateSeguindo, updateSeguidor]
 
+    {-Adiciona os novos-}
     adicionaUsuario (usuariosAtualizados ++ [updateSeguindo]) updateSeguidor
-
 
 
 removeElementosString :: [String] -> [String] -> [String]
@@ -106,4 +107,5 @@ removeUsuarios usuariosTotais usuariosRemovidos = [usuarios | usuarios <- usuari
 
 procuraUsuarioUnsafe :: String -> [Usuario] -> Usuario
 procuraUsuarioUnsafe nome [] = Usuario "falha" "falha" [] []
-procuraUsuarioUnsafe nome (x:xs) = if idUsuario x == nome then x else procuraUsuarioUnsafe nome xs 
+procuraUsuarioUnsafe nome (x:xs) = if idUsuario x == nome then x else procuraUsuarioUnsafe nome xs
+

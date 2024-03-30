@@ -18,13 +18,14 @@ instance ToJSON Perfil
 
 data Perfil = Perfil {
     nome :: String,
-    biografia :: String
+    biografia :: String,
+    id :: String
 } deriving (Show, Generic)
 
 -- Cria um perfil no sistema
-criarPerfil :: String -> String -> IO ()
-criarPerfil nome biografia = do
-  let perfil = Perfil nome biografia
+criarPerfil :: String -> String -> String -> IO ()
+criarPerfil nome biografia id = do
+  let perfil = Perfil nome biografia id
   maybeJson <- recuperaPerfis
   salvaPerfil (fromJust maybeJson) perfil
 
@@ -41,16 +42,38 @@ recuperaPerfis = do
   arquivo <- BL.readFile "Data/perfis.json"
   return (decode arquivo)
 
-visaoGeral :: IO ()
-visaoGeral = do
-  maybePerfis <- recuperaPerfis
-  case maybePerfis of
-    Nothing -> putStrLn "Nenhum perfil encontrado."
-    Just perfis -> do
-      let perfilUsuario = head perfis
-      putStrLn $ "--------------------------------------" ++ "\n"
-      putStrLn $ "|        MEU PERFIL THE READER        |" ++ "\n"
-      putStrLn $ "--------------------------------------" ++ "\n"
+visaoGeral :: String -> [String] -> [String] -> IO ()
+visaoGeral userId seguidores seguindo = do
+    maybePerfis <- recuperaPerfis
+    case maybePerfis of
+      Nothing -> putStrLn "Perfil não encontrado."
+      Just perfis -> do
+        perfilUsuario <- procuraPerfilUnsafe userId perfis
+        putStrLn $ "--------------------------------------" ++ "\n"
+        putStrLn $ "|        MEU PERFIL THE READER        |" ++ "\n"
+        putStrLn $ "--------------------------------------" ++ "\n"
 
-      putStrLn $ "MEU NOME: " ++ nome perfilUsuario
-      putStrLn $ "SOBRE MIM... " ++ biografia perfilUsuario
+        putStrLn $ "MEU NOME: " ++ nome perfilUsuario
+        putStrLn $ "SOBRE MIM... " ++ biografia perfilUsuario
+        putStrLn $ "SOU SEGUIDO POR " ++ show (length seguidores) ++ " E ACOMPANHO " ++ show (length seguindo) ++ " READERS"
+
+visaoStalker :: String -> IO ()
+visaoStalker userVisitado = do
+    maybePerfis <- recuperaPerfis
+    case maybePerfis of
+      Nothing -> putStrLn "Perfil não encontrado."
+      Just perfis -> do
+        perfilVisitado <- procuraPerfilUnsafe userVisitado perfis
+        putStrLn $ "--------------------------------------" ++ "\n"
+        putStrLn $ "|        CONHEÇA ESSE READER :)       |" ++ "\n"
+        putStrLn $ "--------------------------------------" ++ "\n"
+
+        putStrLn $ "NOME: " ++ nome perfilVisitado
+        putStrLn $ "SOBRE..." ++ biografia perfilVisitado
+
+procuraPerfilUnsafe :: String -> [Perfil] -> IO Perfil
+procuraPerfilUnsafe userId [] = error "Usuário não encontrado."
+procuraPerfilUnsafe userId (x:xs) = if (Controller.Perfil.id) x == userId then return x else procuraPerfilUnsafe userId xs
+
+
+

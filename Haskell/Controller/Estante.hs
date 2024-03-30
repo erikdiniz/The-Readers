@@ -13,52 +13,161 @@ import System.IO
 import Data.Bool (Bool)
 import Data.Maybe (fromMaybe)
 import Controller.Livro
+import Data.Aeson.Types (parseMaybe)
+import Data.Maybe (mapMaybe)
 
 {-Criando estantes, que podem ser dos subtipos: Lendo, Lidos, Pretendo Ler e Abandonados-}
-data Estante = Lendo | Lidos | Pretendo_Ler | Abandonados {
-    livros :: [Livro],
+data Estante = Estante {
+    idusuario :: String,
+    lidos :: [Livro],
+    lendo :: [Livro],
+    pretendo_ler :: [Livro],
+    abandonados :: [Livro]
 } deriving (Show, Generic)
 
 instance ToJSON Estante 
 instance FromJSON Estante
 
-{- Adiciona um livro já existente no sistema  a um tipo de estante-}
-adicionaLivro :: String -> Estante -> String -> IO()
-adicionaLivro nome estante = do
-    if verificaLivro nome then
-        case estante of
-            Lendo ->
-                adicionaLivro nome estante = do
-                    let novoLivro = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novoLivro
-                    removeFile "Data/lendo.json"
-                    renameFile "Data/temp.json" "Data/lendo.json"
+{- Adiciona um livro já existente na estante e atualiza o arquivo json com o livro cadastrado-}
+adicionaLivro :: String -> String -> Estante -> String -> IO()
+adicionaLivro nome nomeestante estante = do
+    if verificaLivro nome estante then
+        case nomeestante of
+            "lendo" ->
+                    {-Colocar o livro na estante, remover a estante antiga do json, adicionar a nova estante num [Estante] e escrever no json-}
+                    let lendo = colocaLivroEstante nome estante "lendo"
+                    let novaEstante = encodePretty (estante : estante)
+                    BS.writefile "Data/temp.json" novaEstante
+                    removeFile "Data/estante.json"
+                    renameFile "Data/temp.json" "Data/estante.json"
                     putStrLn "Livro adicionado à estante dos livros que você está lendo atualmente."
-            Lidos ->
+            "lidos" ->
                 adicionaLivro nome estante = do
-                    let novoLivro = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novoLivro
-                    removeFile "Data/lidos.json"
-                    renameFile "Data/temp.json" "Data/lidos.json"
+                    let lidos = colocaLivroEstante nome estante "lidos"
+                    let novaEstante = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novaEstante
+                    removeFile "Data/estante.json"
+                    renameFile "Data/temp.json" "Data/estante.json"
                     putStrLn "Livro adicionado à estante dos livros que você está já leu."   
-            Pretendo_Ler ->
+            "pretendo ler" ->
                 adicionaLivro nome estante = do
-                    let novoLivro = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novoLivro
-                    removeFile "Data/pretendo_ler.json"
-                    renameFile "Data/temp.json" "Data/pretendo_ler.json"
+                    let pretendoLer = colocaLivroEstante nome estante "pretendo ler"
+                    let novaEstante = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novaEstante
+                    removeFile "Data/estante.json"
+                    renameFile "Data/temp.json" "Data/estante.json"
                     putStrLn "Livro adicionado à estante dos livros que você ainda pretende ler."
-            Abandonados ->
+            "abandonados" ->
                 adicionaLivro nome estante = do
-                    let novoLivro = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novoLivro
-                    removeFile "Data/abandonados.json"
-                    renameFile "Data/temp.json" "Data/abandonados.json"
+                    let abandonados = colocaLivroEstante nome estante "abandonados"
+                    let novaEstante = encodePretty (entrada : estante)
+                    BS.writefile "Data/temp.json" novaEstante
+                    removeFile "Data/estante.json"
+                    renameFile "Data/temp.json" "Data/estante.json"
                     putStrLn "Livro adicionado à estante dos livros que você abandonou a leitura." 
 
+colocaLivroEstante :: String -> Estante -> String -> Estante
+colocaLivroEstante nomeLivro estante nomeestante = do
+    let jacadastrado = verificaLivro nomeLivro estante
+    if jacadastrado == False then
+        case nomeestante of
+            "lidos" -> 
+                let listadelivros = lidos estante
+                let livro = getLivro nomelivro getListaLivros
+                let novaLista = listadelivros ++ livro
+            "lendo" -> 
+                let listadelivros = lendo estante
+                let livro = getLivro nomelivro getListaLivros
+                let novaLista = listadelivros ++ livro
+            "pretendo ler" -> 
+                let listadelivros = pretendo_ler estante
+                let livro = getLivro nomelivro getListaLivros
+                let novaLista = listadelivros ++ livro    
+            "abandonados" -> 
+                let listadelivros = abandonados estante
+                let livro = getLivro nomelivro getListaLivros
+                let novaLista = listadelivros ++ livro
+
 {-Verifica se o livro já está cadastrado no sistema bem como se já foi adicionado a alguma das estantes-}
-verificaLivro :: String -> Bool
-if Livro.livroJaExiste nome listaLivro then    
-    if nome not in Lendo.livros && Lidos.livros && Pretendo_Ler.livros && Abandonados.livros then False else True
-else False
-                
+verificaLivro :: String -> Estante -> Bool
+verificaLivro nomeLivro estante = do
+    let lidos = lidos estante
+    let lendo = lendo estante
+    let pretendo_ler = pretendo_ler estante
+    let abandonados = abandonados estante
+    let livro = getLivro nomelivro getListaLivros
+    if livro `elem` lidos && livro `elem` lendo && livro `elem` pretendo_ler && livro `elem` abandonados then True else False
+
+{-Recupera uma estante-}
+getEstante :: IO(Maybe Estante)
+getEstante = do
+    arquivo <- BL.readFile "Data/estante.json"
+    return (decode arquivo)
+
+{-Recupera a estante de livros lidos-}
+getLidos :: IO(Maybe [Livro])
+getLidos = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let lidos = mapMaybe (parseMaybe (.: "lidos")) estante
+            return (lidos)
+
+{-Recupera a estante de livros que o usuário está lendo-}
+getLendo :: IO(Maybe [Livro])
+getLendo = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let lendo = mapMaybe (parseMaybe (.: "lendo")) estante
+            return (lendo)
+
+{-Recupera a estante de livros que o usário pretende ler-}            
+getPretendoLer :: IO(Maybe [Livro])
+getPretendoLer = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let pretendoLer = mapMaybe (parseMaybe (.: "pretendo ler")) estante
+            return (pretendoLer)
+
+{-Recupera a estante de livros abandonados pelo usuário-}            
+getAbandonados :: IO(Maybe [Livro])
+getAbandonados = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let abandonados = mapMaybe (parseMaybe (.: "lidos")) estante
+            return (abandonados)
+
+{-Representação textual da estante de livros lidos pelo usuário-}            
+toStringLidos :: [Livro] -> IO(String)
+toStringLidos = do
+    let lidos = nome getLidos
+    let resultado = unlines lidos
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário está lendo -}
+toStringLendo :: [Livro] -> IO(String)
+toStringLendo = do
+    let lendo = nome getLendo
+    let resultado = unlines lendo
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário pretende ler-}    
+toStringPretendoLer :: [Livro] -> IO(String)
+toStringPretendoLer = do
+    let pretendoLer = nome getPretendoLer
+    let resultado =  unlines pretendoLer
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário abandonou a leitura-}     
+toStringAbandonados :: [Livro] -> IO(String)
+toStringAbandonados = do
+    let abandonados = nome getAbandonados
+    let resultado =  unlines abandonados
+    return (resultado)
