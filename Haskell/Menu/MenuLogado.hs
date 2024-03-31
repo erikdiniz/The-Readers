@@ -5,6 +5,7 @@ import Controller.Perfil
 import Controller.Leitura
 import Controller.Avaliacao
 import Controller.Admin
+import Controller.Estatisticas
 import Menu.MenuEstatisticas
 import Data.Maybe
 
@@ -250,11 +251,11 @@ exibeDashAdm adm = do
 
 escolhaAdm :: Admin -> String -> IO ()
 escolhaAdm adm "1" = do
-    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeEstatisticasAdmin
     exibeDashAdm adm
 
 escolhaAdm adm "2" = do
-    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeUsuarios
     exibeDashAdm adm
 
 escolhaAdm adm "3" = do

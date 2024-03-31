@@ -6,7 +6,7 @@ module Controller.Estatisticas where
 import Data.Aeson
 import GHC.Generics
 import qualified Data.ByteString.Lazy as B
-import Data.List (group, sortBy, maximumBy, sort, groupBy)
+import Data.List (group, sortBy, maximumBy, sort, groupBy, nub)
 import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
@@ -228,3 +228,85 @@ exibeLivrosPorAno usuario = do
         mapM_ (\livro -> mapM_ (\line -> putStrLn $ "|" ++ centerString 35 line ++ "|") (wrapText 33 livro)) livros
         putStrLn $ "") livrosPorAno
     putStrLn $ "-------------------------------------"
+
+{- ADMINISTRADOR -}
+
+-- Retorna uma lista de todos os gêneros presentes nas leituras de todos os usuários
+listaGenerosTodosUsuarios :: [Leitura] -> [String]
+listaGenerosTodosUsuarios leituras = nub $ map genero_lido leituras
+
+-- Conta o número de leituras de um determinado gênero em todas as leituras de todos os usuários
+generoNumLeiturasTodosUsuarios :: [Leitura] -> String -> Int
+generoNumLeiturasTodosUsuarios leituras genero = length $ filter (\leitura -> genero_lido leitura == genero) leituras
+
+{- Função que retorna o gênero mais lido entre todos os usuários -}
+generoMaisLidoGeral :: [Leitura] -> String
+generoMaisLidoGeral leituras =
+    let generos = listaGenerosTodosUsuarios leituras
+        contagemGeneros = map (\gen -> (gen, generoNumLeiturasTodosUsuarios leituras gen)) generos
+        generoMaisLidoGeral = fst $ maximumBy (compare `on` snd) contagemGeneros
+    in generoMaisLidoGeral
+
+autorMaisLidoGeral :: [Leitura] -> String
+autorMaisLidoGeral leituras =
+    let autores = nub $ map autor_lido leituras
+        contagemAutores = map (\autor -> (autor, length $ filter (\leitura -> autor_lido leitura == autor) leituras)) autores
+        autorMaisLidoGeral = fst $ maximumBy (compare `on` snd) contagemAutores
+    in autorMaisLidoGeral
+
+-- Função que retorna o livro com a melhor avaliação entre todos os usuários
+melhorLivroAvaliadoGeral :: [Leitura] -> String
+melhorLivroAvaliadoGeral leituras =
+    let livros = nub $ map titulo_lido leituras
+        avaliacoes = map (\livro -> (livro, maximum $ map (\leitura -> if titulo_lido leitura == livro then nota leitura else 0) leituras)) livros
+        melhorLivro = fst $ maximumBy (compare `on` snd) avaliacoes
+    in melhorLivro
+
+-- Função que calcula o total de páginas lidas no geral
+totalPaginasLidasGeral :: [Leitura] -> Int
+totalPaginasLidasGeral leituras =
+    sum [numPaginas leitura | leitura <- leituras]
+
+
+exibeEstatisticasAdmin :: IO()
+exibeEstatisticasAdmin = do
+    let leituras = recuperaLeituraUnsafe
+        genero = generoMaisLidoGeral leituras
+        autor = autorMaisLidoGeral leituras
+        melhorLivro = melhorLivroAvaliadoGeral leituras
+        numLivrosLidos = Prelude.length leituras
+        numPaginasLidas = totalPaginasLidasGeral leituras
+    
+    putStrLn $ "--------------------------------------" ++ "\n"
+    putStrLn $ "|         Estatísticas Gerais        |"
+    putStrLn $ "|                                    |"
+    putStrLn $ "|" ++ centerString 36 "Gênero mais lido" ++ "|"
+    putStrLn $ "|" ++ centerString 36 genero ++ "|"
+    putStrLn $ "|                                    |"
+    putStrLn $ "|" ++ centerString 36 "Autor mais lido" ++ "|"
+    putStrLn $ "|" ++ centerString 36 autor ++ "|"
+    putStrLn $ "|                                    |"
+    putStrLn $ "|" ++ centerString 36 "Livro com melhor avaliação" ++ "|"
+    mapM_ (\line -> putStrLn $ "|" ++ centerString 36 line ++ "|") (wrapText 34 melhorLivro)
+    putStrLn $ "|                                    |"
+    putStrLn $ "|" ++ centerString 36 "Total de livros lidos" ++ "|"
+    putStrLn $ "|" ++ centerString 36 (show numLivrosLidos) ++ "|"
+    putStrLn $ "|                                    |"
+    putStrLn $ "|" ++ centerString 36 "Total de páginas lidas" ++ "|"
+    putStrLn $ "|" ++ centerString 36 (show numPaginasLidas) ++ "|" ++ "\n"
+    putStrLn $ "--------------------------------------"
+
+-- Função para alinhar uma string à esquerda dentro de uma largura fixa
+leftAlignString :: Int -> String -> String
+leftAlignString width str = str ++ replicate (max 0 $ width - length str) ' '
+
+exibeUsuarios :: IO ()
+exibeUsuarios = do
+    let usuarios = recuperaUsuariosUnsafe
+
+    putStrLn $ "--------------------------------------" ++ "\n"
+    putStrLn $ "|          Lista de usuários         |"
+    putStrLn $ "|                                    |"
+    mapM_ (\(idx, user) -> putStrLn $ "| " ++ "   " ++ show idx ++ ". " ++ leftAlignString 26 (idUsuario user) ++ "   |") (zip [1..] usuarios)
+    putStrLn $ "|                                    |" ++ "\n"
+    putStrLn $ "--------------------------------------" ++ "\n"
