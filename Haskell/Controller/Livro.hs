@@ -77,6 +77,15 @@ getListaLivros = do
     arquivo <- BL.readFile "Data/livros.json"
     return (decode arquivo)
 
+-- |Método Interativo que recupera a lista de todos os Livros cadastrados no sistema fora do conteto IO.
+getListaLivrosUnsafe :: [Livro]
+getListaLivrosUnsafe = do
+    let arquivo = unsafePerformIO (BL.readFile "Data/livros.json")
+    let maybeJson = (decode arquivo) :: Maybe [Livro]
+    case maybeJson of
+        Nothing -> []
+        Just livros -> livros
+
 -- |Método recursivo que recupera um Livro cadastrado na lista de Livros a partir do nome.
 getLivro :: String -> [Livro] -> Maybe Livro
 getLivro _ [] = Nothing
