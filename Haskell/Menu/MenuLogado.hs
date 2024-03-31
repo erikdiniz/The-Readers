@@ -4,9 +4,9 @@ import Controller.Livro
 import Controller.Perfil
 import Controller.Leitura
 import Controller.Avaliacao
+import Controller.Admin
 import Menu.MenuEstatisticas
 import Data.Maybe
-
 
 
 exibeMenuLogado :: Usuario -> IO()
@@ -236,3 +236,35 @@ menuPerfilStalker usuario = do
      userVisitado <- getLine
      visaoStalker userVisitado
      menuPerfil usuario
+
+exibeDashAdm :: Admin -> IO()
+exibeDashAdm adm = do
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|     Dashboard de Administrador     |" ++ "\n"
+    putStrLn $ "-------------------------------------" ++ "\n"
+
+    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [S] Sair"
+
+    escolha <- getLine
+    escolhaAdm adm escolha
+
+escolhaAdm :: Admin -> String -> IO ()
+escolhaAdm adm "1" = do
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "2" = do
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "3" = do
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "S" = do
+    putStrLn "Até a próxima!"
+
+escolhaAdm adm "" = do
+     putStrLn "Opção Inválida"
+     exibeDashAdm adm
+

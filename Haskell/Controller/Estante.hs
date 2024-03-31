@@ -1,5 +1,4 @@
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-
 module Controller.Estante where
 
 
@@ -172,3 +171,4 @@ toStringAbandonados = do
     let abandonados = nome getAbandonados
     let resultado =  unlines abandonados
     return (resultado)
+-}
