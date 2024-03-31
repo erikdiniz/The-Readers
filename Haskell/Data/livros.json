@@ -1,5 +1,11 @@
 [
     {
+        "autor": "Jorge Amado",
+        "genero": "Romance ",
+        "n_paginas": 265,
+        "nome": "Capitães da Areia"
+    },
+    {
         "autor": "Brandon Sanderson",
         "genero": "Fantasia",
         "n_paginas": 1000,

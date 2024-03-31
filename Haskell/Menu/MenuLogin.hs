@@ -50,7 +50,7 @@ selecionaAcao "" = do
 
 dashAdm :: IO ()
 dashAdm = do
-     putStrLn "Escolher opção: \n [C] Cadastrar novo adm \n [L] Realizar Login \n [V] Voltar ao menu de login "
+     putStrLn "Escolher opção: \n [L] Realizar Login \n [V] Voltar ao menu de login "
      acao <- getLine
      selecionaAcaoAdm acao
 
@@ -62,16 +62,6 @@ loginAdmMenu nome senha = do
           Nothing -> putStrLn "Credenciais Inválidas"
 
 selecionaAcaoAdm :: String -> IO ()
-selecionaAcaoAdm "C" = do
-    putStrLn "Insira seu nome de login: "
-    login <- getLine
-
-    putStrLn "Insira sua senha: "
-    senha <- getLine
-    cadastraAdm login senha
-    putStrLn "Adm Cadastrado!"
-    dashAdm
-
 selecionaAcaoAdm "L" = do
      putStrLn "Login: "
      nome <- getLine

@@ -1,7 +1,9 @@
 [
     {
-        "comentarios": [],
-        "curtida": 0,
+        "comentarios": [
+            "bibi: ainda nao li, mas pretendo!!"
+        ],
+        "curtida": 1,
         "livroId": "Duna",
         "nota_avaliada": 5,
         "resenha": "gostei",
@@ -24,4 +26,3 @@
         "usuarioId": "moab"
     }
 ]
-
