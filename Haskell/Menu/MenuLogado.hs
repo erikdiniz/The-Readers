@@ -109,8 +109,7 @@ selecionaAcaoLogin usuario "R" = do
             tentaResenhar usuario maybeLeitura resenha
         Nothing -> putStrLn "Falha no JSON"
     
-    
-    
+
 
 tentaResenhar :: Usuario -> Maybe Leitura -> String -> IO()
 tentaResenhar usuario maybeLeitura resenha = 
@@ -254,12 +253,11 @@ escolhaAdm adm "1" = do
     exibeDashAdm adm
 
 escolhaAdm adm "2" = do
-    putStrLn $ "\n--------------------------------------" ++ "\n"
+    listaUsers adm
     exibeDashAdm adm
 
 escolhaAdm adm "3" = do
-    getListaLivros
-    putStrLn $ "\n--------------------------------------" ++ "\n"
+    listaLivros adm
     exibeDashAdm adm
 
 escolhaAdm adm "+" = do

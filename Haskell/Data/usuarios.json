@@ -1,8 +1,13 @@
 [
     {
         "idUsuario": "maisumteste",
-        "seguidores": [],
-        "seguindo": [],
+        "seguidores": [
+          "moab"
+        ],
+        "seguindo": [
+          "bibi",
+          "moab"
+        ],
         "senha": "a"
     },
     {
