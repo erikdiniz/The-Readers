@@ -108,3 +108,11 @@ livroJaExiste nomeProcurado listaLivro =
         Nothing -> False
     where
         maybeListaLivros = unsafePerformIO listaLivro
+
+recuperaLivrosUnsafe :: IO [Livro]
+recuperaLivrosUnsafe = do
+    let arquivo = unsafePerformIO $ BL.readFile "Data/livros.json"
+    let maybeJson = (decode arquivo) :: Maybe [Livro]
+    case maybeJson of
+        Nothing -> return []
+        Just livros -> return livros

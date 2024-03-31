@@ -1,6 +1,8 @@
 {-# LANGUAGE DeriveGeneric #-}
 
 module Controller.Admin where
+import Controller.Usuario (recuperaNomeDeUsuarios, recuperaUsuariosUnsafe)
+import Controller.Livro
 import Data.Aeson
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Data.List (unwords)
@@ -65,6 +67,27 @@ recuperaAdmsUnsafe = do
 procuraAdm :: String -> [Admin] -> Maybe Admin
 procuraAdm user [] = Nothing
 procuraAdm user (x:xs) = if idAdm x == user then Just x else procuraAdm user xs
+
+listaLivros :: Admin -> IO ()
+listaLivros adm = do
+  livros <- recuperaLivrosUnsafe
+  let nomesLivros = getNomeLivros livros []
+
+  putStrLn "--------------------------------"
+  putStrLn "         LISTA DE LIVROS        "
+  putStrLn "--------------------------------"
+  putStrLn $ unlines nomesLivros
+
+
+listaUsers :: Admin -> IO ()
+listaUsers adm = do
+  let usuarios = recuperaUsuariosUnsafe
+  let nomesUsuarios = recuperaNomeDeUsuarios usuarios []
+
+  putStrLn "--------------------------------"
+  putStrLn "         LISTA DE USUÁRIOS       "
+  putStrLn "--------------------------------"
+  putStrLn $ unlines nomesUsuarios
 
 
 
