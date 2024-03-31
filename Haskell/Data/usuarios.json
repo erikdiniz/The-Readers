@@ -1,13 +1,9 @@
 [
     {
         "idUsuario": "maisumteste",
-        "seguidores": [
-            "moab"
-        ],
-        "seguindo": [
-            "moab"
-        ],
-        "senha": "123"
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "a"
     },
     {
         "idUsuario": "erik",
@@ -16,18 +12,19 @@
         "senha": "erik"
     },
     {
-        "idUsuario": "queemocao",
-        "seguidores": [],
-        "seguindo": [
-            "moab"
+        "idUsuario": "moab",
+        "seguidores": [
+            "bibi"
         ],
-        "senha": "moabehocara"
+        "seguindo": [],
+        "senha": "4545"
     },
     {
         "idUsuario": "bibi",
         "seguidores": [],
         "seguindo": [
-            "moab"
+            "moab",
+            "maisumteste"
         ],
         "senha": "123123"
     },

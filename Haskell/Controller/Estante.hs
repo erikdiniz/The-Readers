@@ -1,3 +1,4 @@
+
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE OverloadedStrings #-}
 
@@ -84,3 +85,74 @@ updateCampoEstante "lendo" livro estante = estante { lendo = livro : lendo estan
 updateCampoEstante "pretendo ler" livro estante = estante { pretendo_ler = livro : pretendo_ler estante }
 updateCampoEstante "abandonados" livro estante = estante { abandonados = livro : abandonados estante }
 updateCampoEstante _ _ _ = error "Tipo de estante inválido."
+=======
+    arquivo <- BL.readFile "Data/estante.json"
+    return (decode arquivo)
+
+{-Recupera a estante de livros lidos-}
+getLidos :: IO(Maybe [Livro])
+getLidos = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let lidos = mapMaybe (parseMaybe (.: "lidos")) estante
+            return (lidos)
+
+{-Recupera a estante de livros que o usuário está lendo-}
+getLendo :: IO(Maybe [Livro])
+getLendo = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let lendo = mapMaybe (parseMaybe (.: "lendo")) estante
+            return (lendo)
+
+{-Recupera a estante de livros que o usário pretende ler-}            
+getPretendoLer :: IO(Maybe [Livro])
+getPretendoLer = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let pretendoLer = mapMaybe (parseMaybe (.: "pretendo ler")) estante
+            return (pretendoLer)
+
+{-Recupera a estante de livros abandonados pelo usuário-}            
+getAbandonados :: IO(Maybe [Livro])
+getAbandonados = do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeEstante = decode arquivo :: Maybe Estante
+    case maybeEstante of
+        Just estante -> do
+            let abandonados = mapMaybe (parseMaybe (.: "lidos")) estante
+            return (abandonados)
+
+{-Representação textual da estante de livros lidos pelo usuário-}            
+toStringLidos :: [Livro] -> IO(String)
+toStringLidos = do
+    let lidos = nome getLidos
+    let resultado = unlines lidos
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário está lendo -}
+toStringLendo :: [Livro] -> IO(String)
+toStringLendo = do
+    let lendo = nome getLendo
+    let resultado = unlines lendo
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário pretende ler-}    
+toStringPretendoLer :: [Livro] -> IO(String)
+toStringPretendoLer = do
+    let pretendoLer = nome getPretendoLer
+    let resultado =  unlines pretendoLer
+    return (resultado)
+
+{-Representação textual da estante de livros que o usuário abandonou a leitura-}     
+toStringAbandonados :: [Livro] -> IO(String)
+toStringAbandonados = do
+    let abandonados = nome getAbandonados
+    let resultado =  unlines abandonados
+    return (resultado)

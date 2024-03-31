@@ -4,9 +4,9 @@ import Controller.Livro
 import Controller.Perfil
 import Controller.Leitura
 import Controller.Avaliacao
+import Controller.Admin
 import Menu.MenuEstatisticas
 import Data.Maybe
-
 
 
 exibeMenuLogado :: Usuario -> IO()
@@ -14,7 +14,9 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
+
     putStrLn "\n [P] Meu Perfil\n [F] Feed\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
+
 
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
@@ -50,7 +52,7 @@ selecionaAcaoLogin usuario "-" = do
 selecionaAcaoLogin usuario "B" = do
     menuPerfilStalker usuario
 
-selecionaAcaoLogin usuario "U" = do
+selecionaAcaoLogin usuario "A" = do
     let nomesUsuarios = recuperaNomeDeUsuarios recuperaUsuariosUnsafe []
     let nomesFiltrados = (removeElementos nomesUsuarios ([idUsuario usuario] ++ seguindo usuario))
     putStrLn "Usuários: "
@@ -234,3 +236,36 @@ menuPerfilStalker usuario = do
      userVisitado <- getLine
      visaoStalker userVisitado
      menuPerfil usuario
+
+exibeDashAdm :: Admin -> IO()
+exibeDashAdm adm = do
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|     Dashboard de Administrador     |" ++ "\n"
+    putStrLn $ "-------------------------------------" ++ "\n"
+
+    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [S] Sair"
+
+    escolha <- getLine
+    escolhaAdm adm escolha
+
+escolhaAdm :: Admin -> String -> IO ()
+escolhaAdm adm "1" = do
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "2" = do
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "3" = do
+    getListaLivros
+    putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "S" = do
+    putStrLn "Até a próxima!"
+
+escolhaAdm adm "" = do
+     putStrLn "Opção Inválida"
+     exibeDashAdm adm
+
