@@ -35,6 +35,7 @@ loginAdm user senha = do
 valideSenha :: Admin -> String -> Maybe Admin
 valideSenha adm senhaFornecida = if senha adm == senhaFornecida then Just adm else Nothing
 
+
 salvaAdm :: [Admin] -> Admin -> IO()
 salvaAdm admins adm = do
     let novosAdms = encodePretty (adm : admins)

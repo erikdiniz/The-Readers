@@ -258,6 +258,7 @@ escolhaAdm adm "2" = do
     exibeDashAdm adm
 
 escolhaAdm adm "3" = do
+    getListaLivros
     putStrLn $ "\n--------------------------------------" ++ "\n"
     exibeDashAdm adm
 

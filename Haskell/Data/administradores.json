@@ -2,9 +2,5 @@
     {
         "idAdm": "adm1",
         "senha": "123"
-    },
-    {
-        "idAdm": "admin1",
-        "senha": "sistema"
     }
 ]
