@@ -1,0 +1,27 @@
+[
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "Duna",
+        "nota_avaliada": 5,
+        "resenha": "gostei",
+        "usuarioId": "moab"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "The Way of Kings",
+        "nota_avaliada": 1,
+        "resenha": "muito bom",
+        "usuarioId": "maisumteste"
+    },
+    {
+        "comentarios": [],
+        "curtida": 3,
+        "livroId": "The Way of Kings",
+        "nota_avaliada": 5,
+        "resenha": "incrivel",
+        "usuarioId": "moab"
+    }
+]
+

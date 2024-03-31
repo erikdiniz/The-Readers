@@ -2,7 +2,10 @@ module Menu.MenuLogado where
 import Controller.Usuario
 import Controller.Livro
 import Controller.Perfil
-import Data.Typeable
+import Controller.Leitura
+import Controller.Avaliacao
+import Menu.MenuEstatisticas
+import Data.Maybe
 
 
 
@@ -11,7 +14,10 @@ exibeMenuLogado usuario = do
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
-    putStrLn "\n [P] Meu Perfil\n [A] Adicionar amigo\n [B] Buscar usuário\n [+] Cadastro de Livro\n [-] Excluir um livro\n [S] Sair"
+
+    putStrLn "\n [P] Meu Perfil\n [F] Feed\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
+
+
     opcao <- getLine
     selecionaAcaoLogin usuario opcao
 
@@ -56,6 +62,84 @@ selecionaAcaoLogin usuario "A" = do
     seguir <- getLine
     tentaSeguir usuario nomesFiltrados seguir
 
+selecionaAcaoLogin usuario "F" = do
+    maybeAvaliacoes <- recuperaAvaliacoesSafe
+    let avaliacoes = fromJust maybeAvaliacoes
+    seguindo <- recuperaSeguidores usuario
+    let avaliacoesSeguindo = recuperaAvaliacoesPorNome (seguindo) avaliacoes
+    simuladorFeed usuario avaliacoesSeguindo
+    exibeMenuLogado usuario
+
+selecionaAcaoLogin usuario "L" = do
+    putStrLn "Nome do livro: "
+    nomeLivro <- getLine
+    putStrLn "Data da leitura: "
+    dataLeitura <- getLine
+    putStrLn "Nota da leitura (1 - 5)"
+    nota <- readLn :: IO Int
+    maybeListaLivros <- getListaLivros
+    let listaLivros = fromMaybe [] maybeListaLivros
+    let maybeLivro = getLivro nomeLivro listaLivros
+    tentaCadastrar usuario maybeLivro dataLeitura nota
+
+selecionaAcaoLogin usuario "E" = do
+    putStrLn $ "-------------------------------------" ++ "\n"
+    putStrLn $ "|            Estatísticas           |" ++ "\n"
+    putStrLn $ "-------------------------------------" ++ "\n"
+    menuEstatisticas usuario
+    exibeMenuLogado usuario
+
+selecionaAcaoLogin usuario "R" = do
+    putStrLn "Qual leitura você deseja resenhar:"
+    todasLeituras <- recuperaLeituraSafe
+    case todasLeituras of
+        Just leituras -> do 
+            let lista_leituras = recuperaLeituraDoUsuarioSafe (idUsuario usuario) leituras 
+            let nomes_das_leituras = concatenaLidos lista_leituras []
+
+            imprimeLista nomes_das_leituras
+
+            nomeLeitura <- getLine
+
+            let maybeLeitura = procuraLeitura (idUsuario usuario) nomeLeitura (recuperaLeituraDoUsuarioSafe (idUsuario usuario) leituras)
+
+            putStrLn "Escreva sua resenha: "
+            resenha <- getLine
+            
+            tentaResenhar usuario maybeLeitura resenha
+        Nothing -> putStrLn "Falha no JSON"
+    
+    
+    
+
+tentaResenhar :: Usuario -> Maybe Leitura -> String -> IO()
+tentaResenhar usuario maybeLeitura resenha = 
+    case maybeLeitura of
+        Just leitura -> do
+            fazAvaliacao (idUsuario usuario) leitura resenha
+            putStrLn "Resenha cadastrada!"
+            exibeMenuLogado usuario
+        Nothing -> do
+            putStrLn "Título não lido"
+            exibeMenuLogado usuario
+
+
+
+tentaCadastrar :: Usuario -> Maybe Livro -> String -> Int -> IO()
+tentaCadastrar usuario maybeLivro dataLeitura nota = do
+    case maybeLivro of 
+        Just livro -> do
+            if nota >= 1 && nota <= 5 then do
+                cadastrarLeitura (idUsuario usuario) livro dataLeitura nota
+                putStrLn "Livro cadastrado!"
+                exibeMenuLogado usuario
+            else do 
+                putStrLn "Nota invalida"
+                exibeMenuLogado usuario
+        Nothing -> do
+            putStrLn "Livro não encontrado no sistema"
+            exibeMenuLogado usuario
+
 tentaSeguir :: Usuario -> [[Char]] -> String -> IO()
 tentaSeguir usuario validos seguir = do
     case (seguir `elem` validos) of
@@ -67,7 +151,7 @@ tentaSeguir usuario validos seguir = do
             putStrLn "Usuário inválido"
             exibeMenuLogado usuario
     
-    
+
 imprimeLista :: [[Char]] -> IO()
 imprimeLista [] = putStrLn ""
 imprimeLista (x:xs) = do
@@ -80,7 +164,7 @@ removeElementos listaTotal remover = [nome | nome <- listaTotal, not (nome `elem
 
 menuPerfil :: Usuario -> IO()
 menuPerfil usuario = do
-     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [S] Voltar ao menu principal"
+     putStrLn "\nEscolher opção: \n [V] Visão geral \n [E] Editar meu perfil\n [M] Minhas Resenhas\n [S] Voltar ao menu principal"
      opcao <- getLine
      selecionaOpcao usuario opcao
 
@@ -107,9 +191,44 @@ selecionaOpcao usuario "E" = do
 selecionaOpcao usuario "S" = do
     exibeMenuLogado usuario
 
+selecionaOpcao usuario "M" = do
+    carregaAvaliacoes usuario
+
 selecionaOpcao usuario "" = do
      putStrLn "Opção Inválida"
      menuPerfil usuario
+
+
+
+{-Carrega as Resenhas do Usuário Logado-}
+carregaAvaliacoes :: Usuario -> IO()
+carregaAvaliacoes usuario = do
+    avaliacoes <- recuperaAvaliacoesSafe
+    case avaliacoes of
+        Just avaliacoes -> do
+            let minhasAvaliacoes = recuperaAvaliacoesUsuario [usuario] avaliacoes
+            putStrLn "----------- RESENHAS ----------"
+            imprimeAvaliacoes minhasAvaliacoes
+            menuPerfil usuario
+        Nothing -> do
+            putStrLn "Nenhuma avaliação"
+            menuPerfil usuario
+
+{-Itera imprimindo cada avaliação-}
+imprimeAvaliacoes :: [Avaliacao] -> IO()
+imprimeAvaliacoes [] = putStrLn "------------- FIM -------------"
+imprimeAvaliacoes (x:xs) = do 
+    let string = mostraAvaliacao x 
+    putStrLn "-------------------------------"
+    putStrLn string
+    imprimeAvaliacoes xs
+
+menuEstante :: Usuario -> IO()
+menuEstante usuario = do
+    putStrLn "\nEscolher opção: \n [+] Adicionar Livro \n [L] Lidos\n [E] Lendo\n [P] Pretendo Ler\n [A] Abandonados\n [S] Voltar para menu principal"
+    opcao <- getLine
+    selecionaOpcao usuario opcao    
+
 
 menuPerfilStalker :: Usuario -> IO()
 menuPerfilStalker usuario = do

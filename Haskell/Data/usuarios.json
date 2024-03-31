@@ -1,7 +1,10 @@
 [
     {
-        "idUsuario": "maisumteste",
-        "seguidores": [
+        "idUsuario": "erik",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "erik"
+=======
             "bibi"
         ],
         "seguindo": [],
@@ -23,5 +26,17 @@
             "maisumteste"
         ],
         "senha": "123123"
+    },
+    {
+        "idUsuario": "moab",
+        "seguidores": [
+            "queemocao",
+            "bibi",
+            "maisumteste"
+        ],
+        "seguindo": [
+            "maisumteste"
+        ],
+        "senha": "4545"
     }
 ]

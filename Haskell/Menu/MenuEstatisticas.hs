@@ -1,32 +1,30 @@
 module Menu.MenuEstatisticas where
 
 import Controller.Estatisticas
+import Controller.Usuario
 
-menuEstatisticas :: IO ()
-menuEstatisticas = do
-    putStrLn "[E] Estatísticas do Perfil"
-    opcao <- getLine
-    selecionaAcao opcao
+menuEstatisticas :: Usuario -> IO ()
+menuEstatisticas usuario = do
+    putStrLn $ "\nEscolher opção:\n[V] Visão Geral\n[A] Autores\n[G] Gêneros \n[Y] Lidos por ano \n[S] Voltar ao menu"
 
-subMenuEstatisticas :: IO ()
-subMenuEstatisticas = do
-    putStrLn $ ".----------------------------------------------------------." ++ "\n"
-          ++ "|                     Estatísticas                         |" ++ "\n"
-          ++ "|                                                          |" ++ "\n"
-          ++ "|                  Selecione uma opção:                    |" ++ "\n"
-          ++ "|                                                          |" ++ "\n"
-          ++ "|               [V] Visão Geral                            |" ++ "\n"
-          ++ "|               [A] Autores                                |" ++ "\n"
-          ++ "|               [G] Gêneros                                |" ++ "\n"
-          ++ "|               [N] Avaliações                             |" ++ "\n"
-          ++ "|               [S] Voltar para o menu                     |" ++ "\n"
-          ++ ".----------------------------------------------------------." ++ "\n"
     x <- getLine
-    selecionaAcao x
+    selecionaAcao usuario x 
 
-selecionaAcao :: String -> IO ()
-selecionaAcao "e" = subMenuEstatisticas
-selecionaAcao "v" =  do
-    estatisticasGerais
-    subMenuEstatisticas
-selecionaAcao "s" = menuEstatisticas
+selecionaAcao :: Usuario -> String -> IO ()
+selecionaAcao usuario "V" =  do
+    estatisticasGerais usuario
+    menuEstatisticas usuario
+
+selecionaAcao usuario "A" = do
+    exibeAutoresQuantidadeLivrosUsuario usuario
+    menuEstatisticas usuario
+
+selecionaAcao usuario "G" = do
+    exibeLivrosPorGenero usuario
+    menuEstatisticas usuario
+
+selecionaAcao usuario "Y" = do
+    exibeLivrosPorAno usuario
+    menuEstatisticas usuario
+
+selecionaAcao usario "S" = putStrLn ""
