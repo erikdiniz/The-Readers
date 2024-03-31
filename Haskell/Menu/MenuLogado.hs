@@ -243,7 +243,7 @@ exibeDashAdm adm = do
     putStrLn $ "|     Dashboard de Administrador     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
 
-    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [S] Sair"
+    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [+] Cadastrar novo adm\n [S] Sair"
 
     escolha <- getLine
     escolhaAdm adm escolha
@@ -260,6 +260,16 @@ escolhaAdm adm "2" = do
 escolhaAdm adm "3" = do
     getListaLivros
     putStrLn $ "\n--------------------------------------" ++ "\n"
+    exibeDashAdm adm
+
+escolhaAdm adm "+" = do
+    putStrLn "Novo login administrador: "
+    login <- getLine
+
+    putStrLn "Escolha uma senha: "
+    senha <- getLine
+    cadastraAdm login senha
+    putStrLn "Adm Cadastrado!"
     exibeDashAdm adm
 
 escolhaAdm adm "S" = do
