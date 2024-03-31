@@ -55,7 +55,7 @@ selecionaAcaoLogin usuario "-" = do
 selecionaAcaoLogin usuario "B" = do
     menuPerfilStalker usuario
 
-selecionaAcaoLogin usuario "A" = do
+selecionaAcaoLogin usuario "U" = do
     let nomesUsuarios = recuperaNomeDeUsuarios recuperaUsuariosUnsafe []
     let nomesFiltrados = (removeElementos nomesUsuarios ([idUsuario usuario] ++ seguindo usuario))
     putStrLn "Usuários: "
