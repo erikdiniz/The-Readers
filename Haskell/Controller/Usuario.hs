@@ -10,6 +10,7 @@ import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
 import Controller.Perfil
+import Controller.Estante
 
 
 data Usuario = Usuario {
