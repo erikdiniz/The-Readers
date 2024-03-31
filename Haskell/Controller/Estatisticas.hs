@@ -14,6 +14,7 @@ import Data.Char (toUpper)
 
 import Controller.Leitura
 import Controller.Usuario
+import Controller.Admin
 
 jsonFile :: FilePath
 jsonFile = "Data/leituras.json"
@@ -268,8 +269,8 @@ totalPaginasLidasGeral leituras =
     sum [numPaginas leitura | leitura <- leituras]
 
 
-exibeEstatisticasAdmin :: IO()
-exibeEstatisticasAdmin = do
+exibeEstatisticasAdmin :: Admin -> IO ()
+exibeEstatisticasAdmin adm = do
     let leituras = recuperaLeituraUnsafe
         genero = generoMaisLidoGeral leituras
         autor = autorMaisLidoGeral leituras
@@ -299,14 +300,3 @@ exibeEstatisticasAdmin = do
 -- Função para alinhar uma string à esquerda dentro de uma largura fixa
 leftAlignString :: Int -> String -> String
 leftAlignString width str = str ++ replicate (max 0 $ width - length str) ' '
-
-exibeUsuarios :: IO ()
-exibeUsuarios = do
-    let usuarios = recuperaUsuariosUnsafe
-
-    putStrLn $ "--------------------------------------" ++ "\n"
-    putStrLn $ "|          Lista de usuários         |"
-    putStrLn $ "|                                    |"
-    mapM_ (\(idx, user) -> putStrLn $ "| " ++ "   " ++ show idx ++ ". " ++ leftAlignString 26 (idUsuario user) ++ "   |") (zip [1..] usuarios)
-    putStrLn $ "|                                    |" ++ "\n"
-    putStrLn $ "--------------------------------------" ++ "\n"
