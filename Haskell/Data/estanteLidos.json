@@ -1,5 +1,0 @@
-[
-    {"titulo": "Livro 1", "autor": "Autor 1","genero": "Romance", "anoLancamento": 2021, "numPaginas": 100, "avaliacao": 4.1},
-    {"titulo": "A sociedade do anel", "autor": "Cláudio Baptista","genero": "Ficção científica", "anoLancamento": 2024, "numPaginas": 200, "avaliacao": 4.7},
-    {"titulo": "Livro 3", "autor": "Autor 3","genero": "Drama", "anoLancamento": 2023, "numPaginas": 300, "avaliacao": 4.0}
-]
