@@ -1,5 +1,11 @@
 [
     {
+        "idUsuario": "maisumteste",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "a"
+    },
+    {
         "idUsuario": "erik",
         "seguidores": [],
         "seguindo": [],
@@ -8,32 +14,30 @@
     {
         "idUsuario": "moab",
         "seguidores": [
-            "queemocao",
             "bibi"
         ],
         "seguindo": [],
         "senha": "4545"
     },
     {
-        "idUsuario": "maisumteste",
-        "seguidores": [],
-        "seguindo": [],
-        "senha": "123"
-    },
-    {
-        "idUsuario": "queemocao",
-        "seguidores": [],
-        "seguindo": [
-            "moab"
-        ],
-        "senha": "moabehocara"
-    },
-    {
         "idUsuario": "bibi",
         "seguidores": [],
         "seguindo": [
-            "moab"
+            "moab",
+            "maisumteste"
         ],
         "senha": "123123"
+    },
+    {
+        "idUsuario": "moab",
+        "seguidores": [
+            "queemocao",
+            "bibi",
+            "maisumteste"
+        ],
+        "seguindo": [
+            "maisumteste"
+        ],
+        "senha": "4545"
     }
 ]

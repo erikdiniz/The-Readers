@@ -10,6 +10,7 @@ import qualified Data.ByteString.Lazy as BS
 import System.Directory
 import System.IO.Unsafe
 import Controller.Perfil
+--import Controller.Estante
 
 
 data Usuario = Usuario {
@@ -49,6 +50,14 @@ adicionaUsuario usuarios usuario = do
     BS.writeFile "Data/temp.json" novosUsuarios
     removeFile "Data/usuarios.json"
     renameFile "Data/temp.json" "Data/usuarios.json"
+
+
+recuperaSeguidores :: Usuario -> IO([String])
+recuperaSeguidores usuario = do
+    usuariosMaybe <- recuperaUsuarios
+    let usuarios = fromJust usuariosMaybe
+    let usuarioAtualizado = fromJust (procuraUsuario (idUsuario usuario) usuarios)
+    return (seguindo usuarioAtualizado)
 
 {- Pega a lista inteira de usuários cadastrados -}
 recuperaUsuarios :: IO (Maybe [Usuario])

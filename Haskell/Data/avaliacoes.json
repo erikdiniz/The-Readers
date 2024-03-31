@@ -1,5 +1,15 @@
 [
     {
+        "comentarios": [
+            "bibi: ainda nao li, mas pretendo!!"
+        ],
+        "curtida": 1,
+        "livroId": "Duna",
+        "nota_avaliada": 5,
+        "resenha": "gostei",
+        "usuarioId": "moab"
+    },
+    {
         "comentarios": [],
         "curtida": 0,
         "livroId": "The Way of Kings",
@@ -9,10 +19,10 @@
     },
     {
         "comentarios": [],
-        "curtida": 0,
-        "livroId": "Duna",
+        "curtida": 3,
+        "livroId": "The Way of Kings",
         "nota_avaliada": 5,
-        "resenha": "gostei",
+        "resenha": "incrivel",
         "usuarioId": "moab"
     }
 ]

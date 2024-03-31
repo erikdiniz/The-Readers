@@ -6,6 +6,7 @@ import Data.Aeson
 import Data.Maybe
 import Controller.Livro
 import Controller.Leitura
+import Controller.Usuario
 import System.Directory
 import System.IO.Unsafe
 import qualified Data.ByteString.Lazy as BS
@@ -50,6 +51,58 @@ recuperaAvaliacoesUnsafe = do
     case maybeJson of
         Nothing -> []
         Just avaliacoes -> avaliacoes
+
+{- Carrega as avaliações que pertencem a uma lista de usuários-}
+recuperaAvaliacoesUsuario :: [Usuario] -> [Avaliacao] -> [Avaliacao]
+recuperaAvaliacoesUsuario usuarios todasAvaliacoes = do
+    let nomes = recuperaNomeDeUsuarios usuarios []
+    [avaliacoes | avaliacoes <- todasAvaliacoes, (usuarioId avaliacoes) `elem` nomes]
+
+{- Carrega as avaliações que pertencem a uma lista de usuários pelo id deles-}
+recuperaAvaliacoesPorNome :: [String] -> [Avaliacao] -> [Avaliacao]
+recuperaAvaliacoesPorNome nomes todasAvaliacoes = [avaliacoes | avaliacoes <- todasAvaliacoes, (usuarioId avaliacoes) `elem` nomes]
+
+recuperaAvaliacoesSafe :: IO(Maybe [Avaliacao])
+recuperaAvaliacoesSafe = do
+    arquivo <- BS.readFile "Data/avaliacoes.json"
+    return (decode arquivo) 
+
+simuladorFeed :: Usuario -> [Avaliacao] -> IO()
+
+simuladorFeed usuario [] = do 
+    putStrLn "Você chegou ao fim do feed"
+
+simuladorFeed usuario (x:xs) = do
+    let str = mostraAvaliacao x 
+    putStrLn "--------------------------------------"
+    let nomeUsuario = "Resenha de: " ++ (usuarioId x) 
+    putStrLn nomeUsuario
+    putStrLn "--------------------------------------\n"
+    putStrLn str
+    putStrLn "\n--------------------------------------\n"
+    putStrLn "[C] Curtir \n[A] Adicionar Comentário\n[P] Próximo post \n[V] voltar"
+    opcao <- getLine
+    selecionaOpcaoFeed opcao usuario (x:xs)
+
+selecionaOpcaoFeed :: String -> Usuario -> [Avaliacao] -> IO()
+selecionaOpcaoFeed "C" usuario (x:xs) = do
+    adicionaCurtida x
+    let avaliacaoAtualizada = x {curtida = curtida x + 1 }
+    simuladorFeed usuario (avaliacaoAtualizada:xs)
+
+selecionaOpcaoFeed "A" usuario (x:xs) = do
+    putStrLn "Digitar o comentário: "
+    comentario <- getLine
+    let str = idUsuario usuario ++ ": " ++ comentario
+    adicionarComentarioAvaliacao x str
+    let comentarioAtualizado = x {comentarios = comentarios x ++ [str]}
+    simuladorFeed usuario (comentarioAtualizado:xs)
+
+selecionaOpcaoFeed "P" usuario (x:xs) = do
+    simuladorFeed usuario (xs)
+
+selecionaOpcaoFeed "V" usuario avaliacoes = do 
+    putStrLn "-----------------------------"
 
 -- Faz uma visão de avaliação
 mostraAvaliacao :: Avaliacao -> String
