@@ -3,6 +3,7 @@
 
 module Controller.Estante where
 
+import System.IO.Unsafe (unsafePerformIO)
 import System.Directory
 import GHC.Generics
 import Data.Aeson
@@ -76,6 +77,14 @@ getCampoEstante "lendo" estante = lendo estante
 getCampoEstante "pretendo ler" estante = pretendo_ler estante
 getCampoEstante "abandonados" estante = abandonados estante
 getCampoEstante _ _ = error "Tipo de estante inválido."
+
+getEstanteUnsafe :: Estante
+getEstanteUnsafe = unsafePerformIO $ do
+    arquivo <- BL.readFile "Data/estante.json"
+    let maybeJson = decode arquivo :: Maybe Estante
+    case maybeJson of
+        Nothing -> error "Failed to decode estante.json"
+        Just estante -> return estante
 
 -- Função para atualizar um campo da estante com um novo livro
 updateCampoEstante :: String -> Livro -> Estante -> Estante
