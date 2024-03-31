@@ -8,7 +8,7 @@ import Controller.Admin
 import Controller.Estatisticas
 import Menu.MenuEstatisticas
 import Data.Maybe
-
+import Menu.MenuEstante
 
 exibeMenuLogado :: Usuario -> IO()
 exibeMenuLogado usuario = do
@@ -226,11 +226,8 @@ imprimeAvaliacoes (x:xs) = do
     imprimeAvaliacoes xs
 
 menuEstante :: Usuario -> IO()
-menuEstante usuario = do
-    putStrLn "\nEscolher opção: \n [+] Adicionar Livro \n [L] Lidos\n [E] Lendo\n [P] Pretendo Ler\n [A] Abandonados\n [S] Voltar para menu principal"
-    opcao <- getLine
-    selecionaOpcao usuario opcao    
-
+selecionaOpcao usuario "M" = do
+    submenuEstante usuario
 
 menuPerfilStalker :: Usuario -> IO()
 menuPerfilStalker usuario = do
