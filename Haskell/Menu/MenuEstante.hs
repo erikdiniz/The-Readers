@@ -8,10 +8,10 @@ submenuEstante usuario = do
     putStrLn $ "\nEscolher opção:\n[C] Cadastrar livro nas estantes\n[L] Lendo\n[I] Lidos \n[A] Abandonados \n[S] Voltar ao menu principal"
 
     x <- getLine
-    selecionaAcao usuario x 
+    selecionaAcaoEstante usuario x 
 
 selecionaAcaoEstante :: Usuario -> String -> IO ()
-selecionaAcao usuario "C" =  do
+selecionaAcaoEstante usuario "C" =  do
     putStrLn "Nome do livro: "
     nomeLivro <- getLine
 
