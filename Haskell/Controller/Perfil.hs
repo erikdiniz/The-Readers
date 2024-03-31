@@ -69,7 +69,7 @@ visaoStalker userVisitado = do
         putStrLn $ "--------------------------------------" ++ "\n"
 
         putStrLn $ "NOME: " ++ nome perfilVisitado
-        putStrLn $ "SOBRE..." ++ biografia perfilVisitado
+        putStrLn $ "SOBRE... " ++ biografia perfilVisitado
 
 procuraPerfilUnsafe :: String -> [Perfil] -> IO Perfil
 procuraPerfilUnsafe userId [] = error "Usuário não encontrado."
