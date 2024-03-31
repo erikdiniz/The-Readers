@@ -113,6 +113,8 @@ selecionaAcaoLogin usuario "R" = do
         Nothing -> putStrLn "Falha no JSON"
     
 
+selecionaAcaoLogin usuario "M" = do
+    submenuEstante usuario
 
 tentaResenhar :: Usuario -> Maybe Leitura -> String -> IO()
 tentaResenhar usuario maybeLeitura resenha = 
@@ -225,9 +227,6 @@ imprimeAvaliacoes (x:xs) = do
     putStrLn string
     imprimeAvaliacoes xs
 
-menuEstante :: Usuario -> IO()
-selecionaOpcao usuario "M" = do
-    submenuEstante usuario
 
 menuPerfilStalker :: Usuario -> IO()
 menuPerfilStalker usuario = do
@@ -276,4 +275,5 @@ escolhaAdm adm "S" = do
 escolhaAdm adm "" = do
      putStrLn "Opção Inválida"
      exibeDashAdm adm
+
 
