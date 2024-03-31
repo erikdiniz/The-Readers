@@ -1,12 +1,18 @@
 [
     {
+        "idUsuario": "Iorran",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "1212"
+    },
+    {
         "idUsuario": "maisumteste",
         "seguidores": [
-          "moab"
+            "moab"
         ],
         "seguindo": [
-          "bibi",
-          "moab"
+            "bibi",
+            "moab"
         ],
         "senha": "a"
     },

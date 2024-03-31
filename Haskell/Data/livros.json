@@ -1,5 +1,17 @@
 [
     {
+        "autor": "George R R Martin",
+        "genero": "Aventura",
+        "n_paginas": 900,
+        "nome": "A Guerra dos Tronos"
+    },
+    {
+        "autor": "Tolkien",
+        "genero": "Aventura",
+        "n_paginas": 800,
+        "nome": "O Hobbit"
+    },
+    {
         "autor": "Jorge Amado",
         "genero": "Romance ",
         "n_paginas": 265,
@@ -16,12 +28,6 @@
         "genero": "Ficção",
         "n_paginas": 500,
         "nome": "Babel"
-    },
-    {
-        "autor": "George R R Martin",
-        "genero": "Aventura",
-        "n_paginas": 700,
-        "nome": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos"
     },
     {
         "autor": "Frank Herbert",

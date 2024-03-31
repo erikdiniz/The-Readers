@@ -1,5 +1,15 @@
 [
     {
+        "biografia": "Sou lindo",
+        "id": "Iorran",
+        "nome": "Iorraninha"
+    },
+    {
+        "biografia": "",
+        "id": "Iorran",
+        "nome": ""
+    },
+    {
         "biografia": "usado para testar o funcionamento da plataforma",
         "id": "maisumteste",
         "nome": "Testador"

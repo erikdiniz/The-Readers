@@ -1,6 +1,33 @@
 [
     {
         "comentarios": [
+            "bibi: Maravilhos, já vi.",
+            "bibi: éééée´´ee"
+        ],
+        "curtida": 6,
+        "livroId": "The Way of Kings",
+        "nota_avaliada": 1,
+        "resenha": "muito bom",
+        "usuarioId": "maisumteste"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos",
+        "nota_avaliada": 5,
+        "resenha": "PERFEITO!!!!!!!!!!!!!!!!!!!!!!!!! 0 defeitos.",
+        "usuarioId": "Iorran"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "O Hobbit",
+        "nota_avaliada": 5,
+        "resenha": "Adorei o livro, mas o filme é melhor e mais dinamico.",
+        "usuarioId": "Iorran"
+    },
+    {
+        "comentarios": [
             "bibi: ainda nao li, mas pretendo!!"
         ],
         "curtida": 1,
@@ -8,14 +35,6 @@
         "nota_avaliada": 5,
         "resenha": "gostei",
         "usuarioId": "moab"
-    },
-    {
-        "comentarios": [],
-        "curtida": 0,
-        "livroId": "The Way of Kings",
-        "nota_avaliada": 1,
-        "resenha": "muito bom",
-        "usuarioId": "maisumteste"
     },
     {
         "comentarios": [],

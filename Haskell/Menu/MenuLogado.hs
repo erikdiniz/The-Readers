@@ -44,12 +44,14 @@ selecionaAcaoLogin usuario "+" = do
     genero <- getLine
 
     cadastraLivro nome autor n_paginas genero
+    exibeMenuLogado usuario
 
 selecionaAcaoLogin usuario "-" = do
     putStrLn "Nome do livro a ser excluido: "
     nomeLivro <- getLine
     deletaLivro nomeLivro
-
+    exibeMenuLogado usuario
+    
 selecionaAcaoLogin usuario "B" = do
     menuPerfilStalker usuario
 

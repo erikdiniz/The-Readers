@@ -1,5 +1,23 @@
 [
     {
+        "autor_lido": "George R R Martin",
+        "dataLeitura": "10/12/2019",
+        "genero_lido": "Aventura",
+        "idUsuario_lido": "Iorran",
+        "nota": 5,
+        "numPaginas": 700,
+        "titulo_lido": "As Crônicas de Gelo e Fogo - A Guerra dos Tronos"
+    },
+    {
+        "autor_lido": "Tolkien",
+        "dataLeitura": "31/02/2000",
+        "genero_lido": "Aventura",
+        "idUsuario_lido": "Iorran",
+        "nota": 5,
+        "numPaginas": 800,
+        "titulo_lido": "O Hobbit"
+    },
+    {
         "autor_lido": "Brandon Sanderson",
         "dataLeitura": "12/12/2012",
         "genero_lido": "Fantasia",
@@ -11,7 +29,6 @@
     {
         "autor_lido": "Brandon Sanderson",
         "dataLeitura": "1212",
-        "dataLeitura": "10/01/2023",
         "genero_lido": "Fantasia",
         "idUsuario_lido": "maisumteste",
         "nota": 1,
