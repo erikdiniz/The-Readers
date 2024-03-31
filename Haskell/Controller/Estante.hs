@@ -1,22 +1,20 @@
-{-
+
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE OverloadedStrings #-}
+
 module Controller.Estante where
 
-
-import GHC.Generics
 import System.Directory
+import GHC.Generics
 import Data.Aeson
-import Data.Maybe
 import qualified Data.ByteString.Lazy as BL
+import Data.Maybe
+import Control.Monad (when)
+import Control.Exception (catch)
 import Data.Aeson.Encode.Pretty (encodePretty)
-import System.IO.Unsafe
-import System.IO
-import Data.Bool (Bool)
-import Data.Maybe (fromMaybe)
 import Controller.Livro
-import Data.Aeson.Types (parseMaybe)
-import Data.Maybe (mapMaybe)
 
-{-Criando estantes, que podem ser dos subtipos: Lendo, Lidos, Pretendo Ler e Abandonados-}
+-- Definição do tipo de dados Estante
 data Estante = Estante {
     idusuario :: String,
     lidos :: [Livro],
@@ -25,82 +23,69 @@ data Estante = Estante {
     abandonados :: [Livro]
 } deriving (Show, Generic)
 
-instance ToJSON Estante 
+-- Instâncias para permitir a serialização/desserialização JSON
+instance ToJSON Estante
 instance FromJSON Estante
 
-{- Adiciona um livro já existente na estante e atualiza o arquivo json com o livro cadastrado-}
-adicionaLivro :: String -> String -> Estante -> String -> IO()
-adicionaLivro nome nomeestante estante = do
-    if verificaLivro nome estante then
-        case nomeestante of
-            "lendo" ->
-                    {-Colocar o livro na estante, remover a estante antiga do json, adicionar a nova estante num [Estante] e escrever no json-}
-                    let lendo = colocaLivroEstante nome estante "lendo"
-                    let novaEstante = encodePretty (estante : estante)
-                    BS.writefile "Data/temp.json" novaEstante
-                    removeFile "Data/estante.json"
-                    renameFile "Data/temp.json" "Data/estante.json"
-                    putStrLn "Livro adicionado à estante dos livros que você está lendo atualmente."
-            "lidos" ->
-                adicionaLivro nome estante = do
-                    let lidos = colocaLivroEstante nome estante "lidos"
-                    let novaEstante = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novaEstante
-                    removeFile "Data/estante.json"
-                    renameFile "Data/temp.json" "Data/estante.json"
-                    putStrLn "Livro adicionado à estante dos livros que você está já leu."   
-            "pretendo ler" ->
-                adicionaLivro nome estante = do
-                    let pretendoLer = colocaLivroEstante nome estante "pretendo ler"
-                    let novaEstante = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novaEstante
-                    removeFile "Data/estante.json"
-                    renameFile "Data/temp.json" "Data/estante.json"
-                    putStrLn "Livro adicionado à estante dos livros que você ainda pretende ler."
-            "abandonados" ->
-                adicionaLivro nome estante = do
-                    let abandonados = colocaLivroEstante nome estante "abandonados"
-                    let novaEstante = encodePretty (entrada : estante)
-                    BS.writefile "Data/temp.json" novaEstante
-                    removeFile "Data/estante.json"
-                    renameFile "Data/temp.json" "Data/estante.json"
-                    putStrLn "Livro adicionado à estante dos livros que você abandonou a leitura." 
+-- Caminho para o arquivo JSON da estante
+estanteFile :: FilePath
+estanteFile = "Data/estante.json"
 
-colocaLivroEstante :: String -> Estante -> String -> Estante
-colocaLivroEstante nomeLivro estante nomeestante = do
-    let jacadastrado = verificaLivro nomeLivro estante
-    if jacadastrado == False then
-        case nomeestante of
-            "lidos" -> 
-                let listadelivros = lidos estante
-                let livro = getLivro nomelivro getListaLivros
-                let novaLista = listadelivros ++ livro
-            "lendo" -> 
-                let listadelivros = lendo estante
-                let livro = getLivro nomelivro getListaLivros
-                let novaLista = listadelivros ++ livro
-            "pretendo ler" -> 
-                let listadelivros = pretendo_ler estante
-                let livro = getLivro nomelivro getListaLivros
-                let novaLista = listadelivros ++ livro    
-            "abandonados" -> 
-                let listadelivros = abandonados estante
-                let livro = getLivro nomelivro getListaLivros
-                let novaLista = listadelivros ++ livro
-
-{-Verifica se o livro já está cadastrado no sistema bem como se já foi adicionado a alguma das estantes-}
-verificaLivro :: String -> Estante -> Bool
-verificaLivro nomeLivro estante = do
-    let lidos = lidos estante
-    let lendo = lendo estante
-    let pretendo_ler = pretendo_ler estante
-    let abandonados = abandonados estante
-    let livro = getLivro nomelivro getListaLivros
-    if livro `elem` lidos && livro `elem` lendo && livro `elem` pretendo_ler && livro `elem` abandonados then True else False
-
-{-Recupera uma estante-}
-getEstante :: IO(Maybe Estante)
+-- Função para carregar a estante a partir do arquivo JSON
+getEstante :: IO (Maybe Estante)
 getEstante = do
+    result <- tryReadFile estanteFile
+    case result of
+        Right bytes -> return (decode bytes)
+        Left err -> do
+            putStrLn $ "Erro ao ler o arquivo de estante: " ++ show err
+            return Nothing
+    where
+        tryReadFile :: FilePath -> IO (Either IOError BL.ByteString)
+        tryReadFile path = catch (Right <$> BL.readFile path) handleFileError
+
+        handleFileError :: IOError -> IO (Either IOError BL.ByteString)
+        handleFileError err = return (Left err)
+
+-- Função para salvar a estante no arquivo JSON
+salvarEstante :: Estante -> IO ()
+salvarEstante estante = BL.writeFile estanteFile (encodePretty estante)
+
+-- Função para adicionar um livro à estante
+adicionaLivro :: String -> String -> Estante -> IO ()
+adicionaLivro nomeLivro tipoEstante estante = do
+    maybeLivros <- getListaLivros
+    let livro = maybe (error "Livro não encontrado.") id $ getLivro nomeLivro $ fromJust maybeLivros
+
+    -- Verifica se o livro já está na estante
+    let livroJaCadastrado = any (\livro' -> nome livro' == nomeLivro) (getCampoEstante tipoEstante estante)
+
+    when (not livroJaCadastrado) $ do
+        -- Adiciona o livro ao campo apropriado
+        let estanteAtualizada = updateCampoEstante tipoEstante livro estante
+        salvarEstante estanteAtualizada
+        putStrLn $ "Livro adicionado à estante de " ++ tipoEstante ++ "."
+
+    -- Mensagem de erro se o livro já estiver cadastrado
+    when livroJaCadastrado $
+        putStrLn "Este livro já está na sua estante."
+
+-- Função para obter o campo apropriado da estante com base no tipo
+getCampoEstante :: String -> Estante -> [Livro]
+getCampoEstante "lidos" estante = lidos estante
+getCampoEstante "lendo" estante = lendo estante
+getCampoEstante "pretendo ler" estante = pretendo_ler estante
+getCampoEstante "abandonados" estante = abandonados estante
+getCampoEstante _ _ = error "Tipo de estante inválido."
+
+-- Função para atualizar um campo da estante com um novo livro
+updateCampoEstante :: String -> Livro -> Estante -> Estante
+updateCampoEstante "lidos" livro estante = estante { lidos = livro : lidos estante }
+updateCampoEstante "lendo" livro estante = estante { lendo = livro : lendo estante }
+updateCampoEstante "pretendo ler" livro estante = estante { pretendo_ler = livro : pretendo_ler estante }
+updateCampoEstante "abandonados" livro estante = estante { abandonados = livro : abandonados estante }
+updateCampoEstante _ _ _ = error "Tipo de estante inválido."
+=======
     arquivo <- BL.readFile "Data/estante.json"
     return (decode arquivo)
 
@@ -171,4 +156,3 @@ toStringAbandonados = do
     let abandonados = nome getAbandonados
     let resultado =  unlines abandonados
     return (resultado)
--}
