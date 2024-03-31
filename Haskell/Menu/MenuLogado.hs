@@ -250,7 +250,7 @@ exibeDashAdm adm = do
 
 escolhaAdm :: Admin -> String -> IO ()
 escolhaAdm adm "1" = do
-    exibeEstatisticasAdmin
+    exibeEstatisticasAdmin adm
     exibeDashAdm adm
 
 escolhaAdm adm "2" = do
