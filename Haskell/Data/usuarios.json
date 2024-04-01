@@ -1,7 +1,9 @@
 [
     {
         "idUsuario": "Iorran",
-        "seguidores": [],
+        "seguidores": [
+            "moab"
+        ],
         "seguindo": [],
         "senha": "1212"
     },
@@ -23,14 +25,6 @@
         "senha": "erik"
     },
     {
-        "idUsuario": "moab",
-        "seguidores": [
-            "bibi"
-        ],
-        "seguindo": [],
-        "senha": "4545"
-    },
-    {
         "idUsuario": "bibi",
         "seguidores": [],
         "seguindo": [
@@ -42,12 +36,10 @@
     {
         "idUsuario": "moab",
         "seguidores": [
-            "queemocao",
-            "bibi",
-            "maisumteste"
+            "bibi"
         ],
         "seguindo": [
-            "maisumteste"
+            "Iorran"
         ],
         "senha": "4545"
     }

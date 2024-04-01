@@ -1,5 +1,32 @@
 [
     {
+        "autor_lido": "Haruki Murakami",
+        "dataLeitura": "12/12/2013",
+        "genero_lido": "Ficção",
+        "idUsuario_lido": "moab",
+        "nota": 5,
+        "numPaginas": 200,
+        "titulo_lido": "After Dark"
+    },
+    {
+        "autor_lido": "Jorge Amado",
+        "dataLeitura": "15/12/2011",
+        "genero_lido": "Romance ",
+        "idUsuario_lido": "moab",
+        "nota": 4,
+        "numPaginas": 265,
+        "titulo_lido": "Capitães da Areia"
+    },
+    {
+        "autor_lido": "Tolkien",
+        "dataLeitura": "12/12/2010",
+        "genero_lido": "Aventura",
+        "idUsuario_lido": "moab",
+        "nota": 4,
+        "numPaginas": 800,
+        "titulo_lido": "O Hobbit"
+    },
+    {
         "autor_lido": "George R R Martin",
         "dataLeitura": "10/12/2019",
         "genero_lido": "Aventura",

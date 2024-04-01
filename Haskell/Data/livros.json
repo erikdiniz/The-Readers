@@ -1,5 +1,11 @@
 [
     {
+        "autor": "Haruki Murakami",
+        "genero": "Ficção",
+        "n_paginas": 200,
+        "nome": "After Dark"
+    },
+    {
         "autor": "George R R Martin",
         "genero": "Aventura",
         "n_paginas": 900,

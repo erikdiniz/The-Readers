@@ -1,9 +1,22 @@
 [
     {
-        "comentarios": [
-            "bibi: Maravilhos, já vi.",
-            "bibi: éééée´´ee"
-        ],
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "After Dark",
+        "nota_avaliada": 4,
+        "resenha": "Murakami é um ótimo autor",
+        "usuarioId": "moab"
+    },
+    {
+        "comentarios": [],
+        "curtida": 0,
+        "livroId": "O Hobbit",
+        "nota_avaliada": 4,
+        "resenha": "Escrita muito diferente, mas no geral é legal",
+        "usuarioId": "moab"
+    },
+    {
+        "comentarios": [],
         "curtida": 6,
         "livroId": "The Way of Kings",
         "nota_avaliada": 1,
@@ -23,7 +36,7 @@
         "curtida": 0,
         "livroId": "O Hobbit",
         "nota_avaliada": 5,
-        "resenha": "Adorei o livro, mas o filme é melhor e mais dinamico.",
+        "resenha": "Adorei o livro, mas o filme eh melhor e mais dinamico.",
         "usuarioId": "Iorran"
     },
     {

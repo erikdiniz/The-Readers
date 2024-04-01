@@ -11,7 +11,6 @@ import Data.List (unfoldr)
 import Data.Function (on)
 import Data.Ord (comparing)
 import Data.Char (toUpper)
-
 import Controller.Leitura
 import Controller.Usuario
 import Controller.Admin
@@ -25,8 +24,9 @@ getJSON = B.readFile jsonFile
 {- Lê o conteúdo do arquivo JSON e decodifica em uma lista de livros -}
 lerLivros :: FilePath -> IO [Leitura]
 lerLivros arquivo = do
-    conteudo <- B.readFile arquivo
-    case decode conteudo of
+    conteudo <- recuperaLeituraSafe
+    let maybeLeitura = conteudo
+    case maybeLeitura of
         Nothing -> error "Erro ao decodificar o JSON."
         Just livros -> return livros
 
@@ -35,11 +35,11 @@ lerLivros arquivo = do
 {- Retorna o total de páginas lidas pelo usuário com o ID especificado. -}
 getTotalPag :: [Leitura] -> String -> Int
 getTotalPag [] _ = 0
-getTotalPag leituras idUsuario = sum $ map numPaginas (recuperaLeituraDoUsuario idUsuario)
+getTotalPag leituras idUsuario = sum $ map numPaginas (recuperaLeituraDoUsuarioSafe idUsuario leituras)
 
 {- Retorna o total de livros lidos pelo usuário com o ID especificado. -}
 getTotalLivros :: [Leitura] -> String -> Int
-getTotalLivros leituras idUsuario = Prelude.length (recuperaLeituraDoUsuario idUsuario)
+getTotalLivros leituras idUsuario = Prelude.length (recuperaLeituraDoUsuarioSafe idUsuario leituras)
 
 {- Função que retorna quantas vezes determinado genero foi lido pelo usuário com o ID especificado -}
 generoNumLeituras :: [Leitura] -> String -> String -> Int
@@ -115,9 +115,8 @@ wrapText width = unfoldr $ \s ->
         else Just (splitAt width s)
 
 {- Exibição das estatísticas gerais do usuário -}
-estatisticasGerais :: Usuario -> IO()
-estatisticasGerais usuario = do 
-    leituras <- lerLivros jsonFile
+estatisticasGerais :: Usuario -> [Leitura] -> IO()
+estatisticasGerais usuario leituras = do 
     let usuarioId = idUsuario usuario
         totalLivros = getTotalLivros leituras usuarioId
         totalPaginas = getTotalPag leituras usuarioId
@@ -150,20 +149,19 @@ estatisticasGerais usuario = do
 {- AUTORES -}
 
 {- Retorna a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
-autoresQuantidadeLivrosUsuario :: Usuario -> [(String, Int)]
-autoresQuantidadeLivrosUsuario usuario =
+autoresQuantidadeLivrosUsuario :: Usuario -> [Leitura] -> [(String, Int)]
+autoresQuantidadeLivrosUsuario usuario leituras =
     let usuarioId = idUsuario usuario
-        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        leiturasUsuario = recuperaLeituraDoUsuarioSafe usuarioId leituras
         autores = listaAutores leiturasUsuario usuarioId
         agrupados = group (sort autores)
     in map (\xs -> (head xs, length xs)) agrupados
 
 {- Formata a lista de autores e a quantidade de livros lidos por autor pelo usuário específico -}
-exibeAutoresQuantidadeLivrosUsuario :: Usuario -> IO ()
-exibeAutoresQuantidadeLivrosUsuario usuario = do
+exibeAutoresQuantidadeLivrosUsuario :: Usuario -> [Leitura] -> IO ()
+exibeAutoresQuantidadeLivrosUsuario usuario leituras = do
     let usuarioId = idUsuario usuario
-        leituras = recuperaLeituraUnsafe
-        autoresQuantidade = autoresQuantidadeLivrosUsuario usuario
+        autoresQuantidade = autoresQuantidadeLivrosUsuario usuario leituras
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|              Autores              |"
     putStrLn $ "|                                   |"
@@ -173,10 +171,10 @@ exibeAutoresQuantidadeLivrosUsuario usuario = do
 {- GÊNEROS -}
 
 {- Retorna uma lista de tuplas onde o primeiro elemento é o gênero e o segundo elemento é uma lista de livros desse gênero lidos pelo usuário. -}
-generosLivrosUsuario :: Usuario -> [(String, [String])]
-generosLivrosUsuario usuario =
+generosLivrosUsuario :: Usuario -> [Leitura]-> [(String, [String])]
+generosLivrosUsuario usuario leituras =
     let usuarioId = idUsuario usuario
-        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        leiturasUsuario = recuperaLeituraDoUsuarioSafe usuarioId leituras
         generos = listaGeneros leiturasUsuario usuarioId
         livrosPorGenero = groupByGenero leiturasUsuario generos
     in map (\gen -> (gen, livrosPorGenero gen)) generos
@@ -188,11 +186,10 @@ groupByGenero leituras generos gen =
     in sort livros
 
 {- Exibe os livros lidos por cada gênero -}
-exibeLivrosPorGenero :: Usuario -> IO ()
-exibeLivrosPorGenero usuario = do
+exibeLivrosPorGenero :: Usuario -> [Leitura] -> IO ()
+exibeLivrosPorGenero usuario leituras = do
     let usuarioId = idUsuario usuario
-        leituras = recuperaLeituraUnsafe
-        generosLivros = generosLivrosUsuario usuario
+        generosLivros = generosLivrosUsuario usuario leituras
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|              Gêneros              |" ++ "\n"
     mapM_ (\(genero, livros) -> do
@@ -209,19 +206,19 @@ anoDaData :: String -> String
 anoDaData dataStr = drop 6 dataStr
 
 -- Função para agrupar os livros por ano
-livrosPorAnoUsuario :: Usuario -> [(String, [String])]
-livrosPorAnoUsuario usuario =
+livrosPorAnoUsuario :: Usuario -> [Leitura] -> [(String, [String])]
+livrosPorAnoUsuario usuario leituras =
     let usuarioId = idUsuario usuario
-        leiturasUsuario = recuperaLeituraDoUsuario usuarioId
+        leiturasUsuario = recuperaLeituraDoUsuarioSafe usuarioId leituras
         leiturasOrdenadas = reverse $ sortBy (compare `on` dataLeitura) leiturasUsuario
         leiturasAgrupadas = groupBy ((==) `on` anoDaData . dataLeitura) leiturasOrdenadas
         livrosPorAno = map (\grupo -> (anoDaData (dataLeitura (head grupo)), map titulo_lido grupo)) leiturasAgrupadas
     in livrosPorAno
 
-exibeLivrosPorAno :: Usuario -> IO ()
-exibeLivrosPorAno usuario = do
+exibeLivrosPorAno :: Usuario -> [Leitura] -> IO ()
+exibeLivrosPorAno usuario leituras = do
     let usuarioId = idUsuario usuario
-        livrosPorAno = sortBy (flip compare `on` fst) $ livrosPorAnoUsuario usuario -- Ordena por ano
+        livrosPorAno = sortBy (flip compare `on` fst) $ livrosPorAnoUsuario usuario leituras -- Ordena por ano
     putStrLn $ "-------------------------------------" ++ "\n"
     putStrLn $ "|           Livros por Ano          |" ++ "\n"
     mapM_ (\(ano, livros) -> do
