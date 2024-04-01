@@ -8,7 +8,6 @@ import Controller.Admin
 import Controller.Estatisticas
 import Menu.MenuEstatisticas
 import Data.Maybe
-import Menu.MenuEstante
 
 exibeMenuLogado :: Usuario -> IO()
 exibeMenuLogado usuario = do
@@ -16,7 +15,7 @@ exibeMenuLogado usuario = do
     putStrLn $ "|       Bem vindo ao The Readers     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
 
-    putStrLn "\n [P] Meu Perfil\n [F] Feed\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [-] Excluir um livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
+    putStrLn "\n [P] Meu Perfil\n [F] Feed\n [U] Seguir usuário\n [B] Buscar usuário\n [L] Cadastrar Leitura\n [R] Criar Resenha\n [+] Cadastro de Livro\n [M] Minhas Estantes\n [E] Estatísticas\n [S] Sair"
 
 
     opcao <- getLine
@@ -44,12 +43,6 @@ selecionaAcaoLogin usuario "+" = do
     genero <- getLine
 
     cadastraLivro nome autor n_paginas genero
-    exibeMenuLogado usuario
-
-selecionaAcaoLogin usuario "-" = do
-    putStrLn "Nome do livro a ser excluido: "
-    nomeLivro <- getLine
-    deletaLivro nomeLivro
     exibeMenuLogado usuario
     
 selecionaAcaoLogin usuario "B" = do
@@ -119,8 +112,8 @@ selecionaAcaoLogin usuario "R" = do
         Nothing -> putStrLn "Falha no JSON"
     
 
-selecionaAcaoLogin usuario "M" = do
-    submenuEstante usuario
+--selecionaAcaoLogin usuario "M" = do
+--    submenuEstante usuario
 
 tentaResenhar :: Usuario -> Maybe Leitura -> String -> IO()
 tentaResenhar usuario maybeLeitura resenha = 
@@ -247,7 +240,7 @@ exibeDashAdm adm = do
     putStrLn $ "|     Dashboard de Administrador     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
 
-    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [+] Cadastrar novo adm\n [S] Sair"
+    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [+] Cadastrar novo adm\n [-] Excluir livro\n [S] Sair"
 
     escolha <- getLine
     escolhaAdm adm escolha
@@ -278,8 +271,12 @@ escolhaAdm adm "+" = do
 escolhaAdm adm "S" = do
     putStrLn "Até a próxima!"
 
+escolhaAdm adm "-" = do
+    putStrLn "Nome do livro a ser excluido: "
+    nomeLivro <- getLine
+    deletaLivro nomeLivro
+    exibeDashAdm adm
+
 escolhaAdm adm "" = do
      putStrLn "Opção Inválida"
      exibeDashAdm adm
-
-
