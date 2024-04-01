@@ -6,6 +6,102 @@
         "nome": "A Guerra dos Tronos"
     },
     {
+        "autor": "John Bunyan",
+        "genero": "Alegoria",
+        "n_paginas": 270,
+        "nome": "O Peregrino"
+    },
+     {
+        "autor": "Dan Brown",
+        "genero": "Mistério",
+        "n_paginas": 500,
+        "nome": "O Codigo Da Vinci"
+    },
+     {
+        "autor": "John Green",
+        "genero": "Romance",
+        "n_paginas": 300,
+        "nome": "A Culpa é das Estrelas"
+    },
+    {
+        "autor": "Machado de Assis",
+        "genero": "Romance",
+        "n_paginas": 240,
+        "nome": "Dom Casmurro"
+    },
+    {
+        "autor": "Markus Zusak",
+        "genero": "Romance",
+        "n_paginas": 500,
+        "nome": "A menina que roubava livros"
+    },
+    {
+        "autor": "Jane Austen",
+        "genero": "Romance",
+        "n_paginas": 300,
+        "nome": "Orgulho e preconceito"
+    },
+    {
+        "autor": "Patrick Rothfuss",
+        "genero": "Fantasia",
+        "n_paginas": 700,
+        "nome": "O nome do vento"
+    },
+    {
+        "autor": "Machado de Assis",
+        "genero": "Conto",
+        "n_paginas": 40,
+        "nome": "O Alienista"
+    },
+    {
+        "autor": "Rick Riordan",
+        "genero": "Fantasia",
+        "n_paginas": 350,
+        "nome": "O ladrão de raios"
+    },
+    {
+        "autor": "Eduardo Spohr",
+        "genero": "Fantasia",
+        "n_paginas": 600,
+        "nome": "A Batalha do Apocalipse"
+    },
+    {
+        "autor": "Gabriel Garcia Marquez",
+        "genero": "Fcção",
+        "n_paginas": 400,
+        "nome": "Cem Anos de Solidão"
+    },
+    {
+        "autor": "Homero",
+        "genero": "Epopeia",
+        "n_paginas": 300,
+        "nome": "A Odisséia"
+    },
+     {
+        "autor": "George Orwell",
+        "genero": "Ficção",
+        "n_paginas": 300,
+        "nome": "1984"
+    },
+     {
+        "autor": "Aluisio Azevedo",
+        "genero": "Romance",
+        "n_paginas": 250,
+        "nome": "O Cortico"
+    },
+    {
+        "autor": "Victor Hugo",
+        "genero": "Romance",
+        "n_paginas": 1200,
+        "nome": "Os Miseráveis"
+    },
+    {
+        "autor": "Carlos Ruiz Zafon",
+        "genero": "Mistério",
+        "n_paginas": 500,
+        "nome": "O Jogo do Anjo"
+    },
+    {
         "autor": "Tolkien",
         "genero": "Aventura",
         "n_paginas": 800,
@@ -24,10 +120,40 @@
         "nome": "The Way of Kings"
     },
     {
+        "autor": "Paula Hawkins",
+        "genero": "Suspense",
+        "n_paginas": 350,
+        "nome": "A garota no trem"
+    },
+    {
         "autor": "R.F. Kuang",
         "genero": "Ficção",
         "n_paginas": 500,
         "nome": "Babel"
+    },
+    {
+        "autor": "Dante Alighieri",
+        "genero": "Poesia",
+        "n_paginas": 500,
+        "nome": "Divina Comédia"
+    },
+    {
+        "autor": "Fiodor Dostoieviski",
+        "genero": "Romance",
+        "n_paginas": 500,
+        "nome": "Crime e Castigo"
+    },
+    {
+        "autor": "Hermn Melville",
+        "genero": "Romance",
+        "n_paginas": 600,
+        "nome": "Moby Dick"
+    },
+    {
+        "autor": "Miguel de Cervantes",
+        "genero": "Romance",
+        "n_paginas": 900,
+        "nome": "Dom Quixote"
     },
     {
         "autor": "Frank Herbert",
