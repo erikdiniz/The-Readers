@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Controller.Estante where
 
@@ -9,14 +8,13 @@ import GHC.Generics
 import Data.Aeson
 import qualified Data.ByteString.Lazy as BL
 import Data.Maybe
-import Control.Monad (when)
 import Control.Exception (catch)
 import Data.Aeson.Encode.Pretty (encodePretty)
 import Controller.Livro
+import Controller.Usuario
 
 -- Definição do tipo de dados Estante
 data Estante = Estante {
-    idusuario :: String,
     lidos :: [Livro],
     lendo :: [Livro],
     pretendo_ler :: [Livro],
@@ -27,19 +25,22 @@ data Estante = Estante {
 instance ToJSON Estante
 instance FromJSON Estante
 
--- Caminho para o arquivo JSON da estante
-estanteFile :: FilePath
-estanteFile = "Data/estante.json"
+-- Tipo de dados para armazenar as estantes de todos os usuários
+type Estantes = [(String, Estante)]  -- (idUsuario, Estante)
 
--- Função para carregar a estante a partir do arquivo JSON
-getEstante :: IO (Maybe Estante)
-getEstante = do
-    result <- tryReadFile estanteFile
+-- Caminho para o arquivo JSON das estantes
+estantesFile :: FilePath
+estantesFile = "Data/estantes.json"
+
+-- Função para carregar as estantes de todos os usuários do arquivo JSON
+getEstantes :: IO Estantes
+getEstantes = do
+    result <- tryReadFile estantesFile
     case result of
-        Right bytes -> return (decode bytes)
+        Right bytes -> return (fromMaybe [] (decode bytes))
         Left err -> do
-            putStrLn $ "Erro ao ler o arquivo de estante: " ++ show err
-            return Nothing
+            putStrLn $ "Erro ao ler o arquivo de estantes: " ++ show err
+            return []
     where
         tryReadFile :: FilePath -> IO (Either IOError BL.ByteString)
         tryReadFile path = catch (Right <$> BL.readFile path) handleFileError
@@ -47,44 +48,21 @@ getEstante = do
         handleFileError :: IOError -> IO (Either IOError BL.ByteString)
         handleFileError err = return (Left err)
 
--- Função para salvar a estante no arquivo JSON
-salvarEstante :: Estante -> IO ()
-salvarEstante estante = BL.writeFile estanteFile (encodePretty estante)
+-- Função para salvar as estantes de todos os usuários no arquivo JSON
+salvarEstantes :: Estantes -> IO ()
+salvarEstantes estantes = BL.writeFile estantesFile (encodePretty estantes)
 
--- Função para adicionar um livro à estante
-adicionaLivro :: String -> String -> Estante -> IO ()
-adicionaLivro nomeLivro tipoEstante estante = do
+-- Função para adicionar um livro à estante de um usuário
+adicionaLivro :: String -> String -> String -> Estantes -> IO ()
+adicionaLivro nomeLivro tipoEstante idUsuario estantes = do
     maybeLivros <- getListaLivros
     let livro = maybe (error "Livro não encontrado.") id $ getLivro nomeLivro $ fromJust maybeLivros
-
-    -- Verifica se o livro já está na estante
-    let livroJaCadastrado = any (\livro' -> nome livro' == nomeLivro) (getCampoEstante tipoEstante estante)
-
-    when (not livroJaCadastrado) $ do
-        -- Adiciona o livro ao campo apropriado
-        let estanteAtualizada = updateCampoEstante tipoEstante livro estante
-        salvarEstante estanteAtualizada
-        putStrLn $ "Livro adicionado à estante de " ++ tipoEstante ++ "."
-
-    -- Mensagem de erro se o livro já estiver cadastrado
-    when livroJaCadastrado $
-        putStrLn "Este livro já está na sua estante."
-
--- Função para obter o campo apropriado da estante com base no tipo
-getCampoEstante :: String -> Estante -> [Livro]
-getCampoEstante "lidos" estante = lidos estante
-getCampoEstante "lendo" estante = lendo estante
-getCampoEstante "pretendo ler" estante = pretendo_ler estante
-getCampoEstante "abandonados" estante = abandonados estante
-getCampoEstante _ _ = error "Tipo de estante inválido."
-
-getEstanteUnsafe :: Estante
-getEstanteUnsafe = unsafePerformIO $ do
-    arquivo <- BL.readFile "Data/estante.json"
-    let maybeJson = decode arquivo :: Maybe Estante
-    case maybeJson of
-        Nothing -> error "Failed to decode estante.json"
-        Just estante -> return estante
+    case lookup idUsuario estantes of
+        Just estante -> do
+            let estanteAtualizada = updateCampoEstante tipoEstante livro estante
+            salvarEstantes $ atualizarEstantes idUsuario estanteAtualizada estantes
+            putStrLn $ "Livro adicionado à estante de " ++ tipoEstante ++ " do usuário " ++ idUsuario ++ "."
+        Nothing -> putStrLn "Usuário não encontrado."
 
 -- Função para atualizar um campo da estante com um novo livro
 updateCampoEstante :: String -> Livro -> Estante -> Estante
@@ -92,4 +70,16 @@ updateCampoEstante "lidos" livro estante = estante { lidos = livro : lidos estan
 updateCampoEstante "lendo" livro estante = estante { lendo = livro : lendo estante }
 updateCampoEstante "pretendo ler" livro estante = estante { pretendo_ler = livro : pretendo_ler estante }
 updateCampoEstante "abandonados" livro estante = estante { abandonados = livro : abandonados estante }
+updateCampoEstante _ _ _ = error "Tipo de estante inválido."
+
+-- Função para atualizar as estantes com a estante de um usuário
+atualizarEstantes :: String -> Estante -> Estantes -> Estantes
+atualizarEstantes idUsuario estante [] = [(idUsuario, estante)]
+atualizarEstantes idUsuario estante ((id, est):resto)
+    | id == idUsuario = (id, estante) : resto
+    | otherwise = (id, est) : atualizarEstantes idUsuario estante resto
+
+-- Função para obter a estante de um usuário pelo ID
+getEstanteUsuario :: String -> Estantes -> Maybe Estante
+getEstanteUsuario userId estantes = lookup userId estantes
 updateCampoEstante _ _ _ = error "Tipo de estante inválido."
