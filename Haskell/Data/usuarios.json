@@ -8,6 +8,12 @@
         "senha": "1212"
     },
     {
+        "idUsuario": "Anny",
+        "seguidores": [],
+        "seguindo": [],
+        "senha": "0123"
+    },
+    {
         "idUsuario": "maisumteste",
         "seguidores": [
             "moab"
