@@ -6,7 +6,7 @@ menuLogado(Usuario):-
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao, Usuario).
 
-seguirUsuario(Usuario):-.
+%seguirUsuario(Usuario):-.
 
 imprimeOpcoes(Opcao):-
     writeln("[U] Seguir Usuário"),

@@ -3,13 +3,13 @@
 
 % Regra genérica para ler um arquivo json e retornar ele em Lista
 lerJSON(Path, Lista):-
-    open(Path, read, Stream),
+    open(Path, read, Stream, [encoding(utf8)]),
     json_read_dict(Stream, Lista),
     close(Stream).
 
 % Regra genérica para escrever Objetos em um json
 escreveJSON(Path, Objetos):-
-    open(Path, write, Stream),
+    open(Path, write, Stream, [encoding(utf8)]),
     json_write(Stream, Objetos),
     close(Stream).
 
