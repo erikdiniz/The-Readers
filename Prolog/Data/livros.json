@@ -1,0 +1,50 @@
+[
+  {
+    "autor":"George R R Martin",
+    "genero":"Fantasia",
+    "n_paginas":800,
+    "nome":"As Crônicas de Gelo e Fogo - A Dança dos Dragões"
+  },
+  {
+    "autor":"George R R Martin",
+    "genero":"Fantasia",
+    "n_paginas":1000,
+    "nome":"As Crônicas de Gelo e Fogo - O Festim dos Corvos"
+  },
+  {
+    "autor":"George R R Martin",
+    "genero":"Fantasia",
+    "n_paginas":700,
+    "nome":"As Crônicas de Gelo e Fogo - A Tormenta das Espadas"
+  },
+  {
+    "autor":"George R R Martin",
+    "genero":"Fantasia",
+    "n_paginas":700,
+    "nome":"As Crônicas de Gelo e Fogo -  A Fúria dos Reis"
+  },
+  {
+    "autor":"George R R Martin",
+    "genero":"Fantasia ",
+    "n_paginas":680,
+    "nome":"As Crônicas de Gelo e Fogo - Guerra dos Tronos"
+  },
+  {
+    "autor":"Frank Herbert",
+    "genero":"Ficção",
+    "n_paginas":680,
+    "nome":"Duna"
+  },
+  {
+    "autor":"J R R Tolkien",
+    "genero":"Aventura",
+    "n_paginas":700,
+    "nome":"O Hobbit"
+  },
+  {
+    "autor":"J R R Tolkien",
+    "genero":"Aventura",
+    "n_paginas":700,
+    "nome":"Senhor dos Aneis"
+  }
+]
