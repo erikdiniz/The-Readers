@@ -1,4 +1,9 @@
 [
-  {"nome":"bibi", "seguidores": [], "seguindo": [], "senha":"123"},
-  {"nome":"moab", "seguidores": [], "seguindo": [], "senha":"a"}
+  {
+    "nome":"bibi",
+    "seguidores": ["moab" ],
+    "seguindo": [],
+    "senha":"123"
+  },
+  {"nome":"moab", "seguidores": [], "seguindo": ["bibi" ], "senha":"a"}
 ]
