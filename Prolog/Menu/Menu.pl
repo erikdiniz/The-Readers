@@ -10,22 +10,37 @@ menu:-
 
 imprimeOpcoes(Opcao):-
     writeln("[C] Cadastro de Usuario"),
-    read(Opcao).
+    writeln("[L] Login de Usuario"),
+    writeln("[S] Sair"),
+    read_line_to_string(user_input,Opcao).
 
-selecionaAcao('C'):- cadastraUsuario, menu, !.
-selecionaAcao(_):- writeln("Ação inválida"), menu, !.
+selecionaAcao(Opcao):- (Opcao == "C" -> cadastraUsuario, menu, !;
+                        Opcao == "L" -> loginUsuario,!;
+                        Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), halt;
+                        writeln("Ação inválida"), menu, !).
 
+loginUsuario:-
+    writeln("Nome de login: "),
+    read_line_to_string(user_input,Nome),
+    recuperaUsuario(Nome, Usuario),
+    (Usuario == [] -> nl, writeln("Login Inválido"), nl, menu; verificaSenha(Usuario)).
+
+%colocar chamada pra menu logado
+verificaSenha(Usuario):-
+    writeln("Insira sua senha: "),
+    read_line_to_string(user_input,Senha),
+    (Senha == Usuario.senha -> nl, writeln("Você está logado"); nl, writeln("Senha inválida"), menu).
+   
 cadastraUsuario:-
     writeln("Nome de login: "),
-    read(Nome),
+    read_line_to_string(user_input,Nome),
     writeln("Insira sua senha: "),
-    read(Senha),
+    read_line_to_string(user_input,Senha),
     criaUsuario(Nome, Senha),
     writeln("Cadastro Realizado!").
 
 procuraUsuario:-
-    read(N),
-    atom_string(N, Nome),
+    read_line_to_string(user_input,Nome),
     recuperaUsuario(Nome, Usuario),
     writeln(Usuario).
 
