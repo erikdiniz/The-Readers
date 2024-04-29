@@ -20,15 +20,17 @@ procuraUsuario(_, [], []):- !.
 procuraUsuario(Nome, [X|__], X):- X.nome == Nome, !.
 procuraUsuario(Nome, [_|XS], Usuario):- procuraUsuario(Nome, XS, Usuario).
 
+
+%Remove um usuario do JSON pelo nome dele
 removeUsuario(Usuario):-
-     lerJSON('../Data/usuarios.json', Usuarios), 
+     lerJSON('../Data/usuarios.json', Usuarios),
      remover_por_nome(Usuarios, Usuario.nome, Att),
      escreveJSON('../Data/usuarios.json', Att).
 
 remover_por_nome(Lista, Nome, Resultado) :-
     exclude(tem_nome(Nome), Lista, Resultado).
 
-tem_nome(Nome, dict(nome:Nome, _)).
+tem_nome(Nome, Usuario):- Nome == Usuario.nome.
 
 % Imprime o nome de todos os usuários
 imprimeUsuarios:-
