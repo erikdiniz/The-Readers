@@ -1,22 +1,29 @@
-:- use_module(librart(http/json)).
+:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1]).
+:- use_module(library(http/json)).
 
-escreveUsuario(IdUsuario, Senha) :-
-    open('Data/usuarios.json', read, json),
-    json_read_dict(json, usuarios_json),
-    converte_json_usuarios(usuarios_json, usuarios),
-    cria_usuario(IdUsuario, [], [], Senha),
+% Cria um novo usuário
+criaUsuario(Nome, Senha):-
+    Usuario = _{nome: Nome, seguidores: [], seguindo: [], senha: Senha},
+    lerJSON('../Data/usuarios.json', Usuarios),
+    append([Usuario], Usuarios, UsuariosAtualizados),
+    escreveJSON('../Data/usuarios.json', UsuariosAtualizados).
 
-converte_json_usuarios([],[]).
-converte_json_usuarios([X, XS],[Usuario, ProximosUsuarios]):-
-    swritef(X, '{
-        "idUsuario":"%w",
-        "seguidores":%w,
-        "seguindo":%w,
-        "senha":"%w""
-    }',
-    [IdUsuario, Seguidores, Seguindo, Senha]),
-    Usuario = [IdUsuario, Seguidores, Seguindo, Senha],
-    converte_json_usuarios(XS, ProximosUsuarios).
+%Retorna o dicionário do usuário a partir de seu Nome
+recuperaUsuario(Nome, Usuario):-
+    atom_string(Nome, StrNome),
+    lerJSON('../Data/usuarios.json', IUsuarios),
+    procuraUsuario(StrNome, IUsuarios, Usuario).
 
-cria_usuario(IdUsuario, Seguidores, Seguindo, Senha):-
-    
+% Procura recursivamente por um usuário a partir do Nome
+procuraUsuario(_, [], []):- !. 
+procuraUsuario(Nome, [X|__], X):- X.nome == Nome, !.
+procuraUsuario(Nome, [_|XS], Usuario):- procuraUsuario(Nome, XS, Usuario).
+
+% Imprime o nome de todos os usuários
+imprimeUsuarios:-
+    lerJSON('../Data/usuarios.json', IUsuarios),
+    imprimeLista(IUsuarios).
+
+% Imprime uma lista com nomes de usuários
+imprimeLista([X|XS]):- writeln(X.nome), imprimeLista(XS).
+imprimeLista([]):- writeln("fim").

@@ -1,1 +1,9 @@
-[ ["moab",  [],  [], 123 ],  ["bibi",  [],  [], 123 ],  ["iorran",  [],  [], 123 ] ]
+[
+  {"nome":"kkk", "seguidores": [], "seguindo": [], "senha":"d"},
+  {"nome":"g", "seguidores": [], "seguindo": [], "senha":"aa"},
+  {"nome":"aaaa", "seguidores": [], "seguindo": [], "senha":"dddd"},
+  {"nome":"xx", "seguidores": [], "seguindo": [], "senha":"zz"},
+  {"nome":"z", "seguidores": [], "seguindo": [], "senha":"x"},
+  {"nome":"moab", "seguidores": [], "seguindo": [], "senha":"a"},
+  {"nome":"a", "seguidores": [], "seguindo": [], "senha":"aa"}
+]
