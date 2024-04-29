@@ -1,10 +1,13 @@
-:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1]).
+:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1, seguir/2]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 
 % Cria um novo usuário
 criaUsuario(Nome, Senha):-
     Usuario = _{nome: Nome, seguidores: [], seguindo: [], senha: Senha},
+    adicionaUsuario(Usuario).
+
+adicionaUsuario(Usuario):-
     lerJSON('../Data/usuarios.json', Usuarios),
     append([Usuario], Usuarios, UsuariosAtualizados),
     escreveJSON('../Data/usuarios.json', UsuariosAtualizados).
@@ -32,11 +35,52 @@ remover_por_nome(Lista, Nome, Resultado) :-
 
 tem_nome(Nome, Usuario):- Nome == Usuario.nome.
 
+seguir(Usuario, UsuarioAtt):-
+    writeln("Usuarios Disponíveis: "),
+    opcoesSeguir(Usuario, Disponiveis),
+    imprimeListaString(Disponiveis),
+    writeln("Digite o nome de usuário: "),
+    read_line_to_string(user_input, Opcao),
+    (member(Opcao, Disponiveis) -> nl, writeln("Usuario seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
+                                   nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
+
+opcoesSeguir(Usuario, Disponiveis):-
+    listaUsuarios(NomesUsuarios),
+    append([Usuario.nome], Usuario.seguindo, NaoDisponiveis),
+    notMember(NomesUsuarios, NaoDisponiveis, [], Disponiveis).
+
+adicionarSeguidor(Usuario, Nome, UsuarioAtt):-
+    recuperaUsuario(Nome, Seguido),
+    append(Usuario.seguindo, [Seguido.nome], SeguindoAtt),
+    put_dict(seguindo, Usuario, SeguindoAtt, UsuarioAtt),
+    append(Seguido.seguidores, [Usuario.nome], SeguidoresAtt),
+    put_dict(seguidores, Seguido, SeguidoresAtt, SeguidoAtt),
+    removeUsuario(Usuario),
+    removeUsuario(Seguido),
+    adicionaUsuario(UsuarioAtt),
+    adicionaUsuario(SeguidoAtt).
+
+
+
 % Imprime o nome de todos os usuários
 imprimeUsuarios:-
     lerJSON('../Data/usuarios.json', IUsuarios),
     imprimeLista(IUsuarios).
 
+
+
 % Imprime uma lista com nomes de usuários
 imprimeLista([X|XS]):- writeln(X.nome), imprimeLista(XS).
 imprimeLista([]):- writeln("fim").
+
+
+
+listaUsuarios(NomesUsuarios):-
+    lerJSON('../Data/usuarios.json', Usuarios),
+    montaNomes(Usuarios, [], NomesUsuarios).
+
+montaNomes([X|XS], Acc, Result):- 
+    append([X.nome], Acc, NewAcc), 
+    montaNomes(XS, NewAcc, Result).
+
+montaNomes([], Result, Result):-!.
