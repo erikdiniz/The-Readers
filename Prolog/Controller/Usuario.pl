@@ -1,5 +1,6 @@
-:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1]).
+:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1]).
 :- use_module(library(http/json)).
+:- use_module(library(lists)).
 
 % Cria um novo usuário
 criaUsuario(Nome, Senha):-
@@ -18,6 +19,16 @@ recuperaUsuario(Nome, Usuario):-
 procuraUsuario(_, [], []):- !. 
 procuraUsuario(Nome, [X|__], X):- X.nome == Nome, !.
 procuraUsuario(Nome, [_|XS], Usuario):- procuraUsuario(Nome, XS, Usuario).
+
+removeUsuario(Usuario):-
+     lerJSON('../Data/usuarios.json', Usuarios), 
+     remover_por_nome(Usuarios, Usuario.nome, Att),
+     escreveJSON('../Data/usuarios.json', Att).
+
+remover_por_nome(Lista, Nome, Resultado) :-
+    exclude(tem_nome(Nome), Lista, Resultado).
+
+tem_nome(Nome, dict(nome:Nome, _)).
 
 % Imprime o nome de todos os usuários
 imprimeUsuarios:-

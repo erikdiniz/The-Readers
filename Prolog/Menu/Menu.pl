@@ -1,6 +1,7 @@
 :- use_module(library(http/json)).
 :- use_module("../Util/util.pl").
 :- use_module("../Controller/Usuario.pl").
+:- use_module("../Menu/MenuLogado.pl").
 
 menu:-
     writeln("Bem vindo"), nl,
@@ -25,11 +26,11 @@ loginUsuario:-
     recuperaUsuario(Nome, Usuario),
     (Usuario == [] -> nl, writeln("Login Inválido"), nl, menu; verificaSenha(Usuario)).
 
-%colocar chamada pra menu logado
+%colocar chamada pra menu
 verificaSenha(Usuario):-
     writeln("Insira sua senha: "),
     read_line_to_string(user_input,Senha),
-    (Senha == Usuario.senha -> nl, writeln("Você está logado"); nl, writeln("Senha inválida"), menu).
+    (Senha == Usuario.senha -> nl, writeln("Você está logado"), menuLogado(Usuario); nl, writeln("Senha inválida"), menu).
    
 cadastraUsuario:-
     writeln("Nome de login: "),
