@@ -1,4 +1,4 @@
-:- module(leitura, [cadastrarLeitura/1]).
+:- module(leitura, [cadastrarLeitura/1, recuperaTitulosLidos/2]).
 :- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module("../Menu/MenuLogado.pl").
@@ -48,8 +48,8 @@ recuperaLeiturasUsuario(Usuario, LeiturasUsuario):-
     recuperaLeiturasUsuario(Usuario.nome, Leituras, [], LeiturasUsuario).
 
 recuperaLeiturasUsuario(Nome, [X|XS], Acc, Resultado):-
-    (X.id_usuario == Nome -> append([X], Acc, NewAcc), recuperaLeituras(Nome, XS, NewAcc, Resultado);
-                             recuperaLeituras(Nome, XS, Acc, Resultado)).
+    (X.id_usuario == Nome -> append([X], Acc, NewAcc), recuperaLeiturasUsuario(Nome, XS, NewAcc, Resultado);
+                             recuperaLeiturasUsuario(Nome, XS, Acc, Resultado)).
 recuperaLeiturasUsuario(_,[],Resultado,Resultado):-!.
 
 % Pega os titulos lidos por um usuário
