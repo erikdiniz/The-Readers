@@ -1,4 +1,4 @@
-:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1, seguir/2]).
+:- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1, seguir/2, listaUsuarios/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 
