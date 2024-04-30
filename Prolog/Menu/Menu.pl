@@ -13,16 +13,14 @@ menu:-
 imprimeOpcoes(Opcao):-
     writeln("[C] Cadastro de Usuario"),
     writeln("[L] Login de Usuario"),
-    writeln("[+] Cadastro de Livro"),
-    writeln("[-] Remover um Livro"),
+    writeln("[D] Dashboard Administrador"),
     writeln("[S] Sair"),
     nl,
     read_line_to_string(user_input,Opcao).
 
 selecionaAcao(Opcao):- (Opcao == "C" -> cadastraUsuario, menu, !;
                         Opcao == "L" -> loginUsuario,!;
-                        Opcao == "+" -> cadastraLivro, menu, !;
-                        Opcao == "-" -> removeLivro, menu, !;
+                        Opcao == "D" -> menuAdm,!;
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
                         writeln("Ação inválida"), menu, !).
 
@@ -55,21 +53,21 @@ procuraUsuario:-
     recuperaUsuario(Nome, Usuario),
     writeln(Usuario).
 
-cadastraLivro:- 
-    writeln("Nome do livro: "),
-    read_line_to_string(user_input, Nome),
-    writeln("Autor: "),
-    read_line_to_string(user_input, Autor),
-    writeln("Número de páginas: "),
-    read_line_to_string(user_input, Paginas_String),
-    atom_number(Paginas_String, N_Paginas),
-    writeln("Gênero: "),
-    read_line_to_string(user_input, Genero),
-    criaLivro(Nome, Autor, N_Paginas, Genero),
-    writeln(""). 
 
-removeLivro:-
-    writeln("Nome do livro a ser excluido: "),
-    read_line_to_string(user_input, Nome),
-    removeLivro(Nome),
-    writeln(""). 
+menuAdm:-
+    writeln("Bem vindo"), nl,
+    writeln("Escolher opção:"),
+    imprimeOpcoesAdm(Opcao),
+    selecionaAcaoAdm(Opcao).
+
+imprimeOpcoesAdm(Opcao):-
+    writeln("[L] Realizar login"),
+    writeln("[V] Voltar ao menu de login"),
+    writeln("[S] Sair"),
+    nl,
+    read_line_to_string(user_input,Opcao).
+
+selecionaAcaoAdm(Opcao):- (Opcao == "L" -> menu, !;
+                        Opcao == "V" -> menu, !;
+                        Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
+                        writeln("Ação inválida"), menu, !).
