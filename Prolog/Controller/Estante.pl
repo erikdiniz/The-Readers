@@ -9,7 +9,7 @@ menuEstante(Usuario):-
     selecionaAcao(Opcao, Usuario).
 
 imprimeOpcoes(Opcao):-
-    nl,
+    tty_clear,
     writeln("Estantes"),
     nl,
     writeln("[L] Livros lidos"),
@@ -17,11 +17,12 @@ imprimeOpcoes(Opcao):-
     read_line_to_string(user_input, Opcao). 
 
 selecionaAcao(Opcao, Usuario):- (
-                        Opcao == "V" -> menuLogado(Usuario);
+                        Opcao == "V" -> tty_clear, menuLogado(Usuario);
                         Opcao == "L" -> imprimeLidos(Usuario);
                         writeln("Ação inválida"), menuEstante(Usuario), !).
 
 imprimeLidos(Usuario):-
+    tty_clear,
     writeln("Leituras do usuário:"),
     nl,
     recuperaTitulosLidos(Usuario, Titulos),
@@ -29,4 +30,5 @@ imprimeLidos(Usuario):-
     nl,
     writeln("[V] Voltar"),
     read_line_to_string(user_input, _),
+    tty_clear,
     menuLogado(Usuario).

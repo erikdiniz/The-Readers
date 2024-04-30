@@ -42,7 +42,7 @@ seguir(Usuario, UsuarioAtt):-
     writeln("Digite o nome de usuário: "),
     read_line_to_string(user_input, Opcao),
     (member(Opcao, Disponiveis) -> nl, writeln("Usuario seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
-                                   nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
+                                   tty_clear,nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
 
 opcoesSeguir(Usuario, Disponiveis):-
     listaUsuarios(NomesUsuarios),

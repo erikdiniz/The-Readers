@@ -9,7 +9,7 @@ menuLogado(Usuario):-
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao, Usuario).
 
-seguirUsuario(Usuario):- seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
+seguirUsuario(Usuario):- tty_clear, seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
 
 imprimeOpcoes(Opcao):-
     nl,
