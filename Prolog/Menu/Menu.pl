@@ -16,6 +16,7 @@ imprimeOpcoes(Opcao):-
     writeln("[+] Cadastro de Livro"),
     writeln("[-] Remover um Livro"),
     writeln("[S] Sair"),
+    nl,
     read_line_to_string(user_input,Opcao).
 
 selecionaAcao(Opcao):- (Opcao == "C" -> cadastraUsuario, menu, !;

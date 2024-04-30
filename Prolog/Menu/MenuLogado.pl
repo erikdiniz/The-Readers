@@ -11,8 +11,8 @@ seguirUsuario(Usuario):- seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
 
 imprimeOpcoes(Opcao):-
     writeln("[U] Seguir Usuário"),
-    writeln("[S] Sair"),
     writeln("[L] Cadastrar Leitura"),
+    writeln("[S] Sair"),
     read_line_to_string(user_input, Opcao).    
 
 selecionaAcao(Opcao, Usuario):- (
