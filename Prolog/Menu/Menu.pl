@@ -23,7 +23,7 @@ selecionaAcao(Opcao):- (Opcao == "C" -> cadastraUsuario, menu, !;
                         Opcao == "L" -> loginUsuario,!;
                         Opcao == "+" -> cadastraLivro, menu, !;
                         Opcao == "-" -> removeLivro, menu, !;
-                        Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), halt;
+                        Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
                         writeln("Ação inválida"), menu, !).
 
 loginUsuario:-
@@ -41,10 +41,14 @@ verificaSenha(Usuario):-
 cadastraUsuario:-
     writeln("Nome de login: "),
     read_line_to_string(user_input,Nome),
-    writeln("Insira sua senha: "),
-    read_line_to_string(user_input,Senha),
-    criaUsuario(Nome, Senha),
-    writeln("Cadastro Realizado!").
+    listaUsuarios(NomesUtilizados),
+    (member(Nome, NomesUtilizados) -> nl ,writeln("Esse nome de usuário já está sendo utilizado"),nl, menu;
+                                    writeln("Insira sua senha: "),
+                                    read_line_to_string(user_input,Senha),
+                                    criaUsuario(Nome, Senha),
+                                    writeln("Cadastro Realizado!")
+                                    ).
+    
 
 procuraUsuario:-
     read_line_to_string(user_input,Nome),
