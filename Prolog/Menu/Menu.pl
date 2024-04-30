@@ -1,6 +1,7 @@
 :- use_module(library(http/json)).
 :- use_module("../Util/util.pl").
 :- use_module("../Controller/Usuario.pl").
+:- use_module("../Controller/Admin.pl").
 :- use_module("../Controller/Livro.pl").
 :- use_module("../Menu/MenuLogado.pl").
 
@@ -67,7 +68,56 @@ imprimeOpcoesAdm(Opcao):-
     nl,
     read_line_to_string(user_input,Opcao).
 
-selecionaAcaoAdm(Opcao):- (Opcao == "L" -> menu, !;
+selecionaAcaoAdm(Opcao):- (Opcao == "L" -> loginAdm,!;
                         Opcao == "V" -> menu, !;
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
                         writeln("Ação inválida"), menu, !).
+
+loginAdm:-
+    writeln("Insira seu ID: "),
+    read_line_to_string(user_input,Id),
+    recuperaAdm(Id, Admin),
+    (Admin == [] -> nl, writeln("Login Inválido"), nl, menuAdm; verificaSenhaAdm(Admin)).
+
+%colocar chamada pra menu
+verificaSenhaAdm(Admin):-
+    writeln("Insira sua senha: "),
+    read_line_to_string(user_input,Senha),
+    (Senha == Admin.senha -> nl, writeln("Você está logado"), menuLogadoAdm(Admin); nl, writeln("Senha inválida"), menuAdm).
+
+menuLogadoAdm(Admin):-
+    writeln("Dashboard de Administrador"), nl,
+    writeln("Escolher opção:"),
+    dashAdm(Opcao, Admin),
+    selecionaAdm(Opcao).
+
+dashAdm(Opcao, Admin):-
+    writeln("[1] Cadastro novo Adm"),
+    writeln("[2] Estatísticas Gerais"),
+    writeln("[3] Lista de usuários cadastrados"),
+    writeln("[-] Excluir livro"),
+    writeln("[S] Sair"),
+    nl,
+    read_line_to_string(user_input,Opcao).
+
+selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
+                        Opcao == "2" -> menuLogadoAdm(Admin),!;
+                        Opcao == "3" -> imprimeUsuarios, menuLogadoAdm(Admin),!;
+                        Opcao == "-" -> removeLivro, menuLogadoAdm(Admin), !;
+                        Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
+                        writeln("Ação inválida"), menu, !).
+
+
+cadastraAdm:-
+    writeln("Novo Id Administrador: "),
+    read_line_to_string(user_input,Id),
+    writeln("Senha: "),
+    read_line_to_string(user_input,Senha),
+    cadastraAdmin(Id, Senha),
+    writeln("Novo adm cadastrado com sucesso!").
+
+removeLivro:-
+    writeln("Nome do livro a ser excluido: "),
+    read_line_to_string(user_input, Nome),
+    removeLivro(Nome),
+    writeln("").

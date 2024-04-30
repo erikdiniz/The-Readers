@@ -19,7 +19,6 @@ imprimeOpcoes(Opcao):-
     writeln("[U] Seguir Usuário"),
     writeln("[M] Minhas Estantes"),
     writeln("[+] Cadastro de Livro"),
-    writeln("[-] Remover um Livro"),
     writeln("[L] Cadastrar Leitura"),
     writeln("[S] Sair"),
     read_line_to_string(user_input, Opcao).    
@@ -29,7 +28,6 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "U" -> seguirUsuario(Usuario);
                         Opcao == "L" -> cadastrarLeitura(Usuario);
                         Opcao == "+" -> cadastraLivro, menu, !;
-                        Opcao == "-" -> removeLivro, menu, !;
                         Opcao == "M" -> menuEstante(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
                         writeln("Ação inválida"), menu, !).
@@ -46,12 +44,6 @@ cadastraLivro:-
     writeln("Gênero: "),
     read_line_to_string(user_input, Genero),
     criaLivro(Nome, Autor, N_Paginas, Genero),
-    writeln("").
-
-removeLivro:-
-    writeln("Nome do livro a ser excluido: "),
-    read_line_to_string(user_input, Nome),
-    removeLivro(Nome),
     writeln("").
 
 
