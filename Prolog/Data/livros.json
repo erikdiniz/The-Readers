@@ -1,5 +1,11 @@
 [
   {
+    "autor":"Brandon Sanderson",
+    "genero":"Fantasia",
+    "n_paginas":1064,
+    "nome":"The Way of Kings"
+  },
+  {
     "autor":"Haruki Murakami",
     "genero":"Ficção",
     "n_paginas":500,

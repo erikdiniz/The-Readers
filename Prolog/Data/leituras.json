@@ -1,0 +1,20 @@
+[
+  {
+    "autor_lido":"Frank Herbert",
+    "data":"15/15/2121",
+    "genero_lido":"Ficção",
+    "id_usuario":"moab",
+    "nota":4,
+    "num_paginas":680,
+    "titulo_lido":"Duna"
+  },
+  {
+    "autor_lido":"J R R Tolkien",
+    "data":"14/15/1655",
+    "genero_lido":"Aventura",
+    "id_usuario":"moab",
+    "nota":5,
+    "num_paginas":700,
+    "titulo_lido":"O Hobbit"
+  }
+]
