@@ -75,9 +75,12 @@ visaoGeralUser(Usuario):-
     totalPaginas(Leituras, TotalPaginas),
     generoMaisLido(Leituras, Genero),
     autorMaisLido(Leituras, Autor),
-    melhorAvaliado(Leituras, MelhorAvaliado),
+    melhorAvaliado(Leituras, MelhorAvaliado), nl,
+    writeln("--------------------------------------"),
+    writeln("|        Estatisticas                |"),
+    writeln("--------------------------------------"), nl
     format("Total de livros lidos: ~w", [TotalLeituras]), nl,
     format("Total de páginas lidas: ~w", [TotalPaginas]), nl,
-    format("Genero mais lido ~w", [Genero]), nl,
+    format("Genero mais lido: ~w", [Genero]), nl,
     format("Autor mais lido: ~w", [Autor]), nl,
-    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]).
+    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl.
