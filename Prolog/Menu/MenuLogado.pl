@@ -28,7 +28,7 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), halt;
                         Opcao == "U" -> seguirUsuario(Usuario);
                         Opcao == "L" -> cadastrarLeitura(Usuario);
-                        Opcao == "+" -> cadastraLivro, menu, !;
+                        Opcao == "+" -> cadastraLivro, menuLogado(Usuario), !;
                         Opcao == "M" -> menuEstante(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
                         writeln("Ação inválida"), menu, !).
@@ -69,7 +69,7 @@ selecionaAcaoPerfil(Opcao, Usuario):- (
                                     writeln("--------------------------------------"),
                                     writeln("|        MEU PERFIL THE READER        |"),
                                     writeln("--------------------------------------"),
-                                    visaoGeral(Usuario.nome);
+                                    visaoGeral(Usuario.nome), menuLogado(Usuario), !;
                         Opcao == "E" -> editaPerfil(Usuario, Usuario.nome);
                         Opcao == "O" -> stalkear(Usuario);
                         Opcao == "M" -> menuEstante(Usuario);

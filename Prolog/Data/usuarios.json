@@ -1,15 +1,20 @@
 [
-  {"nome":"teste", "seguidores": [], "seguindo": [], "senha":"000"},
+  {
+    "nome":"teste",
+    "seguidores": ["bibi" ],
+    "seguindo": [],
+    "senha":"000"
+  },
+  {
+    "nome":"bibi",
+    "seguidores": ["moab" ],
+    "seguindo": ["moab", "teste" ],
+    "senha":"123"
+  },
   {
     "nome":"moab",
     "seguidores": ["bibi" ],
     "seguindo": ["bibi" ],
     "senha":"a"
-  },
-  {
-    "nome":"bibi",
-    "seguidores": ["moab" ],
-    "seguindo": ["moab" ],
-    "senha":"123"
   }
 ]

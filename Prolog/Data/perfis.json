@@ -1,4 +1,10 @@
 [
+  {
+    "biografia":"grande fa de moab",
+    "id":"bibi",
+    "nomePerfil":"bibizinha"
+  },
+  {"biografia":"eu amo ler!", "id":"bibi", "nomePerfil":"bibi"},
   {"biografia":"n", "id":"bibi", "nomePerfil":"bio"},
   {"biografia":"amo ler!", "id":"bibi", "nomePerfil":"bibi"},
   {

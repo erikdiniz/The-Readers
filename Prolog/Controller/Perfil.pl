@@ -17,17 +17,17 @@ salvarPerfil(Perfil):-
 
 visaoGeral(NomeUsuario):-
     recuperaPerfil(NomeUsuario, Perfil),
-    writeln("MEU NOME: " ++ Perfil.nomePerfil),
-    writeln(),
-    writeln("SOBRE MIM... " ++ Perfil.biografia),
-    writeln().
+    writeln("MEU NOME... "),
+    writeln(Perfil.nomePerfil),
+    writeln("SOBRE MIM... "),
+    writeln(Perfil.biografia).
 
 visaoStalker(PerfilVisitado):-
     recuperaPerfil(PerfilVisitado, Perfil),
-    writeln("NOME: " ++ Perfil.nomePerfil),
-    writeln(),
-    writeln("SOBRE... " ++ Perfil.biografia),
-    writeln().
+    writeln("NOME: "),
+    writeln(Perfil.nomePerfil),
+    writeln("SOBRE: "),
+    writeln(Perfil.biografia).
 
 % Recupera perfil pelo id
 recuperaPerfil(Id, Perfil):-
