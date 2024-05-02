@@ -1,6 +1,15 @@
 [
   {
     "autor_lido":"Frank Herbert",
+    "data":"02/05/2024",
+    "genero_lido":"Ficção",
+    "id_usuario":"bibi",
+    "nota":4,
+    "num_paginas":680,
+    "titulo_lido":"Duna"
+  },
+  {
+    "autor_lido":"Frank Herbert",
     "data":"15/15/2121",
     "genero_lido":"Ficção",
     "id_usuario":"moab",

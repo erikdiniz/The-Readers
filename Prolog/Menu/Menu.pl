@@ -86,7 +86,11 @@ verificaSenhaAdm(Admin):-
     (Senha == Admin.senha -> nl, writeln("Você está logado"), menuLogadoAdm(Admin); nl, writeln("Senha inválida"), menuAdm).
 
 menuLogadoAdm(Admin):-
-    writeln("Dashboard de Administrador"), nl,
+    nl,
+    writeln("--------------------------------------"),
+    writeln("|     Dashboard de Administrador     |"),
+    writeln("--------------------------------------"),
+    nl,
     writeln("Escolher opção:"),
     dashAdm(Opcao, Admin),
     selecionaAdm(Opcao).
@@ -95,6 +99,7 @@ dashAdm(Opcao, Admin):-
     writeln("[1] Cadastro novo Adm"),
     writeln("[2] Estatísticas Gerais"),
     writeln("[3] Lista de usuários cadastrados"),
+    writeln("[4] Lista de livros cadastrados"),
     writeln("[-] Excluir livro"),
     writeln("[S] Sair"),
     nl,
@@ -104,9 +109,13 @@ selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
                         Opcao == "2" -> menuLogadoAdm(Admin),!;
                         Opcao == "3" -> imprimeUsuarios, menuLogadoAdm(Admin),!;
                         Opcao == "-" -> removeLivro, menuLogadoAdm(Admin), !;
+                        Opcao == "4" -> listalivros(Admin, Titulos), menuLogadoAdm(Admin),!;
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), nl, halt;
                         writeln("Ação inválida"), menu, !).
 
+listalivros(Admin, Titulos):-
+    writeln("Livros disponíveis: "),
+    lista_livros(Titulos).
 
 cadastraAdm:-
     writeln("Novo Id Administrador: "),

@@ -36,12 +36,12 @@ remover_por_nome(Lista, Nome, Resultado) :-
 tem_nome(Nome, Usuario):- Nome == Usuario.nome.
 
 seguir(Usuario, UsuarioAtt):-
-    writeln("Usuarios Disponíveis: "),
+    writeln("Usuários Disponíveis: "),
     opcoesSeguir(Usuario, Disponiveis),
     imprimeListaString(Disponiveis),
     writeln("Digite o nome de usuário: "),
     read_line_to_string(user_input, Opcao),
-    (member(Opcao, Disponiveis) -> nl, writeln("Usuario seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
+    (member(Opcao, Disponiveis) -> nl, writeln("Usuário seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
                                    tty_clear,nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
 
 opcoesSeguir(Usuario, Disponiveis):-
@@ -70,7 +70,7 @@ imprimeUsuarios:-
 
 % Imprime uma lista com nomes de usuários
 imprimeLista([X|XS]):- writeln(X.nome), imprimeLista(XS).
-imprimeLista([]):- writeln("fim").
+imprimeLista([]):- writeln("- fim.").
 
 
 listaUsuarios(NomesUsuarios):-

@@ -1,4 +1,4 @@
-:- module(menulogado, [menuLogado/1, menuPerfil/1]).
+:- module(menulogado, [menuLogado/1, menuPerfil/1, stalkear/1, editaPerfil/2 ]).
 :- use_module("../Controller/Usuario.pl").
 :- use_module("../Controller/Leitura.pl").
 :- use_module("../Controller/Estante.pl").
@@ -6,7 +6,9 @@
 
 menuLogado(Usuario):-
     nl,
-    writeln("Bem vindo ao The Readers"),
+    writeln("--------------------------------------"),
+    writeln("|       Bem vindo ao The Readers     |"),
+    writeln("--------------------------------------"),
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao, Usuario).
 
@@ -63,7 +65,11 @@ imprimeOpcoesPerfil(Opcao):-
 
 selecionaAcaoPerfil(Opcao, Usuario):- (
                         Opcao == "S" -> menuLogado(Usuario);
-                        Opcao == "V" -> visaoGeral(Usuario.nome);
+                        Opcao == "V" -> nl,
+                                    writeln("--------------------------------------"),
+                                    writeln("|        MEU PERFIL THE READER        |"),
+                                    writeln("--------------------------------------"),
+                                    visaoGeral(Usuario.nome);
                         Opcao == "E" -> editaPerfil(Usuario, Usuario.nome);
                         Opcao == "O" -> stalkear(Usuario);
                         Opcao == "M" -> menuEstante(Usuario);
@@ -78,8 +84,12 @@ editaPerfil(Usuario, NomeUsuario):- (
     criaPerfil(NomePerfil, Biografia, NomeUsuario),
     writeln("Perfil salvo com sucesso!"), menuPerfil(Usuario), !).
 
+
 stalkear(Usuario):- (
     nl,
     writeln("Insira o ID do perfil à ser visitado: "),
     read_line_to_string(user_input, PerfilVisitado),
+    writeln("--------------------------------------"),
+    writeln("|        CONHEÇA ESSE READER :)      |"),
+    writeln("--------------------------------------"),
     visaoStalker(PerfilVisitado), menuPerfil(Usuario), !).

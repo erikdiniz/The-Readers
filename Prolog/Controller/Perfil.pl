@@ -16,30 +16,18 @@ salvarPerfil(Perfil):-
     escreveJSON('../Data/perfis.json', PerfisAtualizados).
 
 visaoGeral(NomeUsuario):-
-    cabecalhoPerfil,
     recuperaPerfil(NomeUsuario, Perfil),
     writeln("MEU NOME: " ++ Perfil.nomePerfil),
     writeln(),
     writeln("SOBRE MIM... " ++ Perfil.biografia),
     writeln().
 
-cabecalhoPerfil:-
-    writeln("--------------------------------------"),
-    writeln("|        MEU PERFIL THE READER        |"),
-    writeln("--------------------------------------").
-
 visaoStalker(PerfilVisitado):-
-    cabecalhoPerfilStalker,
     recuperaPerfil(PerfilVisitado, Perfil),
     writeln("NOME: " ++ Perfil.nomePerfil),
     writeln(),
     writeln("SOBRE... " ++ Perfil.biografia),
     writeln().
-
-cabecalhoPerfilStalker:-
-    writeln("--------------------------------------"),
-    writeln("|        CONHEÇA ESSE READER :)      |"),
-    writeln("--------------------------------------").
 
 % Recupera perfil pelo id
 recuperaPerfil(Id, Perfil):-

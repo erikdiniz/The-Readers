@@ -1,4 +1,6 @@
 [
+  {"biografia":"n", "id":"bibi", "nomePerfil":"bio"},
+  {"biografia":"amo ler!", "id":"bibi", "nomePerfil":"bibi"},
   {
     "biografia":"Lindo e com QI acima da media!",
     "id":"moab",
