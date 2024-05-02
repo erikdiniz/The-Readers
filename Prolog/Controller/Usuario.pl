@@ -68,11 +68,9 @@ imprimeUsuarios:-
     imprimeLista(IUsuarios).
 
 
-
 % Imprime uma lista com nomes de usuários
 imprimeLista([X|XS]):- writeln(X.nome), imprimeLista(XS).
 imprimeLista([]):- writeln("fim").
-
 
 
 listaUsuarios(NomesUsuarios):-
