@@ -3,6 +3,7 @@
 :- use_module("../Controller/Leitura.pl").
 :- use_module("../Controller/Estante.pl").
 :- use_module("../Controller/Perfil.pl").
+:- use_module("../Controller/Estatisticas.pl").
 
 menuLogado(Usuario):-
     nl,
@@ -21,6 +22,7 @@ imprimeOpcoes(Opcao):-
     writeln("[M] Minhas Estantes"),
     writeln("[+] Cadastro de Livro"),
     writeln("[L] Cadastrar Leitura"),
+    writeln("[E] Estatisticas"),
     writeln("[S] Sair"),
     read_line_to_string(user_input, Opcao).
 
@@ -30,6 +32,7 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "L" -> cadastrarLeitura(Usuario);
                         Opcao == "+" -> cadastraLivro, menuLogado(Usuario), !;
                         Opcao == "M" -> menuEstante(Usuario);
+                        Opcao == "E" -> menuEstatisticas(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
                         writeln("Ação inválida"), menu, !).
 
