@@ -1,4 +1,4 @@
-:- module(leitura, [cadastrarLeitura/1, recuperaTitulosLidos/2]).
+:- module(leitura, [cadastrarLeitura/1, recuperaTitulosLidos/2, recuperaGenerosLidos/2, recuperaLeiturasUsuario/2, recuperaAutoresLidos/2]).
 :- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module("../Menu/MenuLogado.pl").
@@ -65,3 +65,25 @@ pegaTitulos([X|XS], Acc, Resultado):-
     pegaTitulos(XS, NewAcc, Resultado).
 pegaTitulos([], Resultado, Resultado):-!.
 
+% Pega os gêneros lidos por um usuário
+recuperaGenerosLidos(Usuario, GenerosLidos) :-
+    lerJSON('../Data/leituras.json', Leituras),
+    recuperaLeiturasUsuario(Usuario.nome, Leituras, [], LeiturasUsuario),
+    pegaGeneros(LeiturasUsuario, GenerosLidos).
+
+% Pega os gêneros de uma lista de leituras
+pegaGeneros([Leitura|LeiturasRestantes], [Leitura.genero_lido|GenerosRestantes]) :-
+    pegaGeneros(LeiturasRestantes, GenerosRestantes).
+pegaGeneros([], []).
+
+% Pega os autores lidos por um usuário
+recuperaAutoresLidos(Usuario, AutoresLidos):-
+    lerJSON('../Data/leituras.json', Leituras),
+    recuperaLeiturasUsuario(Usuario.nome, Leituras, [], LeiturasUsuario),
+    pegaAutores(LeiturasUsuario,[], AutoresLidos).
+
+% Pega os autores de uma lista de leituras
+pegaAutores([X|XS], Acc, Resultado):-
+    append([X.autor_lido], Acc, NewAcc),
+    pegaAutores(XS, NewAcc, Resultado).
+pegaAutores([], Resultado, Resultado):-!.
