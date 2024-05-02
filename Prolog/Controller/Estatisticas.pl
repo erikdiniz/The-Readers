@@ -59,6 +59,15 @@ autorMaisLido([Leitura1, Leitura2|Resto], AutorMaisLido):-
         autorMaisLido([Leitura2|Resto], AutorMaisLido)
     ).
 
+% Retorna o livro com melhor avaliação
+melhorAvaliado([], "Nenhum livro encontrado.").
+melhorAvaliado([Leitura], Leitura).
+melhorAvaliado([Leitura1, Leitura2|Resto], MelhorLivro):-
+    (
+        Leitura1.nota >= Leitura2.nota -> melhorAvaliado([Leitura1|Resto], MelhorLivro);
+        melhorAvaliado([Leitura2|Resto], MelhorAvaliado)
+    ).
+
 % Exibe as estatísticas gerais de um usuário
 visaoGeralUser(Usuario):-
     recuperaLeiturasUsuario(Usuario, Leituras),
@@ -66,7 +75,9 @@ visaoGeralUser(Usuario):-
     totalPaginas(Leituras, TotalPaginas),
     generoMaisLido(Leituras, Genero),
     autorMaisLido(Leituras, Autor),
-    format("Total de livros lidos: ~w", [TotalLeituras]),
-    format("Total de páginas lidas: ~w", [TotalPaginas]),
-    format("Genero mais lido ~w", [Genero]),
-    format("Autor mais lido: ~w", [Autor]).
+    melhorAvaliado(Leituras, MelhorAvaliado),
+    format("Total de livros lidos: ~w", [TotalLeituras]), nl,
+    format("Total de páginas lidas: ~w", [TotalPaginas]), nl,
+    format("Genero mais lido ~w", [Genero]), nl,
+    format("Autor mais lido: ~w", [Autor]), nl,
+    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]).
