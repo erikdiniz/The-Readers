@@ -1,4 +1,4 @@
-:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2]).
+:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2, imprimeListaLivros/0]).
 :- use_module(library(http/json)).
 :- use_module("../Util/util.pl").
 
@@ -40,17 +40,29 @@ livroJaExiste(NomeProcurado, [_|T], Resultado) :- livroJaExiste(NomeProcurado, T
 
 tem_nome(Nome, Livro):- Nome == Livro.nome .
 
+
+
+
+
 % Lista livros do sistema
 lista_livros(Titulos):-
     lerJSON('../Data/livros.json', Livros),
     lista_livros(Livros, [], Titulos).
 
-lista_livros([X|XS], Acc, Resultado):-
-    append([X.nome], Acc, NewAcc),
-    lista_livros(XS, NewAcc, Resultado).
+lista_livros([T|H], Acc, Resultado):-
+    append([T.nome], Acc, NewAcc),
+    lista_livros(H, NewAcc, Resultado).
 lista_livros([], Resultado, Resultado):-!.
 
-%Recupera um livro pelo nome
+% Imprime o nome de todos os livros cadastrados no sistema.
+imprimeListaLivros() :-
+    lista_livros(Titulos),
+    imprimeLista(Titulos).
+
+imprimeLista([H|T]) :- writeln(H), imprimeLista(T).
+imprimeLista([]) :- writeln (" - fim.").
+
+% Recupera um livro pelo nome
 recupera_livro(Titulo, Livro):-
     lerJSON('../Data/livros.json', Livros),
     getLivro(Titulo, Livros, Livro).
