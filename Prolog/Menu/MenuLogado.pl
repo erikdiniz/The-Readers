@@ -10,18 +10,17 @@ menuLogado(Usuario):-
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao, Usuario).
 
-seguirUsuario(Usuario):- seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
+seguirUsuario(Usuario):- tty_clear, seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
 
 imprimeOpcoes(Opcao):-
     nl,
     writeln("[P] Menu Perfil"),
-    writeln("[B] Buscar Usuário"),
     writeln("[U] Seguir Usuário"),
     writeln("[M] Minhas Estantes"),
     writeln("[+] Cadastro de Livro"),
     writeln("[L] Cadastrar Leitura"),
     writeln("[S] Sair"),
-    read_line_to_string(user_input, Opcao).    
+    read_line_to_string(user_input, Opcao).
 
 selecionaAcao(Opcao, Usuario):- (
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), halt;
@@ -57,22 +56,30 @@ imprimeOpcoesPerfil(Opcao):-
     nl,
     writeln("[V] Visão geral"),
     writeln("[E] Editar meu perfil"),
+    writeln("[O] Visitar outro perfil"),
     writeln("[M] Minhas Resenhas"),
     writeln("[S] Voltar ao menu principal"),
     read_line_to_string(user_input, Opcao).
 
 selecionaAcaoPerfil(Opcao, Usuario):- (
                         Opcao == "S" -> menuLogado(Usuario);
-                        Opcao == "V" -> visaoGeral(Usuario);
-                        Opcao == "E" -> editaPerfil(Usuario);
+                        Opcao == "V" -> visaoGeral(Usuario.nome);
+                        Opcao == "E" -> editaPerfil(Usuario, Usuario.nome);
+                        Opcao == "O" -> stalkear(Usuario);
                         Opcao == "M" -> menuEstante(Usuario);
                         writeln("Ação inválida"), menu, !).
 
-editaPerfil(Usuario):- (
+editaPerfil(Usuario, NomeUsuario):- (
     nl,
     writeln("Escolha seu nome: "),
     read_line_to_string(user_input,NomePerfil),
     writeln("Escolha sua biografia: "),
     read_line_to_string(user_input,Biografia),
-    criaPerfil(NomePerfil, Biografia, Usuario),
+    criaPerfil(NomePerfil, Biografia, NomeUsuario),
     writeln("Perfil salvo com sucesso!"), menuPerfil(Usuario), !).
+
+stalkear(Usuario):- (
+    nl,
+    writeln("Insira o ID do perfil à ser visitado: "),
+    read_line_to_string(user_input, PerfilVisitado),
+    visaoStalker(PerfilVisitado), menuPerfil(Usuario), !).

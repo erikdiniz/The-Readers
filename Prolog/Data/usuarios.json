@@ -1,9 +1,15 @@
 [
+  {"nome":"teste", "seguidores": [], "seguindo": [], "senha":"000"},
+  {
+    "nome":"moab",
+    "seguidores": ["bibi" ],
+    "seguindo": ["bibi" ],
+    "senha":"a"
+  },
   {
     "nome":"bibi",
     "seguidores": ["moab" ],
-    "seguindo": [],
+    "seguindo": ["moab" ],
     "senha":"123"
-  },
-  {"nome":"moab", "seguidores": [], "seguindo": ["bibi" ], "senha":"a"}
+  }
 ]

@@ -1,12 +1,12 @@
-:- module(perfil,[criaPerfil/3, salvarPerfil/1, recuperaPerfil/2, visaoGeral/1]).
+:- module(perfil,[criaPerfil/3, salvarPerfil/1, visaoGeral/1, visaoStalker/1, recuperaPerfil/2, procuraPerfilPorId/3]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module("../Util/util.pl").
 :- use_module("../Controller/Usuario.pl").
 
 % Cria um novo perfil
-criaPerfil(NomePerfil, Biografia, Usuario):-
-    Perfil = _{nomePerfil: NomePerfil, biografia: Biografia, id: Usuario},
+criaPerfil(NomePerfil, Biografia, NomeUsuario):-
+    Perfil = _{nomePerfil: NomePerfil, biografia: Biografia, id: NomeUsuario},
     salvarPerfil(Perfil).
 
 % Salva perfil no arquivo json
@@ -15,64 +15,41 @@ salvarPerfil(Perfil):-
     append([Perfil], Perfis, PerfisAtualizados),
     escreveJSON('../Data/perfis.json', PerfisAtualizados).
 
-recuperaPerfil(NomeUsuario, Perfil):-
-    lerJSON("../Data/perfis.json", Conteudo),
-    parsearJSON(Conteudo, Perfis),
-    procuraPerfilPorNomeUsuario(NomeUsuario, Perfis, Perfil).
-
-% Converte o conteúdo JSON em uma lista de perfis Prolog
-parsearJSON([], []):- !.
-parsearJSON([Head|Tail], [Perfil|Perfis]):-
-    parsearObjeto(Head, Perfil),
-    parsearJSON(Tail, Perfis).
-parsearObjeto([nomePerfil:"Nome", biografia:"Biografia", id:"ID"], perfil(Nome, Biografia, ID)):- !.
-parsearObjeto([nomePerfil:"Nome", biografia:"Biografia", id:{nome:"Nome", seguidores: Seguidores, seguindo: Seguindo, senha:"Senha"}], perfil(Nome, Biografia, {nome: "Nome", seguidores: Seguidores, seguindo: Seguindo, senha: "Senha"})):- !.
-parsearObjeto([_|Tail], []):-
-    parsearJSON(Tail, []).
-
-% Procura o perfil com o nome de usuário especificado
-procuraPerfilPorNomeUsuario(NomeUsuario, [Perfil|Perfis], Resultado):-
-    perfil(Nome, _, _),
-    Nome = NomeUsuario,
-    Resultado = Perfil,
-    !.
-procuraPerfilPorNomeUsuario(NomeUsuario, [_|Perfis], Resultado):-
-    procuraPerfilPorNomeUsuario(NomeUsuario, Perfis, Resultado).
-procuraPerfilPorNomeUsuario(NomeUsuario, [], fail).
-
-
-visaoGeral(Usuario):-
-    recuperaPerfil(nome(Usuario), Perfil),
+visaoGeral(NomeUsuario):-
     cabecalhoPerfil,
-    exibeNome(Perfil),
-    exibeBiografia(Perfil).
- %   exibeSeguidores(perfilSeguidores(Perfil)),
- %   exibeSeguindo(perfilSeguindo(Perfil)).
+    recuperaPerfil(NomeUsuario, Perfil),
+    writeln("MEU NOME: " ++ Perfil.nomePerfil),
+    writeln(),
+    writeln("SOBRE MIM... " ++ Perfil.biografia),
+    writeln().
 
 cabecalhoPerfil:-
     writeln("--------------------------------------"),
     writeln("|        MEU PERFIL THE READER        |"),
     writeln("--------------------------------------").
-exibeNome(Perfil):-
-    writeln("MEU NOME: " ++ nomePerfil(Perfil)),
-    writeln().
-exibeBiografia(Perfil):-
-    writeln("SOBRE MIM... " ++ biografia(Perfil)),
-    writeln().
-exibeSeguidores(Seguidores):-
-    writeln("SOU SEGUIDO POR " ++ show(length(Seguidores))),
-    writeln().
-exibeSeguindo(Seguindo):-
-    writeln("ACOMPANHO " ++ show(length(Seguindo))),
+
+visaoStalker(PerfilVisitado):-
+    cabecalhoPerfilStalker,
+    recuperaPerfil(PerfilVisitado, Perfil),
+    writeln("NOME: " ++ Perfil.nomePerfil),
+    writeln(),
+    writeln("SOBRE... " ++ Perfil.biografia),
     writeln().
 
+cabecalhoPerfilStalker:-
+    writeln("--------------------------------------"),
+    writeln("|        CONHEÇA ESSE READER :)      |"),
+    writeln("--------------------------------------").
 
+% Recupera perfil pelo id
+recuperaPerfil(Id, Perfil):-
+    atom_string(Id, StrId),
+    lerJSON('../Data/perfis.json', IPerfis),
+    procuraPerfilPorId(StrId, IPerfis, Perfil).
 
-% recupera perfis
-% visao stalker
-% procura perfil
-
-
-
+% Procura recursivamente por um perfil a partir do id
+procuraPerfilPorId(_, [], []):- !.
+procuraPerfilPorId(Id, [Perfil|__], Perfil):- Perfil.id == Id, !.
+procuraPerfilPorId(Id, [_|XS], Perfil):- procuraPerfilPorId(Id, XS, Perfil).
 
 
