@@ -1,4 +1,4 @@
-:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2]).
+:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2, imprimeListaLivros/0]).
 :- use_module(library(http/json)).
 :- use_module("../Util/util.pl").
 
@@ -19,7 +19,7 @@ getLivro(_ ,[],[]) :- !.
 getLivro(NomeProcurado, [H|_], H) :- H.nome == NomeProcurado, !. 
 getLivro(NomeProcurado, [_|T], Livro) :- getLivro(NomeProcurado, T, Livro).
 
-% Remove um livro a partir de seu Nome
+% Remove um livro a partir de seu Nome.
 removeLivro(Nome):-
     lerJSON('../Data/livros.json', Livros),
     livroJaExiste(Nome, Livros, Resultado),
@@ -28,8 +28,6 @@ removeLivro(Nome):-
         escreveJSON('../Data/livros.json', ListaAtualizada),
         writeln("Livro excluido com sucesso.");
     writeln("Livro não existe no sistema.").
-
-% Método auxiliar usado para remover um livro
 removeLivroPorNome(Lista, Nome, Resultado):-
     exclude(tem_nome(Nome), Lista, Resultado).
 
@@ -38,19 +36,26 @@ livroJaExiste(_,[],false) :- !.
 livroJaExiste(NomeProcurado, [H|_], true) :- H.nome == NomeProcurado, !.
 livroJaExiste(NomeProcurado, [_|T], Resultado) :- livroJaExiste(NomeProcurado, T, Resultado).
 
-tem_nome(Nome, Livro):- Nome == Livro.nome .
-
-% Lista livros do sistema
+% Lista os Livros do sistema
 lista_livros(Titulos):-
     lerJSON('../Data/livros.json', Livros),
     lista_livros(Livros, [], Titulos).
-
 lista_livros([X|XS], Acc, Resultado):-
     append([X.nome], Acc, NewAcc),
     lista_livros(XS, NewAcc, Resultado).
 lista_livros([], Resultado, Resultado):-!.
 
-%Recupera um livro pelo nome
+% Imprime o nome de todos os livros cadastrados no sistema.
+imprimeListaLivros() :-
+    lista_livros(Titulos),
+    imprimeLista(Titulos).
+imprimeLista([H|T]) :- writeln(H), imprimeLista(T).
+imprimeLista([]) :- writeln(""), halt.
+
+% Recupera um livro pelo nome
 recupera_livro(Titulo, Livro):-
     lerJSON('../Data/livros.json', Livros),
     getLivro(Titulo, Livros, Livro).
+
+% Método auxiliar usado para verificar se Livro tem chave.
+tem_nome(Nome, Livro):- Nome == Livro.nome .

@@ -35,7 +35,7 @@ loginUsuario:-
 verificaSenha(Usuario):-
     writeln("Insira sua senha: "),
     read_line_to_string(user_input,Senha),
-    (Senha == Usuario.senha -> nl, tty_clear, writeln("Você está logado"), menuLogado(Usuario); nl, writeln("Senha inválida"), menu).
+    (Senha == Usuario.senha -> nl, writeln("Você está logado"), menuLogado(Usuario); nl, writeln("Senha inválida"), menu).
    
 cadastraUsuario:-
     writeln("Nome de login: "),
@@ -115,7 +115,7 @@ selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
 
 listalivros(Admin, Titulos):-
     writeln("Livros disponíveis: "),
-    lista_livros(Titulos).
+    imprimeListaLivros.
 
 cadastraAdm:-
     writeln("Novo Id Administrador: "),
