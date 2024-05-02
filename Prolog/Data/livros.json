@@ -1,5 +1,11 @@
 [
   {
+    "autor":"J R R Tolkien",
+    "genero":"Aventura",
+    "n_paginas":1200,
+    "nome":"O Silmarillion"
+  },
+  {
     "autor":"Jorge Amado",
     "genero":"Romance",
     "n_paginas":250,

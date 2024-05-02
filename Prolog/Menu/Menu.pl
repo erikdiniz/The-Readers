@@ -6,8 +6,12 @@
 :- use_module("../Menu/MenuLogado.pl").
 
 menu:-
-    writeln("Bem vindo"), nl,
-    writeln("Escolher opção:"),
+    nl,
+    writeln("----------------------------"),
+    writeln("|        THE READERS        |"),
+    writeln("----------------------------"),
+    nl,
+    writeln("Escolher uma opção para iniciar:"),
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao).
 
@@ -35,7 +39,7 @@ loginUsuario:-
 verificaSenha(Usuario):-
     writeln("Insira sua senha: "),
     read_line_to_string(user_input,Senha),
-    (Senha == Usuario.senha -> nl, tty_clear, writeln("Você está logado"), menuLogado(Usuario); nl, writeln("Senha inválida"), menu).
+    (Senha == Usuario.senha -> nl, writeln("Você está logado"), menuLogado(Usuario); nl, writeln("Senha inválida"), menu).
    
 cadastraUsuario:-
     writeln("Nome de login: "),
@@ -114,8 +118,12 @@ selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
                         writeln("Ação inválida"), menu, !).
 
 listalivros(Admin, Titulos):-
-    writeln("Livros disponíveis: "),
-    lista_livros(Titulos).
+    nl,
+    writeln("------------------------------"),
+    writeln("|     Livros Disponíveis      |"),
+    writeln("-------------------------------"),
+    nl,
+    imprimeListaLivros.
 
 cadastraAdm:-
     writeln("Novo Id Administrador: "),
