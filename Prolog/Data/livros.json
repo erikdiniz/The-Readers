@@ -1,5 +1,11 @@
 [
   {
+    "autor":"Jorge Amado",
+    "genero":"Romance",
+    "n_paginas":250,
+    "nome":"Tieta"
+  },
+  {
     "autor":"Brandon Sanderson",
     "genero":"Fantasia",
     "n_paginas":1064,

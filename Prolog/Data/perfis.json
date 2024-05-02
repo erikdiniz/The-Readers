@@ -1,22 +1,16 @@
 [
   {
-    "biografia":"abc",
-    "id": {
-      "nome":"bibi",
-      "seguidores": ["moab" ],
-      "seguindo": [],
-      "senha":"123"
-    },
-    "nomePerfil":"teste"
+    "biografia":"grande fa de moab",
+    "id":"bibi",
+    "nomePerfil":"bibizinha"
   },
+  {"biografia":"eu amo ler!", "id":"bibi", "nomePerfil":"bibi"},
+  {"biografia":"n", "id":"bibi", "nomePerfil":"bio"},
+  {"biografia":"amo ler!", "id":"bibi", "nomePerfil":"bibi"},
   {
-    "biografia":"teste",
-    "id": {
-      "nome":"bibi",
-      "seguidores": ["moab" ],
-      "seguindo": [],
-      "senha":"123"
-    },
-    "nomePerfil":"bibi"
-  }
+    "biografia":"Lindo e com QI acima da media!",
+    "id":"moab",
+    "nomePerfil":"Moab"
+  },
+  {"biografia":"bio", "id":"bibi", "nomePerfil":"teste"}
 ]
