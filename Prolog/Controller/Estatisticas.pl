@@ -90,24 +90,46 @@ visaoGeralUser(Usuario):-
     format("Total de paginas lidas: ~w", [TotalPaginas]), nl,
     format("Genero mais lido: ~w", [Genero]), nl,
     format("Autor mais lido: ~w", [Autor]), nl,
-    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl,
-    menuEstatisticas(Usuario).
+    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl.
 
-% Exibe a quantidade de livros de cada autor
-imprimeAutoresNumLivros([]):-
-    writeln("Nenhum autor encontrado."), nl.
-imprimeAutoresNumLivros([Autor]):-
-    format("~w - 1 livro(s)", [Autor]),nl.
-imprimeAutoresNumLivros([Autor1, Autor2|Resto]):-
-    contaOcorrencias(Autor1, [Autor1, Autor2|Resto], Qntd),
-    format("~w - ~w livro(s)", [Autor1, Qntd]), nl,
-    imprimeAutoresNumLivros([Autor2|Resto]).
+% Exibe a quantidade de livros por autor, gênero, ano ou qualquer outra propriedade de um livro
+imprimeNumLivros([]):-
+    writeln("Nenhum livro encontrado."), nl.
+imprimeNumLivros([Elemento]):-
+    format("~w - 1 livro(s)", [Elemento]),nl.
+imprimeNumLivros([Elemento1, Elemento2|Resto]):-
+    contaOcorrencias(Elemento1, [Elemento1, Elemento2|Resto], Qntd),
+    format("~w - ~w livro(s)", [Elemento1, Qntd]), nl,
+    imprimeNumLivros([Elemento2|Resto]).
 
-% Exibe as estatísticas por autor de um usuário
+% Exibe as estatísticas por autor das leituras de um usuário
 autoresUser(Usuario):-
-    recuperaAutoresLidos(Usuario, Autores),
-    nl,
+    recuperaAutoresLidos(Usuario, Autores), nl,
     writeln("--------------------------------------"),
     writeln("|              AUTORES               |"),
     writeln("--------------------------------------"), nl,
-    imprimeAutoresNumLivros(Autores).
+    imprimeNumLivros(Autores).
+
+% Exibe as estatísticas por gênero das leituras de um usuário
+generosUser(Usuario):-
+    recuperaGenerosLidos(Usuario, Generos), nl,
+    writeln("--------------------------------------"),
+    writeln("|              GENEROS               |"),
+    writeln("--------------------------------------"), nl,
+    imprimeNumLivros(Generos).
+
+% Predicado para extrair o ano de uma data no formato "dd/mm/aaaa"
+extraiAno([], []).
+extraiAno([Data|Resto], [Ano|AnosRestantes]) :-
+    split_string(Data, "/", "", [_, _, AnoString]),
+    atom_number(AnoString, Ano),
+    extraiAno(Resto, AnosRestantes).
+
+% Exibe as estatísticas por ano das leituras de um usuário
+lidosAnoUser(Usuario):-
+    recuperaDatasLidos(Usuario, Datas),
+    extraiAno(Datas, Anos),
+    writeln("--------------------------------------"),
+    writeln("|            LIDOS POR ANO           |"),
+    writeln("--------------------------------------"), nl,
+    imprimeNumLivros(Anos).

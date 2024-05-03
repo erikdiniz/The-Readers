@@ -1,4 +1,4 @@
-:- module(leitura, [cadastrarLeitura/1, recuperaTitulosLidos/2, recuperaGenerosLidos/2, recuperaLeiturasUsuario/2, recuperaAutoresLidos/2]).
+:- module(leitura, [cadastrarLeitura/1, recuperaTitulosLidos/2, recuperaGenerosLidos/2, recuperaLeiturasUsuario/2, recuperaAutoresLidos/2, recuperaDatasLidos/2]).
 :- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module("../Menu/MenuLogado.pl").
@@ -87,3 +87,15 @@ pegaAutores([X|XS], Acc, Resultado):-
     append([X.autor_lido], Acc, NewAcc),
     pegaAutores(XS, NewAcc, Resultado).
 pegaAutores([], Resultado, Resultado):-!.
+
+% Pega as datas dos livros lidos por um usuário
+recuperaDatasLidos(Usuario, DatasLidos):-
+    lerJSON('../Data/leituras.json', Leituras),
+    recuperaLeiturasUsuario(Usuario.nome, Leituras, [], LeiturasUsuario),
+    pegaDatas(LeiturasUsuario,[], DatasLidos).
+
+% Pega as datas de uma lista de leituras
+pegaDatas([X|XS], Acc, Resultado):-
+    append([X.data], Acc, NewAcc),
+    pegaDatas(XS, NewAcc, Resultado).
+pegaDatas([], Resultado, Resultado):-!.
