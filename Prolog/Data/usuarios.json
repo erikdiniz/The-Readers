@@ -1,4 +1,5 @@
 [
+  {"nome":"Anny", "seguidores": [], "seguindo": [], "senha":"123"},
   {
     "nome":"bibi",
     "seguidores": ["moab", "predohenrique" ],
