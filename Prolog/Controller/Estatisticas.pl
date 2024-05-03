@@ -1,6 +1,7 @@
 :- module(estatisticas, [menuEstatisticas/1, menuEstatisticasAdmin/1]).
 :- use_module("../Menu/MenuLogado.pl").
 :- use_module("../Controller/Leitura.pl").
+:- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module(library(http/json)).
 
@@ -8,7 +9,7 @@
 menuEstatisticas(Usuario):-
     nl,
     writeln("--------------------------------------"),
-    writeln("|            ESTATISTICAS            |"),
+    writeln("|            Estatisticas            |"),
     writeln("--------------------------------------"), nl,
     writeln("[V] Visao Geral"),
     writeln("[A] Autores"),
@@ -16,9 +17,9 @@ menuEstatisticas(Usuario):-
     writeln("[L] Lidos por ano"),
     writeln("[S] Voltar ao menu"),
     read_line_to_string(user_input, Opcao),
-    selecionaEstatisticasUser(Opcao, Usuario).
+    selecionaEstatisticas(Opcao, Usuario).
 
-selecionaEstatisticasUser(Opcao, Usuario):- (
+selecionaEstatisticas(Opcao, Usuario):- (
         Opcao == "V" -> visaoGeralUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "A" -> autoresUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "G" -> generosUser(Usuario), menuEstatisticas(Usuario);
@@ -106,6 +107,14 @@ imprimeNumLivros([Elemento1, Elemento2|Resto]):-
     format("~w - ~w livro(s)", [Elemento1, Qntd]), nl,
     imprimeNumLivros([Elemento2|Resto]).
 
+imprimeNumLivros(_, []).
+imprimeNumLivros(ElementoDup, [Elemento]):-
+    format("~w - 1 livro(s)", [Elemento]).
+imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
+    contaOcorrencias(Elemento, ElementosDup, Qntd),
+    format("~w - ~w livro(s)", [Elemento, Qntd]), nl,
+    imprimeNumLivros(ElementosDup, Resto).
+
 % Exibe as estatísticas por autor das leituras de um usuário
 autoresUser(Usuario):-
     recuperaAutoresLidos(Usuario, Autores), nl,
@@ -146,7 +155,7 @@ menuEstatisticasAdmin(Admin):-
     writeln("--------------------------------------"), nl,
     writeln("[1] Generos dos livros cadastrados"),
     writeln("[2] Autores dos livros cadastrados"),
-    writeln("[3] Livros com melhor avaliaçao"),
+    writeln("[3] Livros com melhor avaliacao"),
     writeln("[4] Numero de leituras"),
     writeln("[S] Voltar ao menu"),
     read_line_to_string(user_input, Opcao),
@@ -159,4 +168,17 @@ selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "4" -> totalLeituras, menuEstatisticasAdmin(Admin);
         Opcao == "5" -> totalLivros, menuEstatisticasAdmin(Admin);
         Opcao == "S" -> menuLogadoAdm(Admin)
+    ).
+
+generosCadastrados:-
+    lerJSON("../Data/livros.json", Livros),
+    listaGeneros(Livros, GenerosDup),
+    list_to_set(GenerosDup, Generos),
+    nl,
+    writeln("--------------------------------------"),
+    writeln("|        GENEROS CADASTRADOS         |"),
+    writeln("--------------------------------------"), nl,
+    (
+        length(Generos, Qntd), Qtnd == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(GenerosDup, Generos), nl
     ).
