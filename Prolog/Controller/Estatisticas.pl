@@ -170,15 +170,18 @@ selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "S" -> menuLogadoAdm(Admin)
     ).
 
+% Exibe os gêneros cadastrados no sistema e a quantidade de livros de cada um
 generosCadastrados:-
     lerJSON("../Data/livros.json", Livros),
     listaGeneros(Livros, GenerosDup),
     list_to_set(GenerosDup, Generos),
+    length(Generos, TotalGeneros),
     nl,
     writeln("--------------------------------------"),
     writeln("|        GENEROS CADASTRADOS         |"),
     writeln("--------------------------------------"), nl,
     (
-        length(Generos, Qntd), Qtnd == 0 -> writeln("Nenhum livro encontrado.");
-        imprimeNumLivros(GenerosDup, Generos), nl
+        TotalGeneros == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(GenerosDup, Generos), nl, nl,
+        format("~w genero(s) cadastrados.", [TotalGeneros]), nl
     ).
