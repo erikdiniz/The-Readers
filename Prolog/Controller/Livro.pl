@@ -50,7 +50,7 @@ imprimeListaLivros() :-
     lista_livros(Titulos),
     imprimeLista(Titulos).
 imprimeLista([H|T]) :- writeln(H), imprimeLista(T).
-imprimeLista([]) :- writeln(""), halt.
+imprimeLista([]) :- writeln("").
 
 % Recupera um livro pelo nome
 recupera_livro(Titulo, Livro):-

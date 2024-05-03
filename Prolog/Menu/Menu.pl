@@ -6,8 +6,12 @@
 :- use_module("../Menu/MenuLogado.pl").
 
 menu:-
-    writeln("Bem vindo"), nl,
-    writeln("Escolher opção:"),
+    nl,
+    writeln("----------------------------"),
+    writeln("|        THE READERS        |"),
+    writeln("----------------------------"),
+    nl,
+    writeln("Escolher uma opção para iniciar:"),
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao).
 
@@ -114,7 +118,11 @@ selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
                         writeln("Ação inválida"), menu, !).
 
 listalivros(Admin, Titulos):-
-    writeln("Livros disponíveis: "),
+    nl,
+    writeln("------------------------------"),
+    writeln("|     Livros Disponíveis      |"),
+    writeln("-------------------------------"),
+    nl,
     imprimeListaLivros.
 
 cadastraAdm:-
