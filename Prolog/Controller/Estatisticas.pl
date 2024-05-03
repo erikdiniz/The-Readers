@@ -41,7 +41,7 @@ contaOcorrencias(Elemento, [_|Resto], Total) :-
     contaOcorrencias(Elemento, Resto, Total).
 
 % Predicado para encontrar o gênero mais lido de uma lista de leituras
-generoMaisLido([], "Nenhum gênero lido.").
+generoMaisLido([], "Nenhum livro encontrado.").
 generoMaisLido([Leitura], Leitura.genero_lido).
 generoMaisLido([Leitura1, Leitura2|Resto], GeneroMaisLido) :-
     generoMaisLido(Resto, GeneroResto),
@@ -54,7 +54,7 @@ generoMaisLido([Leitura1, Leitura2|Resto], GeneroMaisLido) :-
     ).
 
 % Predicado para encontrar o autor mais lido de uma lista de leituras
-autorMaisLido([], "Nenhum autor lido.").
+autorMaisLido([], "Nenhum livro encontrado.").
 autorMaisLido([Leitura], Leitura.autor_lido).
 autorMaisLido([Leitura1, Leitura2|Resto], AutorMaisLido) :-
     autorMaisLido(Resto, AutorResto),
@@ -67,12 +67,13 @@ autorMaisLido([Leitura1, Leitura2|Resto], AutorMaisLido) :-
     ).
 
 % Retorna o livro com melhor avaliação
-melhorAvaliado([], "Nenhum livro encontrado.").
+melhorAvaliado([], _{titulo_lido: "Nenhum livro encontrado.", nota: 0}).
 melhorAvaliado([Leitura], Leitura).
 melhorAvaliado([Leitura1, Leitura2|Resto], MelhorLivro):-
+    melhorAvaliado([Leitura2|Resto], MelhorLivroRestante),
     (
-        Leitura1.nota >= Leitura2.nota -> melhorAvaliado([Leitura1|Resto], MelhorLivro);
-        melhorAvaliado([Leitura2|Resto], MelhorAvaliado)
+        Leitura1.nota >= MelhorLivroRestante.nota -> MelhorLivro = Leitura1;
+        MelhorLivro = MelhorLivroRestante
     ).
 
 % Exibe as estatísticas gerais de um usuário
@@ -90,7 +91,10 @@ visaoGeralUser(Usuario):-
     format("Total de paginas lidas: ~w", [TotalPaginas]), nl,
     format("Genero mais lido: ~w", [Genero]), nl,
     format("Autor mais lido: ~w", [Autor]), nl,
-    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl.
+    (
+        MelhorAvaliado.nota == 0 -> writeln("Livro com maior nota: Nenhum livro encontrado."), nl;
+        format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl
+    ).
 
 % Exibe a quantidade de livros por autor, gênero, ano ou qualquer outra propriedade de um livro
 imprimeNumLivros([]):-
