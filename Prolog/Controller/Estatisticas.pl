@@ -92,3 +92,22 @@ visaoGeralUser(Usuario):-
     format("Autor mais lido: ~w", [Autor]), nl,
     format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl,
     menuEstatisticas(Usuario).
+
+% Exibe a quantidade de livros de cada autor
+imprimeAutoresNumLivros([]):-
+    writeln("Nenhum autor encontrado."), nl.
+imprimeAutoresNumLivros([Autor]):-
+    format("~w - 1 livro(s)", [Autor]),nl.
+imprimeAutoresNumLivros([Autor1, Autor2|Resto]):-
+    contaOcorrencias(Autor1, [Autor1, Autor2|Resto], Qntd),
+    format("~w - ~w livro(s)", [Autor1, Qntd]), nl,
+    imprimeAutoresNumLivros([Autor2|Resto]).
+
+% Exibe as estatísticas por autor de um usuário
+autoresUser(Usuario):-
+    recuperaAutoresLidos(Usuario, Autores),
+    nl,
+    writeln("--------------------------------------"),
+    writeln("|              AUTORES               |"),
+    writeln("--------------------------------------"), nl,
+    imprimeAutoresNumLivros(Autores).
