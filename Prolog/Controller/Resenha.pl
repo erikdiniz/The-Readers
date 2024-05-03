@@ -36,7 +36,7 @@ adicionaResenha(Resenha):-
     append([Resenha], Resenhas, ResenhasAtulizadas),
     escreveJSON('../Data/resenhas.json', ResenhasAtulizadas).
 
-%getResenha
+
 
 % Predicado para carregar as resenhas do arquivo JSON
 carregar_resenhas(Resenhas) :-
