@@ -7,6 +7,9 @@
 % Exibe o Menu Estatísticas do usuário
 menuEstatisticas(Usuario):-
     nl,
+    writeln("--------------------------------------"),
+    writeln("|            Estatisticas            |"),
+    writeln("--------------------------------------"), nl,
     writeln("[V] Visao Geral"),
     writeln("[A] Autores"),
     writeln("[G] Generos"),
@@ -29,34 +32,38 @@ totalPaginas([X|XS], TotalPaginas):-
     totalPaginas(XS, TotalPaginas2),
     TotalPaginas is X.num_paginas + TotalPaginas2.
 
-% Conta ocorrências de um elemento em uma lista
+% Predicado para contar ocorrências de um elemento em uma lista
 contaOcorrencias(_, [], 0).
-contaOcorrencias(Elemento, [X|XS], Total):- (
-        Elemento == X -> contaOcorrencias(Elemento, XS, Total2),
-        Total is 1 + Total2;
-        contaOcorrencias(Elemento, XS, Total)
-    ).
+contaOcorrencias(Elemento, [Elemento|Resto], Total) :-
+    contaOcorrencias(Elemento, Resto, TotalResto),
+    Total is TotalResto + 1.
+contaOcorrencias(Elemento, [_|Resto], Total) :-
+    contaOcorrencias(Elemento, Resto, Total).
 
-% Retorna o gênero mais lido de uma lista de leituras.
+% Predicado para encontrar o gênero mais lido de uma lista de leituras
 generoMaisLido([], "Nenhum gênero lido.").
 generoMaisLido([Leitura], Leitura.genero_lido).
-generoMaisLido([Leitura1, Leitura2|Resto], Genero):-
-    contaOcorrencias(Leitura1.genero_lido, Qntd1),
-    contaOcorrencias(Leitura2.genero_lido, Qntd2),
+generoMaisLido([Leitura1, Leitura2|Resto], GeneroMaisLido) :-
+    generoMaisLido(Resto, GeneroResto),
+    contaOcorrencias(Leitura1.genero_lido, [Leitura1, Leitura2|Resto], Qntd1),
+    contaOcorrencias(Leitura2.genero_lido, [Leitura1, Leitura2|Resto], Qntd2),
     (
-        Qntd1 >= Qntd2 -> Leitura1.genero_lido, generoMaisLido([Leitura2|Resto], Genero)
+        Qntd1 >= Qntd2 -> GeneroMaisLido = Leitura1.genero_lido
+    ;
+        GeneroMaisLido = GeneroResto
     ).
 
-% Retorna o autor mais lido de uma lista de leituras.
+% Predicado para encontrar o autor mais lido de uma lista de leituras
 autorMaisLido([], "Nenhum autor lido.").
 autorMaisLido([Leitura], Leitura.autor_lido).
-autorMaisLido([Leitura1, Leitura2|Resto], AutorMaisLido):-
-    contaOcorrencias(Leitura1.autor_lido, Qntd1),
-    contaOcorrencias(Leitura2.autor_lido, Qntd2),
+autorMaisLido([Leitura1, Leitura2|Resto], AutorMaisLido) :-
+    autorMaisLido(Resto, AutorResto),
+    contaOcorrencias(Leitura1.autor_lido, [Leitura1, Leitura2|Resto], Qntd1),
+    contaOcorrencias(Leitura2.autor_lido, [Leitura1, Leitura2|Resto], Qntd2),
     (
-        Qntd1 >= Qntd2 -> autorMaisLido([Leitura1|Resto], AutorMaisLido)
+        Qntd1 >= Qntd2 -> AutorMaisLido = Leitura1.autor_lido
     ;
-        autorMaisLido([Leitura2|Resto], AutorMaisLido)
+        AutorMaisLido = AutorResto
     ).
 
 % Retorna o livro com melhor avaliação
@@ -75,9 +82,13 @@ visaoGeralUser(Usuario):-
     totalPaginas(Leituras, TotalPaginas),
     generoMaisLido(Leituras, Genero),
     autorMaisLido(Leituras, Autor),
-    melhorAvaliado(Leituras, MelhorAvaliado),
+    melhorAvaliado(Leituras, MelhorAvaliado), nl,
+    writeln("--------------------------------------"),
+    writeln("|            VISAO GERAL             |"),
+    writeln("--------------------------------------"), nl,
     format("Total de livros lidos: ~w", [TotalLeituras]), nl,
-    format("Total de páginas lidas: ~w", [TotalPaginas]), nl,
-    format("Genero mais lido ~w", [Genero]), nl,
+    format("Total de paginas lidas: ~w", [TotalPaginas]), nl,
+    format("Genero mais lido: ~w", [Genero]), nl,
     format("Autor mais lido: ~w", [Autor]), nl,
-    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]).
+    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl,
+    menuEstatisticas(Usuario).
