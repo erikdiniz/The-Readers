@@ -7,6 +7,9 @@
 % Exibe o Menu Estatísticas do usuário
 menuEstatisticas(Usuario):-
     nl,
+    writeln("--------------------------------------"),
+    writeln("|            Estatisticas            |"),
+    writeln("--------------------------------------"), nl,
     writeln("[V] Visao Geral"),
     writeln("[A] Autores"),
     writeln("[G] Generos"),
@@ -81,10 +84,11 @@ visaoGeralUser(Usuario):-
     autorMaisLido(Leituras, Autor),
     melhorAvaliado(Leituras, MelhorAvaliado), nl,
     writeln("--------------------------------------"),
-    writeln("|        Estatisticas                |"),
+    writeln("|            VISAO GERAL             |"),
     writeln("--------------------------------------"), nl,
     format("Total de livros lidos: ~w", [TotalLeituras]), nl,
-    format("Total de páginas lidas: ~w", [TotalPaginas]), nl,
+    format("Total de paginas lidas: ~w", [TotalPaginas]), nl,
     format("Genero mais lido: ~w", [Genero]), nl,
     format("Autor mais lido: ~w", [Autor]), nl,
-    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl.
+    format("Livro com maior nota: ~w - ~w", [MelhorAvaliado.titulo_lido, MelhorAvaliado.nota]), nl,
+    menuEstatisticas(Usuario).
