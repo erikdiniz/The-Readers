@@ -17,7 +17,9 @@ seguirUsuario(Usuario):- tty_clear, seguir(Usuario, UsuarioAtt), menuLogado(Usua
 
 imprimeOpcoes(Opcao):-
     nl,
-    writeln("[P] Menu Perfil"),
+    writeln("[F] Ir para o Feed"),
+    nl, writeln("------------ M E N U : ------------"), nl,
+    writeln("[P] Meu Perfil"),
     writeln("[U] Seguir Usuário"),
     writeln("[M] Minhas Estantes"),
     writeln("[+] Cadastro de Livro"),
