@@ -1,6 +1,7 @@
-:- module(estatisticas, [menuEstatisticas/1]).
+:- module(estatisticas, [menuEstatisticas/1, menuEstatisticasAdmin/1]).
 :- use_module("../Menu/MenuLogado.pl").
 :- use_module("../Controller/Leitura.pl").
+:- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module(library(http/json)).
 
@@ -106,6 +107,14 @@ imprimeNumLivros([Elemento1, Elemento2|Resto]):-
     format("~w - ~w livro(s)", [Elemento1, Qntd]), nl,
     imprimeNumLivros([Elemento2|Resto]).
 
+imprimeNumLivros(_, []).
+imprimeNumLivros(ElementoDup, [Elemento]):-
+    format("~w - 1 livro(s)", [Elemento]).
+imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
+    contaOcorrencias(Elemento, ElementosDup, Qntd),
+    format("~w - ~w livro(s)", [Elemento, Qntd]), nl,
+    imprimeNumLivros(ElementosDup, Resto).
+
 % Exibe as estatísticas por autor das leituras de um usuário
 autoresUser(Usuario):-
     recuperaAutoresLidos(Usuario, Autores), nl,
@@ -137,3 +146,39 @@ lidosAnoUser(Usuario):-
     writeln("|            LIDOS POR ANO           |"),
     writeln("--------------------------------------"), nl,
     imprimeNumLivros(Anos).
+
+% Exibe o Menu Estatísticas do adm
+menuEstatisticasAdmin(Admin):-
+    nl,
+    writeln("--------------------------------------"),
+    writeln("|        ESTATISTICAS GERAIS         |"),
+    writeln("--------------------------------------"), nl,
+    writeln("[1] Generos dos livros cadastrados"),
+    writeln("[2] Autores dos livros cadastrados"),
+    writeln("[3] Livros com melhor avaliacao"),
+    writeln("[4] Numero de leituras"),
+    writeln("[S] Voltar ao menu"),
+    read_line_to_string(user_input, Opcao),
+    selecionaEstatisticasAdmin(Opcao, Admin).
+
+selecionaEstatisticasAdmin(Opcao, Admin):- (
+        Opcao == "1" -> generosCadastrados, menuEstatisticasAdmin(Admin);
+        Opcao == "2" -> autoresCadastrados, menuEstatisticmsAdmin(Admin);
+        Opcao == "3" -> melhoresLivros, menuEstatisticasAdmin(Admin);
+        Opcao == "4" -> totalLeituras, menuEstatisticasAdmin(Admin);
+        Opcao == "5" -> totalLivros, menuEstatisticasAdmin(Admin);
+        Opcao == "S" -> menuLogadoAdm(Admin)
+    ).
+
+generosCadastrados:-
+    lerJSON("../Data/livros.json", Livros),
+    listaGeneros(Livros, GenerosDup),
+    list_to_set(GenerosDup, Generos),
+    nl,
+    writeln("--------------------------------------"),
+    writeln("|        GENEROS CADASTRADOS         |"),
+    writeln("--------------------------------------"), nl,
+    (
+        length(Generos, Qntd), Qtnd == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(GenerosDup, Generos), nl
+    ).

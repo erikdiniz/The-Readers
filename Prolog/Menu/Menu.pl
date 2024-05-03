@@ -4,6 +4,7 @@
 :- use_module("../Controller/Admin.pl").
 :- use_module("../Controller/Perfil.pl").
 :- use_module("../Controller/Livro.pl").
+:- use_module("../Controller/Estatisticas.pl").
 :- use_module("../Menu/MenuLogado.pl").
 
 menu:-
@@ -103,7 +104,7 @@ menuLogadoAdm(Admin):-
 
 dashAdm(Opcao, Admin):-
     writeln("[1] Cadastro novo Adm"),
-    writeln("[2] Estatísticas Gerais"),
+    writeln("[2] Estatisticas Gerais"),
     writeln("[3] Lista de usuários cadastrados"),
     writeln("[4] Lista de livros cadastrados"),
     writeln("[-] Excluir livro"),
@@ -112,7 +113,7 @@ dashAdm(Opcao, Admin):-
     read_line_to_string(user_input,Opcao).
 
 selecionaAdm(Opcao):- (Opcao == "1" -> cadastraAdm, menuLogadoAdm(Admin), !;
-                        Opcao == "2" -> menuLogadoAdm(Admin),!;
+                        Opcao == "2" -> menuEstatisticasAdmin(Admin), menuLogadoAdm(Admin),!;
                         Opcao == "3" -> imprimeUsuarios, menuLogadoAdm(Admin),!;
                         Opcao == "-" -> removeLivro, menuLogadoAdm(Admin), !;
                         Opcao == "4" -> listalivros(Admin, Titulos), menuLogadoAdm(Admin),!;
