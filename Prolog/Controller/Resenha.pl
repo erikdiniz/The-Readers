@@ -1,4 +1,4 @@
-:- module(resenha,[]).
+:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module("../Util/util.pl").
@@ -35,7 +35,7 @@ adicionaResenha(Resenha):-
     append([Resenha], Resenhas, ResenhasAtulizadas),
     escreveJSON('../Data/resenhas.json', ResenhasAtulizadas).
 
-adicionarComentario(Resenha):-
+adicionarComentario(Usuario, Resenha):-
     writeln("Insira seu comentário: "),
     read_line_to_string(user_input, Comentario),
     Componente = _{comentario: Comentario, usuario: Usuario.nome},
@@ -51,4 +51,45 @@ removeResenha(Resenha):-
     lerJSON('../Data/resenhas.json', Resenhas),
     remove_element(Resenha, Resenhas, ResenhasSemRemocao),
     escreveJSON('../Data/resenhas.json', ResenhasSemRemocao).
+
+minhasResenhas(Usuario):-
+    recuperaResenhasUsuario(Usuario, ResenhasUsuario),
+    imprimeResenhas(ResenhasUsuario).
+
+recuperaResenhasUsuario(Usuario, ResenhasUsuario):-
+    lerJSON('../Data/resenhas.json', Resenhas),
+    procuraResenhasPorUsuario(Usuario, Resenhas, ResenhasUsuario).
+
+procuraResenhasPorUsuario(_, [], []):- !.
+procuraResenhasPorUsuario(Usuario, [Resenha|ResenhasRestantes], ResenhasUsuario):-
+    (Resenha.usuarioId == Usuario.nome) ->
+        append([Resenha], ResenhasUsuario, ResenhasUsuarioTemp),
+        procuraResenhasPorUsuario(Usuario, ResenhasRestantes, ResenhasUsuarioTemp), !;
+    procuraResenhasPorUsuario(Usuario, ResenhasRestantes, ResenhasUsuario).
+
+imprimeResenhas([]):-
+    writeln("Você ainda não possui resenhas!").
+imprimeResenhas([Resenha|ResenhasRestantes]):-
+    writeln("---------------------------------"),
+    writeln(Resenha.titulo),
+    writeln(Resenha.autor),
+    writeln("Resenha:"),
+    writeln(Resenha.resenha),
+    writeln("---------------------------------"),
+    writeln("Curtidas:"),
+    writeln(integer_to_string(Resenha.curtidas)),
+    writeln("Comentários:"),
+    imprimeComentarios(Resenha.comentarios),
+    writeln("---------------------------------"),
+    imprimeResenhas(ResenhasRestantes).
+
+imprimeComentarios([]):-
+    writeln("Sem comentários.").
+
+imprimeComentarios([Comentario|ComentariosRestantes]):-
+    writeln("Usuário: " ),
+    writeln(Comentario.usuario),
+    writeln("Comentário: "),
+    writeln(Comentario.comentario),
+    imprimeComentarios(ComentariosRestantes).
 

@@ -4,6 +4,7 @@
 :- use_module("../Controller/Estante.pl").
 :- use_module("../Controller/Perfil.pl").
 :- use_module("../Controller/Estatisticas.pl").
+:- use_module("../Controller/Resenha.pl").
 
 menuLogado(Usuario):-
     nl,
@@ -64,7 +65,7 @@ imprimeOpcoesPerfil(Opcao):-
     writeln("[V] Visão geral"),
     writeln("[E] Editar meu perfil"),
     writeln("[O] Visitar outro perfil"),
-    writeln("[M] Minhas Resenhas"),
+    writeln("[R] Minhas Resenhas"),
     writeln("[S] Voltar ao menu principal"),
     read_line_to_string(user_input, Opcao).
 
@@ -74,10 +75,10 @@ selecionaAcaoPerfil(Opcao, Usuario):- (
                                     writeln("--------------------------------------"),
                                     writeln("|        MEU PERFIL THE READER        |"),
                                     writeln("--------------------------------------"),
-                                    visaoGeral(Usuario.nome), menuLogado(Usuario), !;
+                                    visaoGeral(Usuario.nome), menuPerfil(Usuario), !;
                         Opcao == "E" -> editaPerfil(Usuario, Usuario.nome);
                         Opcao == "O" -> stalkear(Usuario);
-                        Opcao == "M" -> menuEstante(Usuario);
+                        Opcao == "R" -> minhasResenhas(Usuario), menuPerfil(Usuario), !;
                         writeln("Ação inválida"), menu, !).
 
 editaPerfil(Usuario, NomeUsuario):- (
