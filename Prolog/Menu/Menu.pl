@@ -2,6 +2,7 @@
 :- use_module("../Util/util.pl").
 :- use_module("../Controller/Usuario.pl").
 :- use_module("../Controller/Admin.pl").
+:- use_module("../Controller/Perfil.pl").
 :- use_module("../Controller/Livro.pl").
 :- use_module("../Menu/MenuLogado.pl").
 
@@ -49,6 +50,7 @@ cadastraUsuario:-
                                     writeln("Insira sua senha: "),
                                     read_line_to_string(user_input,Senha),
                                     criaUsuario(Nome, Senha),
+                                    criaPerfil(Nome, '', Nome),
                                     writeln("Cadastro Realizado!")
                                     ).
     
