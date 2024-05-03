@@ -163,7 +163,7 @@ menuEstatisticasAdmin(Admin):-
 
 selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "1" -> generosCadastrados, menuEstatisticasAdmin(Admin);
-        Opcao == "2" -> autoresCadastrados, menuEstatisticmsAdmin(Admin);
+        Opcao == "2" -> autoresCadastrados, menuEstatisticasAdmin(Admin);
         Opcao == "3" -> melhoresLivros, menuEstatisticasAdmin(Admin);
         Opcao == "4" -> totalLeituras, menuEstatisticasAdmin(Admin);
         Opcao == "5" -> totalLivros, menuEstatisticasAdmin(Admin);
@@ -175,8 +175,7 @@ generosCadastrados:-
     lerJSON("../Data/livros.json", Livros),
     listaGeneros(Livros, GenerosDup),
     list_to_set(GenerosDup, Generos),
-    length(Generos, TotalGeneros),
-    nl,
+    length(Generos, TotalGeneros), nl,
     writeln("--------------------------------------"),
     writeln("|        GENEROS CADASTRADOS         |"),
     writeln("--------------------------------------"), nl,
@@ -184,4 +183,19 @@ generosCadastrados:-
         TotalGeneros == 0 -> writeln("Nenhum livro encontrado.");
         imprimeNumLivros(GenerosDup, Generos), nl, nl,
         format("~w genero(s) cadastrados.", [TotalGeneros]), nl
+    ).
+
+% Exibe os autores cadastrados no sistema e a quantidade de livros de cada um
+autoresCadastrados:-
+    lerJSON("../Data/livros.json", Livros),
+    listaAutores(Livros, AutoresDup),
+    list_to_set(AutoresDup, Autores),
+    length(Autores, TotalAutores), nl,
+    writeln("--------------------------------------"),
+    writeln("|        AUTORES CADASTRADOS         |"),
+    writeln("--------------------------------------"), nl,
+    (
+        TotalAutores == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(AutoresDup, Autores), nl, nl,
+        format("~w autores(s) cadastrados.", [TotalAutores]), nl
     ).
