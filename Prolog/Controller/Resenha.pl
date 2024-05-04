@@ -1,4 +1,4 @@
-:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1]).
+:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1, cadastrarResenha/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module("../Util/util.pl").
