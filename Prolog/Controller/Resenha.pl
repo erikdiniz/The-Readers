@@ -14,14 +14,20 @@ cadastrarResenha(Usuario):-
     imprimeListaString(Titulos),
     writeln("Qual livro deseja avaliar: "),
     read_line_to_string(user_input, Titulo),
-    recupera_livro(Titulo, Livro),
+    (member(Titulo, Titulos) -> recupera_livro(Titulo, Livro),
     writeln("O que você achou da leitura: "),
     read_line_to_string(user_input, Resenha),
     criaResenha(Usuario, Livro, Resenha),
     nl, tty_clear,
     writeln("Resenha Cadastrada!"),
     nl,
-    menuLogado(Usuario).
+    menuLogado(Usuario);
+    tty_clear,
+    writeln("Livro não cadastrado"),
+    nl,
+    menuLogado(Usuario)
+    ).
+    
     
 
 
