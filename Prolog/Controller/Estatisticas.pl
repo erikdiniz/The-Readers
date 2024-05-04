@@ -156,7 +156,7 @@ menuEstatisticasAdmin(Admin):-
     writeln("[1] Generos dos livros cadastrados"),
     writeln("[2] Autores dos livros cadastrados"),
     writeln("[3] Livros com melhor avaliacao"),
-    writeln("[4] Numero de leituras"),
+    writeln("[4] Numero de livros e leituras"),
     writeln("[S] Voltar ao menu"),
     read_line_to_string(user_input, Opcao),
     selecionaEstatisticasAdmin(Opcao, Admin).
@@ -165,8 +165,7 @@ selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "1" -> generosCadastrados, menuEstatisticasAdmin(Admin);
         Opcao == "2" -> autoresCadastrados, menuEstatisticasAdmin(Admin);
         Opcao == "3" -> melhoresLivros, menuEstatisticasAdmin(Admin);
-        Opcao == "4" -> totalLeituras, menuEstatisticasAdmin(Admin);
-        Opcao == "5" -> totalLivros, menuEstatisticasAdmin(Admin);
+        Opcao == "4" -> totalLivrosLeituras, menuEstatisticasAdmin(Admin);
         Opcao == "S" -> menuLogadoAdm(Admin)
     ).
 
@@ -221,7 +220,7 @@ melhoresLivros:-
     lerJSON("../Data/leituras.json", Leituras),
     livrosNota5(Leituras, LivrosNota5Dup),
     list_to_set(LivrosNota5Dup, LivrosNota5),
-    length(LivrosNota5, TotalLivros),
+    length(LivrosNota5, TotalLivros), nl,
     writeln("--------------------------------------"),
     writeln("|          MELHORES LIVROS           |"),
     writeln("--------------------------------------"), nl,
@@ -230,3 +229,14 @@ melhoresLivros:-
         imprimeLivrosNotas(LivrosNota5), nl, nl,
         format("~w livros(s) com nota 5.", [TotalLivros]), nl
     ).
+
+totalLivrosLeituras:-
+    lerJSON("../Data/leituras.json", Leituras),
+    lerJSON("../Data/livros.json", Livros),
+    length(Leituras, TotalLeituras),
+    length(Livros, TotalLivros), nl,
+    writeln("--------------------------------------"),
+    writeln("|          LIVROS E LEITURAS         |"),
+    writeln("--------------------------------------"), nl,
+    format("~w livro(s) cadastrado(s).", [TotalLivros]), nl,
+    format("~w leitura(s) realizadas.", [TotalLeituras]), nl.
