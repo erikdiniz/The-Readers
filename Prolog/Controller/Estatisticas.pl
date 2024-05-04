@@ -9,7 +9,7 @@
 menuEstatisticas(Usuario):-
     nl,
     writeln("--------------------------------------"),
-    writeln("|            Estatisticas            |"),
+    writeln("|            ESTATISTICAS            |"),
     writeln("--------------------------------------"), nl,
     writeln("[V] Visao Geral"),
     writeln("[A] Autores"),
