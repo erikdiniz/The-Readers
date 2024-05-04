@@ -1,4 +1,4 @@
-:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1]).
+:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1, cadastrarResenha/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module("../Util/util.pl").
@@ -14,14 +14,20 @@ cadastrarResenha(Usuario):-
     imprimeListaString(Titulos),
     writeln("Qual livro deseja avaliar: "),
     read_line_to_string(user_input, Titulo),
-    recupera_livro(Titulo, Livro),
+    (member(Titulo, Titulos) -> recupera_livro(Titulo, Livro),
     writeln("O que você achou da leitura: "),
     read_line_to_string(user_input, Resenha),
     criaResenha(Usuario, Livro, Resenha),
     nl, tty_clear,
     writeln("Resenha Cadastrada!"),
     nl,
-    menuLogado(Usuario).
+    menuLogado(Usuario);
+    tty_clear,
+    writeln("Livro não cadastrado"),
+    nl,
+    menuLogado(Usuario)
+    ).
+    
     
 
 
@@ -45,7 +51,6 @@ carregar_resenhas(Resenhas) :-
 %ToString Resenha
 visaoResenha(Resenha) :-
     writeln("=== Resenha ==="),
-    format("Usuário: ~s~n", [Resenha.usuarioId]),
     format("Título do livro: ~s~n", [Resenha.titulo]),
     format("Autor do livro: ~s~n", [Resenha.autor]),
     format("Resenha: ~s~n", [Resenha.resenha]),
@@ -122,21 +127,25 @@ removeResenha(Resenha):-
 
 minhasResenhas(Usuario):-
     recuperaResenhasUsuario(Usuario, ResenhasUsuario),
-    imprimeResenhas(ResenhasUsuario).
-
+    (ResenhasUsuario == [] -> writeln("Você ainda não possui resenhas");
+    imprimeResenhas(ResenhasUsuario)
+    ).
 recuperaResenhasUsuario(Usuario, ResenhasUsuario):-
     lerJSON('../Data/resenhas.json', Resenhas),
-    procuraResenhasPorUsuario(Usuario, Resenhas, ResenhasUsuario).
+    procuraResenhasPorUsuario(Usuario, Resenhas, [],ResenhasUsuario).
 
-procuraResenhasPorUsuario(_, [], []):- !.
-procuraResenhasPorUsuario(Usuario, [Resenha|ResenhasRestantes], ResenhasUsuario):-
-    (Resenha.usuarioId == Usuario.nome) ->
-        append([Resenha], ResenhasUsuario, ResenhasUsuarioTemp),
-        procuraResenhasPorUsuario(Usuario, ResenhasRestantes, ResenhasUsuarioTemp), !;
-    procuraResenhasPorUsuario(Usuario, ResenhasRestantes, ResenhasUsuario).
+procuraResenhasPorUsuario(_, [],Resultado, Resultado):- !.
+procuraResenhasPorUsuario(Usuario, [Resenha|ResenhasRestantes], Acc, Resultado):-
+    (Usuario.nome == Resenha.usuarioId -> append([Resenha], Acc, NewAcc), procuraResenhasPorUsuario(Usuario, ResenhasRestantes, NewAcc, Resultado);
+                                            procuraResenhasPorUsuario(Usuario, ResenhasRestantes, Acc, Resultado)).
+
+recuperaLeiturasUsuario(Nome, [X|XS], Acc, Resultado):-
+    (X.id_usuario == Nome -> append([X], Acc, NewAcc), recuperaLeiturasUsuario(Nome, XS, NewAcc, Resultado);
+                             recuperaLeiturasUsuario(Nome, XS, Acc, Resultado)).
+recuperaLeiturasUsuario(_,[],Resultado,Resultado):-!.
 
 imprimeResenhas([]):-
-    writeln("Você ainda não possui resenhas!").
+    writeln("").
 imprimeResenhas([Resenha|ResenhasRestantes]):-
     writeln("---------------------------------"),
     writeln(Resenha.titulo),
@@ -145,14 +154,15 @@ imprimeResenhas([Resenha|ResenhasRestantes]):-
     writeln(Resenha.resenha),
     writeln("---------------------------------"),
     writeln("Curtidas:"),
-    writeln(integer_to_string(Resenha.curtidas)),
+    number_string(Resenha.curtidas, SCurtidas),
+    writeln(SCurtidas),
     writeln("Comentários:"),
     imprimeComentarios(Resenha.comentarios),
     writeln("---------------------------------"),
     imprimeResenhas(ResenhasRestantes).
 
 imprimeComentarios([]):-
-    writeln("Sem comentários.").
+    writeln("").
 
 imprimeComentarios([Comentario|ComentariosRestantes]):-
     writeln("Usuário: " ),
