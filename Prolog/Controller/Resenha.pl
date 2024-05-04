@@ -45,7 +45,6 @@ carregar_resenhas(Resenhas) :-
 %ToString Resenha
 visaoResenha(Resenha) :-
     writeln("=== Resenha ==="),
-    format("Usuário: ~s~n", [Resenha.usuarioId]),
     format("Título do livro: ~s~n", [Resenha.titulo]),
     format("Autor do livro: ~s~n", [Resenha.autor]),
     format("Resenha: ~s~n", [Resenha.resenha]),
@@ -121,7 +120,8 @@ removeResenha(Resenha):-
     escreveJSON('../Data/resenhas.json', ResenhasSemRemocao).
 
 minhasResenhas(Usuario):-
-    recuperaResenhasUsuario(Usuario, ResenhasUsuario),
+    recuperaResenhas(Usuario),
+    %recuperaResenhasUsuario(Usuario, ResenhasUsuario),
     imprimeResenhas(ResenhasUsuario).
 
 recuperaResenhasUsuario(Usuario, ResenhasUsuario):-
