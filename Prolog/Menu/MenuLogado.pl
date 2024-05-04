@@ -18,13 +18,14 @@ seguirUsuario(Usuario):- tty_clear, seguir(Usuario, UsuarioAtt), menuLogado(Usua
 
 imprimeOpcoes(Opcao):-
     nl,
-    writeln("[F] Ir para o Feed"),
     nl, writeln("------------ M E N U : ------------"), nl,
+    writeln("[F] Ir para o Feed"),
     writeln("[P] Meu Perfil"),
     writeln("[U] Seguir Usuário"),
     writeln("[M] Minhas Estantes"),
     writeln("[+] Cadastro de Livro"),
     writeln("[L] Cadastrar Leitura"),
+    writeln("[R] Cadastrar Resenha"),
     writeln("[E] Estatisticas"),
     writeln("[S] Sair"),
     read_line_to_string(user_input, Opcao).
@@ -36,6 +37,7 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "+" -> cadastraLivro, menuLogado(Usuario), !;
                         Opcao == "M" -> menuEstante(Usuario);
                         Opcao == "E" -> menuEstatisticas(Usuario);
+                        Opcao == "R" -> cadastrarResenha(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
                         writeln("Ação inválida"), menu, !).
 
