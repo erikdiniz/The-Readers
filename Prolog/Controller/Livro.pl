@@ -1,4 +1,4 @@
-:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2, imprimeListaLivros/0]).
+:- module(livros, [criaLivro/4, livroJaExiste/3, getLivro/3, removeLivro/1, removeLivroPorNome/3, lista_livros/1, recupera_livro/2, imprimeListaLivros/0, listaGeneros/2, listaAutores/2]).
 :- use_module(library(http/json)).
 :- use_module("../Util/util.pl").
 
@@ -59,3 +59,15 @@ recupera_livro(Titulo, Livro):-
 
 % Método auxiliar usado para verificar se Livro tem chave.
 tem_nome(Nome, Livro):- Nome == Livro.nome .
+
+% Retorna os gêneros de uma lista de livros (permite repetição)
+listaGeneros([], []).
+listaGeneros([Livro], [Livro.genero]).
+listaGeneros([Livro1|Resto], [Livro1.genero|RestoGeneros]):-
+    listaGeneros(Resto, RestoGeneros).
+
+% Retorna os autores de uma lista de livros (permite repetição)
+listaAutores([], []).
+listaAutores([Livro], [Livro.autor]).
+listaAutores([Livro1|Resto], [Livro1.autor|RestoAutores]):-
+    listaAutores(Resto, RestoAutores).

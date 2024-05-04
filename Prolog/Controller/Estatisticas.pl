@@ -1,6 +1,7 @@
 :- module(estatisticas, [menuEstatisticas/1, menuEstatisticasAdmin/1]).
 :- use_module("../Menu/MenuLogado.pl").
 :- use_module("../Controller/Leitura.pl").
+:- use_module("../Controller/Livro.pl").
 :- use_module("../Util/util.pl").
 :- use_module(library(http/json)).
 
@@ -16,9 +17,9 @@ menuEstatisticas(Usuario):-
     writeln("[L] Lidos por ano"),
     writeln("[S] Voltar ao menu"),
     read_line_to_string(user_input, Opcao),
-    selecionaEstatisticasUser(Opcao, Usuario).
+    selecionaEstatisticas(Opcao, Usuario).
 
-selecionaEstatisticasUser(Opcao, Usuario):- (
+selecionaEstatisticas(Opcao, Usuario):- (
         Opcao == "V" -> visaoGeralUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "A" -> autoresUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "G" -> generosUser(Usuario), menuEstatisticas(Usuario);
@@ -106,6 +107,14 @@ imprimeNumLivros([Elemento1, Elemento2|Resto]):-
     format("~w - ~w livro(s)", [Elemento1, Qntd]), nl,
     imprimeNumLivros([Elemento2|Resto]).
 
+imprimeNumLivros(_, []).
+imprimeNumLivros(ElementoDup, [Elemento]):-
+    format("~w - 1 livro(s)", [Elemento]).
+imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
+    contaOcorrencias(Elemento, ElementosDup, Qntd),
+    format("~w - ~w livro(s)", [Elemento, Qntd]), nl,
+    imprimeNumLivros(ElementosDup, Resto).
+
 % Exibe as estatísticas por autor das leituras de um usuário
 autoresUser(Usuario):-
     recuperaAutoresLidos(Usuario, Autores), nl,
@@ -146,17 +155,88 @@ menuEstatisticasAdmin(Admin):-
     writeln("--------------------------------------"), nl,
     writeln("[1] Generos dos livros cadastrados"),
     writeln("[2] Autores dos livros cadastrados"),
-    writeln("[3] Livros com melhor avaliaçao"),
-    writeln("[4] Numero de leituras"),
+    writeln("[3] Livros com melhor avaliacao"),
+    writeln("[4] Numero de livros e leituras"),
     writeln("[S] Voltar ao menu"),
     read_line_to_string(user_input, Opcao),
     selecionaEstatisticasAdmin(Opcao, Admin).
 
 selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "1" -> generosCadastrados, menuEstatisticasAdmin(Admin);
-        Opcao == "2" -> autoresCadastrados, menuEstatisticmsAdmin(Admin);
+        Opcao == "2" -> autoresCadastrados, menuEstatisticasAdmin(Admin);
         Opcao == "3" -> melhoresLivros, menuEstatisticasAdmin(Admin);
-        Opcao == "4" -> totalLeituras, menuEstatisticasAdmin(Admin);
-        Opcao == "5" -> totalLivros, menuEstatisticasAdmin(Admin);
+        Opcao == "4" -> totalLivrosLeituras, menuEstatisticasAdmin(Admin);
         Opcao == "S" -> menuLogadoAdm(Admin)
     ).
+
+% Exibe os gêneros cadastrados no sistema e a quantidade de livros de cada um
+generosCadastrados:-
+    lerJSON("../Data/livros.json", Livros),
+    listaGeneros(Livros, GenerosDup),
+    list_to_set(GenerosDup, Generos),
+    length(Generos, TotalGeneros), nl,
+    writeln("--------------------------------------"),
+    writeln("|        GENEROS CADASTRADOS         |"),
+    writeln("--------------------------------------"), nl,
+    (
+        TotalGeneros == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(GenerosDup, Generos), nl, nl,
+        format("~w genero(s) cadastrados.", [TotalGeneros]), nl
+    ).
+
+% Exibe os autores cadastrados no sistema e a quantidade de livros de cada um
+autoresCadastrados:-
+    lerJSON("../Data/livros.json", Livros),
+    listaAutores(Livros, AutoresDup),
+    list_to_set(AutoresDup, Autores),
+    length(Autores, TotalAutores), nl,
+    writeln("--------------------------------------"),
+    writeln("|        AUTORES CADASTRADOS         |"),
+    writeln("--------------------------------------"), nl,
+    (
+        TotalAutores == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeNumLivros(AutoresDup, Autores), nl, nl,
+        format("~w autores(s) cadastrados.", [TotalAutores]), nl
+    ).
+
+% Retorna uma lista com os livros que possuem nota 5
+livrosNota5([], []).
+livrosNota5([Leitura|Resto], [Leitura|LeituraResto]):-
+    Leitura.nota == 5,
+    livrosNota5(Resto, LeituraResto).
+livrosNota5([_|Resto], LeituraResto):-
+    livrosNota5(Resto, LeituraResto).
+
+% Imprime os titulos dos livros e suas notas
+imprimeLivrosNotas([]).
+imprimeLivrosNotas([Livro]):-
+    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]).
+imprimeLivrosNotas([Livro|Resto]):-
+    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]),
+    imprimeLivrosNotas(Resto).
+
+% Exibe os livros avaliados com nota 5
+melhoresLivros:-
+    lerJSON("../Data/leituras.json", Leituras),
+    livrosNota5(Leituras, LivrosNota5Dup),
+    list_to_set(LivrosNota5Dup, LivrosNota5),
+    length(LivrosNota5, TotalLivros), nl,
+    writeln("--------------------------------------"),
+    writeln("|          MELHORES LIVROS           |"),
+    writeln("--------------------------------------"), nl,
+    (
+        TotalLivros == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeLivrosNotas(LivrosNota5), nl, nl,
+        format("~w livros(s) com nota 5.", [TotalLivros]), nl
+    ).
+
+totalLivrosLeituras:-
+    lerJSON("../Data/leituras.json", Leituras),
+    lerJSON("../Data/livros.json", Livros),
+    length(Leituras, TotalLeituras),
+    length(Livros, TotalLivros), nl,
+    writeln("--------------------------------------"),
+    writeln("|          LIVROS E LEITURAS         |"),
+    writeln("--------------------------------------"), nl,
+    format("~w livro(s) cadastrado(s).", [TotalLivros]), nl,
+    format("~w leitura(s) realizadas.", [TotalLeituras]), nl.
