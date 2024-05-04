@@ -199,3 +199,34 @@ autoresCadastrados:-
         imprimeNumLivros(AutoresDup, Autores), nl, nl,
         format("~w autores(s) cadastrados.", [TotalAutores]), nl
     ).
+
+% Retorna uma lista com os livros que possuem nota 5
+livrosNota5([], []).
+livrosNota5([Leitura|Resto], [Leitura|LeituraResto]):-
+    Leitura.nota == 5,
+    livrosNota5(Resto, LeituraResto).
+livrosNota5([_|Resto], LeituraResto):-
+    livrosNota5(Resto, LeituraResto).
+
+% Imprime os titulos dos livros e suas notas
+imprimeLivrosNotas([]).
+imprimeLivrosNotas([Livro]):-
+    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]).
+imprimeLivrosNotas([Livro|Resto]):-
+    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]),
+    imprimeLivrosNotas(Resto).
+
+% Exibe os livros avaliados com nota 5
+melhoresLivros:-
+    lerJSON("../Data/leituras.json", Leituras),
+    livrosNota5(Leituras, LivrosNota5Dup),
+    list_to_set(LivrosNota5Dup, LivrosNota5),
+    length(LivrosNota5, TotalLivros),
+    writeln("--------------------------------------"),
+    writeln("|          MELHORES LIVROS           |"),
+    writeln("--------------------------------------"), nl,
+    (
+        TotalLivros == 0 -> writeln("Nenhum livro encontrado.");
+        imprimeLivrosNotas(LivrosNota5), nl, nl,
+        format("~w livros(s) com nota 5.", [TotalLivros]), nl
+    ).
