@@ -208,26 +208,33 @@ livrosNota5([Leitura|Resto], [Leitura|LeituraResto]):-
 livrosNota5([_|Resto], LeituraResto):-
     livrosNota5(Resto, LeituraResto).
 
-% Imprime os titulos dos livros e suas notas
+% Imprime os titulos dos livros (deve ser usado com os livros de nota 5)
 imprimeLivrosNotas([]).
-imprimeLivrosNotas([Livro]):-
-    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]).
-imprimeLivrosNotas([Livro|Resto]):-
-    format("~w - Nota ~w", [Livro.titulo_lido, Livro.nota]),
+imprimeLivrosNotas([Titulo]):-
+    format("~w - Nota 5", [Titulo]), nl.
+imprimeLivrosNotas([Titulo|Resto]):-
+    format("~w - Nota 5", [Titulo]), nl,
     imprimeLivrosNotas(Resto).
+
+% Recebe uma lista de leituras e retorna os titulos dos livros, permite repetição
+retornaTitulos([], []).
+retornaTitulos([Leitura], [Leitura.titulo_lido]).
+retornaTitulos([Leitura1|Resto], [Leitura1.titulo_lido|RestoTitulo]):-
+    retornaTitulos(Resto, RestoTitulo).
 
 % Exibe os livros avaliados com nota 5
 melhoresLivros:-
     lerJSON("../Data/leituras.json", Leituras),
     livrosNota5(Leituras, LivrosNota5Dup),
-    list_to_set(LivrosNota5Dup, LivrosNota5),
-    length(LivrosNota5, TotalLivros), nl,
+    retornaTitulos(LivrosNota5Dup, TitulosDup),
+    list_to_set(TitulosDup, Titulos),
+    length(LivrosNota5Dup, TotalLivros), nl,
     writeln("--------------------------------------"),
     writeln("|          MELHORES LIVROS           |"),
     writeln("--------------------------------------"), nl,
     (
         TotalLivros == 0 -> writeln("Nenhum livro encontrado.");
-        imprimeLivrosNotas(LivrosNota5), nl, nl,
+        imprimeLivrosNotas(Titulos), nl, nl,
         format("~w livros(s) com nota 5.", [TotalLivros]), nl
     ).
 
