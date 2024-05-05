@@ -6,14 +6,14 @@
 
 % Interação com usuário para cadastrar leitura
 cadastrarLeitura(Usuario):-
-    tty_clear,
+    clear,
     lista_livros(Titulos),
     writeln("Títulos disponíveis: "),
     imprimeListaString(Titulos),
     writeln("Cadastrar leitura de: "),
     read_line_to_string(user_input, Titulo),
     (member(Titulo,Titulos) -> coletaAvaliacao(Usuario,Titulo);
-                               tty_clear, writeln("Título inválido"), nl, menuLogado(Usuario)). 
+                               clear, writeln("Título inválido"), nl, menuLogado(Usuario)). 
 % Interação com usuário para cadastrar leitura
 coletaAvaliacao(Usuario, Titulo):-
     recupera_livro(Titulo, Livro),
@@ -24,11 +24,11 @@ coletaAvaliacao(Usuario, Titulo):-
     atom_number(SNota, Nota),
     (validaNota(Nota) -> 
     criaLeitura(Usuario, Livro, Data, Nota),
-    nl, tty_clear,
+    nl, clear,
     writeln("Leitura Cadastrada!"),
     nl,
     menuLogado(Usuario);
-    tty_clear, nl, writeln("Nota inválida"), nl, menuLogado(Usuario)
+    clear, nl, writeln("Nota inválida"), nl, menuLogado(Usuario)
     ).
 
 validaNota(Nota):- Nota =< 5, Nota >=1.
