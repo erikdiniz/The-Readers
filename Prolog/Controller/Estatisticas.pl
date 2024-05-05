@@ -24,7 +24,8 @@ selecionaEstatisticas(Opcao, Usuario):- (
         Opcao == "A" -> autoresUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "G" -> generosUser(Usuario), menuEstatisticas(Usuario);
         Opcao == "L" -> lidosAnoUser(Usuario), menuEstatisticas(Usuario);
-        Opcao == "S" -> menuLogado(Usuario)
+        Opcao == "S" -> menuLogado(Usuario);
+        writeln("Ação inválida"), menuEstatisticas(Usuario), !
     ).
 
 % Retorna o total de páginas de uma lista de livros (leituras)
@@ -165,7 +166,8 @@ selecionaEstatisticasAdmin(Opcao, Admin):- (
         Opcao == "2" -> autoresCadastrados, menuEstatisticasAdmin(Admin);
         Opcao == "3" -> melhoresLivros, menuEstatisticasAdmin(Admin);
         Opcao == "4" -> totalLivrosLeituras, menuEstatisticasAdmin(Admin);
-        Opcao == "S" -> menuLogadoAdm(Admin)
+        Opcao == "S" -> menuLogadoAdm(Admin);
+        writeln("Ação inválida"), menuEstatisticasAdmin(Admin), !
     ).
 
 % Exibe os gêneros cadastrados no sistema e a quantidade de livros de cada um
