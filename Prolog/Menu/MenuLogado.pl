@@ -14,7 +14,7 @@ menuLogado(Usuario):-
     imprimeOpcoes(Opcao),
     selecionaAcao(Opcao, Usuario).
 
-seguirUsuario(Usuario):- tty_clear, seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
+seguirUsuario(Usuario):- seguir(Usuario, UsuarioAtt), menuLogado(UsuarioAtt).
 
 imprimeOpcoes(Opcao):-
     nl,
@@ -34,13 +34,13 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "S" -> nl, writeln("Obrigado por acessar o The Readers"), halt;
                         Opcao == "U" -> seguirUsuario(Usuario);
                         Opcao == "L" -> cadastrarLeitura(Usuario);
-                        Opcao == "+" -> cadastraLivro, menuLogado(Usuario), !;
+                        Opcao == "+" -> cadastraLivro, menuLogado(Usuario);
                         Opcao == "M" -> menuEstante(Usuario);
                         Opcao == "E" -> menuEstatisticas(Usuario);
                         Opcao == "R" -> cadastrarResenha(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
                         Opcao == "F" -> feed(Usuario);
-                        writeln("Ação inválida"), menu, !).
+                        writeln("Ação inválida"), menuLogado(Usuario)).
 
 
 cadastraLivro:-

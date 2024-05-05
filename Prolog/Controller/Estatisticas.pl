@@ -98,18 +98,11 @@ visaoGeralUser(Usuario):-
     ).
 
 % Exibe a quantidade de livros por autor, gênero, ano ou qualquer outra propriedade de um livro
-imprimeNumLivros([]):-
+% Recebe uma lista com os elemntos duplicados e uma lista com os elementos sem duplicata
+imprimeNumLivros(_, []):-
     writeln("Nenhum livro encontrado."), nl.
-imprimeNumLivros([Elemento]):-
-    format("~w - 1 livro(s)", [Elemento]),nl.
-imprimeNumLivros([Elemento1, Elemento2|Resto]):-
-    contaOcorrencias(Elemento1, [Elemento1, Elemento2|Resto], Qntd),
-    format("~w - ~w livro(s)", [Elemento1, Qntd]), nl,
-    imprimeNumLivros([Elemento2|Resto]).
-
-imprimeNumLivros(_, []).
 imprimeNumLivros(ElementoDup, [Elemento]):-
-    format("~w - 1 livro(s)", [Elemento]).
+    format("~w - 1 livro(s)", [Elemento]), nl.
 imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
     contaOcorrencias(Elemento, ElementosDup, Qntd),
     format("~w - ~w livro(s)", [Elemento, Qntd]), nl,
@@ -117,19 +110,23 @@ imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
 
 % Exibe as estatísticas por autor das leituras de um usuário
 autoresUser(Usuario):-
-    recuperaAutoresLidos(Usuario, Autores), nl,
+    recuperaAutoresLidos(Usuario, AutoresDup),
+    list_to_set(AutoresDup, Autores),
+    nl,
     writeln("--------------------------------------"),
     writeln("|              AUTORES               |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(Autores).
+    imprimeNumLivros(AutoresDup, Autores).
 
 % Exibe as estatísticas por gênero das leituras de um usuário
 generosUser(Usuario):-
-    recuperaGenerosLidos(Usuario, Generos), nl,
+    recuperaGenerosLidos(Usuario, GenerosDup),
+    list_to_set(GenerosDup, Generos),
+    nl,
     writeln("--------------------------------------"),
     writeln("|              GENEROS               |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(Generos).
+    imprimeNumLivros(GenerosDup, Generos).
 
 % Predicado para extrair o ano de uma data no formato "dd/mm/aaaa"
 extraiAno([], []).
@@ -141,11 +138,13 @@ extraiAno([Data|Resto], [Ano|AnosRestantes]) :-
 % Exibe as estatísticas por ano das leituras de um usuário
 lidosAnoUser(Usuario):-
     recuperaDatasLidos(Usuario, Datas),
-    extraiAno(Datas, Anos),
+    extraiAno(Datas, AnosDup),
+    list_to_set(AnosDup, Anos),
+    nl,
     writeln("--------------------------------------"),
     writeln("|            LIDOS POR ANO           |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(Anos).
+    imprimeNumLivros(AnosDup, Anos).
 
 % Exibe o Menu Estatísticas do adm
 menuEstatisticasAdmin(Admin):-
@@ -230,6 +229,7 @@ melhoresLivros:-
         format("~w livros(s) com nota 5.", [TotalLivros]), nl
     ).
 
+% Exibe a quantidade de livros e leituras cadastradas no sistema 
 totalLivrosLeituras:-
     lerJSON("../Data/leituras.json", Leituras),
     lerJSON("../Data/livros.json", Livros),
