@@ -1,6 +1,15 @@
 [
   {
     "autor_lido":"J R R Tolkien",
+    "data":"03/02/2024",
+    "genero_lido":"Aventura",
+    "id_usuario":"erik",
+    "nota":3,
+    "num_paginas":700,
+    "titulo_lido":"Senhor dos Aneis"
+  },
+  {
+    "autor_lido":"J R R Tolkien",
     "data":"10/07/2023",
     "genero_lido":"Aventura",
     "id_usuario":"erik",

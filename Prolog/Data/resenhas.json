@@ -1,16 +1,16 @@
 [
   {
-    "autor":"Frank Herbert",
+    "autor":"J R R Tolkien",
     "comentarios": [],
-    "curtidas":1,
-    "resenha":"Mais uma resenha de duna.",
-    "titulo":"Duna",
-    "usuarioId":"bibi"
+    "curtidas":0,
+    "resenha":"muito bom, melhor que senhor dos aneis",
+    "titulo":"O Hobbit",
+    "usuarioId":"erik"
   },
   {
     "autor":"Frank Herbert",
     "comentarios": [],
-    "curtidas":0,
+    "curtidas":1,
     "resenha":"Não lí não, tô só testando.",
     "titulo":"Duna",
     "usuarioId":"moab"
@@ -19,11 +19,26 @@
     "autor":"Frank Herbert",
     "comentarios": [
       {"comentario":"muito legal", "usuario":"moab"},
-      {"comentario":"muito bom esse", "usuario":"moab"}
+      {"comentario":"muito bom esse", "usuario":"moab"},
+      {"comentario":"ainda nao li mas to pensando", "usuario":"erik"}
     ],
-    "curtidas":2,
+    "curtidas":3,
     "resenha":"bacana",
     "titulo":"Duna",
     "usuarioId":"Anny"
+  },
+  {
+    "autor":"Frank Herbert",
+    "comentarios": [
+      {
+	"comentario":"faltou criatividade nessa resenha viu",
+	"usuario":"erik"
+      },
+      {"comentario":"nao ganhou meu like", "usuario":"erik"}
+    ],
+    "curtidas":1,
+    "resenha":"Mais uma resenha de duna.",
+    "titulo":"Duna",
+    "usuarioId":"bibi"
   }
 ]

@@ -100,9 +100,8 @@ visaoGeralUser(Usuario):-
 
 % Exibe a quantidade de livros por autor, gênero, ano ou qualquer outra propriedade de um livro
 % Recebe uma lista com os elemntos duplicados e uma lista com os elementos sem duplicata
-imprimeNumLivros(_, []):-
-    writeln("Nenhum livro encontrado."), nl.
-imprimeNumLivros(ElementoDup, [Elemento]):-
+imprimeNumLivros(_, []).
+imprimeNumLivros([ElementoDup], Elemento):-
     format("~w - 1 livro(s)", [Elemento]), nl.
 imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
     contaOcorrencias(Elemento, ElementosDup, Qntd),
@@ -117,7 +116,10 @@ autoresUser(Usuario):-
     writeln("--------------------------------------"),
     writeln("|              AUTORES               |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(AutoresDup, Autores).
+    (
+        length(Autores, 0) -> writeln("Nenhum livro encontrado."), nl;
+        imprimeNumLivros(AutoresDup, Autores)
+    ).
 
 % Exibe as estatísticas por gênero das leituras de um usuário
 generosUser(Usuario):-
@@ -127,7 +129,10 @@ generosUser(Usuario):-
     writeln("--------------------------------------"),
     writeln("|              GENEROS               |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(GenerosDup, Generos).
+    (
+        length(Generos, 0) -> writeln("Nenhum livro encontrado."), nl;
+        imprimeNumLivros(GenerosDup, Generos)
+    ).
 
 % Predicado para extrair o ano de uma data no formato "dd/mm/aaaa"
 extraiAno([], []).
@@ -145,7 +150,10 @@ lidosAnoUser(Usuario):-
     writeln("--------------------------------------"),
     writeln("|            LIDOS POR ANO           |"),
     writeln("--------------------------------------"), nl,
-    imprimeNumLivros(AnosDup, Anos).
+    (
+        length(Anos, 0) -> writeln("Nenhum livro encontrado."), nl;
+        imprimeNumLivros(AnosDup, Anos)
+    ).
 
 % Exibe o Menu Estatísticas do adm
 menuEstatisticasAdmin(Admin):-
