@@ -1,11 +1,28 @@
 [
   {
+    "nome":"Anny",
+    "seguidores": ["moab"],
+    "seguindo": [],
+    "senha":"123"
+  },
+  {
+    "nome":"moab",
+    "seguidores": ["bibi" ],
+    "seguindo": ["bibi", "Anny" ],
+    "senha":"a"
+  },
+  {
+    "nome":"teste",
+    "seguidores": ["bibi", "moab" ],
+    "seguindo": [],
+    "senha":"000"
+  },
+  {
     "nome":"erik",
     "seguidores": [],
     "seguindo": [],
     "senha":"saopaulofc"
   },
-  {"nome":"Anny", "seguidores": [], "seguindo": [], "senha":"123"},
   {
     "nome":"bibi",
     "seguidores": ["moab", "predohenrique" ],
@@ -17,17 +34,5 @@
     "seguidores": [],
     "seguindo": ["bibi" ],
     "senha":"bibi"
-  },
-  {
-    "nome":"teste",
-    "seguidores": ["bibi" ],
-    "seguindo": [],
-    "senha":"000"
-  },
-  {
-    "nome":"moab",
-    "seguidores": ["bibi" ],
-    "seguindo": ["bibi" ],
-    "senha":"a"
   }
 ]

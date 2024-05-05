@@ -39,6 +39,7 @@ selecionaAcao(Opcao, Usuario):- (
                         Opcao == "E" -> menuEstatisticas(Usuario);
                         Opcao == "R" -> cadastrarResenha(Usuario);
                         Opcao == "P" -> menuPerfil(Usuario);
+                        Opcao == "F" -> feed(Usuario);
                         writeln("Ação inválida"), menu, !).
 
 

@@ -2,18 +2,10 @@
   {
     "autor":"Frank Herbert",
     "comentarios": [],
-    "curtidas":0,
-    "resenha":"bacana",
+    "curtidas":1,
+    "resenha":"Mais uma resenha de duna.",
     "titulo":"Duna",
-    "usuarioId":"Anny"
-  },
-  {
-    "autor":"Frank Herbert",
-    "comentarios": [],
-    "curtidas":0,
-    "resenha":"Massa",
-    "titulo":"Duna",
-    "usuarioId":"Anny"
+    "usuarioId":"bibi"
   },
   {
     "autor":"Frank Herbert",
@@ -22,5 +14,16 @@
     "resenha":"Não lí não, tô só testando.",
     "titulo":"Duna",
     "usuarioId":"moab"
+  },
+  {
+    "autor":"Frank Herbert",
+    "comentarios": [
+      {"comentario":"muito legal", "usuario":"moab"},
+      {"comentario":"muito bom esse", "usuario":"moab"}
+    ],
+    "curtidas":2,
+    "resenha":"bacana",
+    "titulo":"Duna",
+    "usuarioId":"Anny"
   }
 ]
