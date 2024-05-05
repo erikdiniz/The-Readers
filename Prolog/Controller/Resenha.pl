@@ -1,4 +1,4 @@
-:- module(resenha,[criaResenha/3, adicionarComentario/2, minhasResenhas/1, cadastrarResenha/1]).
+:- module(resenha,[criaResenha/3, minhasResenhas/1, cadastrarResenha/1, feed/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
 :- use_module("../Util/util.pl").
@@ -6,6 +6,45 @@
 :- use_module("../Controller/Leitura.pl").
 :- use_module("../Controller/Usuario.pl").
 :- use_module("../Menu/MenuLogado.pl").
+
+feed(Usuario):-
+    SeguindoNomes = Usuario.seguindo,
+    pegaResenhaDosSeguindo(SeguindoNomes, [], Resultado),
+    iniciarFeed(Usuario, Resultado).
+
+iniciarFeed(Usuario, []):- tty_clear, writeln("Fim do Feed."), menuLogado(Usuario).
+iniciarFeed(Usuario, [Atual|Resto]):-
+    tty_clear,
+    imprimeResenhasFeed(Atual),
+    imprimeOpcoesFeed(),
+    nl,
+    read_line_to_string(user_input, Opcao),
+    (Opcao == "L" -> adicionaCurtidaResenha(Atual, Att), iniciarFeed(Usuario, [Att|Resto]);
+    Opcao == "S" -> tty_clear, menuLogado(Usuario);
+    Opcao == "P" -> iniciarFeed(Usuario, Resto);
+    Opcao == "C" -> adicionaComentario(Usuario, Atual, Att), iniciarFeed(Usuario, [Att|Resto])).
+
+imprimeOpcoesFeed():-
+    format("[P] Próximo post | [L] Curtir | [C] Comentar | [S] Sair", []).
+imprimeResenhasFeed(Resenha):-
+    writeln("---------------------------------"),
+    format('Resenha de ~w~n', [Resenha.usuarioId]),
+    format('~w escrito por ~w~n',[Resenha.titulo, Resenha.autor]),
+    writeln("---------------------------------"),
+    format('Resenha: ~w~n', [Resenha.resenha]),
+    writeln("---------------------------------"),
+    number_string(Resenha.curtidas, SCurtidas),
+    format('~w curtidas ~n', [SCurtidas]),
+    writeln("Comentários:"),
+    imprimeComentarios(Resenha.comentarios),
+    writeln("---------------------------------").
+ 
+pegaResenhaDosSeguindo([Id|Resto], Acc, Resultado):-
+    recuperaUsuario(Id, UsuarioId),
+    recuperaResenhasUsuario(UsuarioId, Resenhas),
+    append(Resenhas, Acc, NewAcc),
+    pegaResenhaDosSeguindo(Resto, NewAcc, Resultado).
+pegaResenhaDosSeguindo([], Resultado, Resultado).
 
 %Interação com o usuário para cadastrar a resenha
 cadastrarResenha(Usuario):-
@@ -77,28 +116,13 @@ recupera_resenhas([ResenhaJSON|OutrasResenhasJSON], Acc, Resenhas) :-
 recupera_resenhas([], Resenhas, Resenhas) :- !.
 
 % Predicado para adicionar uma curtida a uma resenha
-adicionaCurtidaResenha(TituloLivro, Usuario) :-
+adicionaCurtidaResenha(Resenha, ResenhaAtt) :-
+    removeResenha(Resenha),
+    CurtidasAtt is Resenha.curtidas + 1,
+    put_dict(curtidas, Resenha, CurtidasAtt, ResenhaAtt),
     lerJSON('../Data/resenhas.json', Resenhas),
-    (buscarResenha(TituloLivro, ResenhasJSON, Resenha) ->
-        adiciona_curtida_resenha(Resenha, Usuario, ResenhaAtualizada),
-        atualiza_resenha_json(ResenhasJSON, ResenhaAtualizada);
-        writeln('Resenha não encontrada.')
-    ).
-
-% Predicado para buscar uma resenha pelo título do livro
-buscarResenha(_, [], _) :- fail. % Falha se não encontrar a resenha
-buscarResenha(TituloLivro, [ResenhaJSON|OutrasResenhasJSON], Resenha) :-
-    ResenhaJSON.titulo = TituloLivro,
-    Resenha = ResenhaJSON,
-    !. % Para a busca após encontrar a resenha
-
-% Predicado para adicionar uma curtida à resenha
-adiciona_curtida_resenha(Resenha, Usuario, ResenhaAtualizada) :-
-    memberchk(Usuario, Resenha.curtidas),
-    writeln('Você já curtiu esta resenha!'),
-    ResenhaAtualizada = Resenha; % Não atualiza a resenha se o usuário já curtiu
-    append([Usuario], Resenha.curtidas, NovaCurtidas),
-    ResenhaAtualizada = Resenha.put(curtidas, NovaCurtidas).
+    append([ResenhaAtt], Resenhas, ResenhasAtt),
+    escreveJSON('../Data/resenhas.json', ResenhasAtt).
 
 % Predicado para atualizar o arquivo JSON com as resenhas atualizadas
 atualiza_resenha_json(ResenhasJSON, ResenhaAtualizada) :-
@@ -108,26 +132,33 @@ atualiza_resenha_json(ResenhasJSON, ResenhaAtualizada) :-
     json_write(Stream, ResenhasJSON),
     close(Stream).
 
-adicionarComentario(Usuario, Resenha):-
+adicionaComentario(Usuario, Resenha, ResenhaAtt):-
+    nl,
     writeln("Insira seu comentário: "),
     read_line_to_string(user_input, Comentario),
     Componente = _{comentario: Comentario, usuario: Usuario.nome},
-    append(Resenha.comentarios, [Componente], NovoComentario),
-    atualizaResenha(Resenha, NovoComentario).
+    removeResenha(Resenha),
+    append(Resenha.comentarios, [Componente], ComentarioAtt),
+    put_dict(comentarios, Resenha, ComentarioAtt, ResenhaAtt),
+    lerJSON('../Data/resenhas.json', Resenhas),
+    append([ResenhaAtt], Resenhas, ResenhasAtt),
+    escreveJSON('../Data/resenhas.json', ResenhasAtt).
 
-atualizaResenha(Resenha, NovosComentarios):-
-    ResenhaAtualizada = Resenha^comentarios := NovosComentarios,
-    removeResenha(Resenha), % Remove a resenha antiga do arquivo
-    adicionaResenha(ResenhaAtualizada). % Adiciona a resenha atualizada
 
 removeResenha(Resenha):-
     lerJSON('../Data/resenhas.json', Resenhas),
-    remove_element(Resenha, Resenhas, ResenhasSemRemocao),
+    remove_element(Resenha, Resenhas, [],ResenhasSemRemocao),
     escreveJSON('../Data/resenhas.json', ResenhasSemRemocao).
+
+remove_element(Resenha, [Head|Tail], Acc,Resultado):-
+    ((Resenha.resenha == Head.resenha, Resenha.usuarioId == Head.usuarioId) -> remove_element(Resenha, Tail, Acc, Resultado);
+                                                          append([Head], Acc, NewAcc), remove_element(Resenha, Tail, NewAcc, Resultado)).
+remove_element(_, [], Resultado,Resultado):-!.
 
 minhasResenhas(Usuario):-
     recuperaResenhasUsuario(Usuario, ResenhasUsuario),
     (ResenhasUsuario == [] -> writeln("Você ainda não possui resenhas");
+    nl,
     imprimeResenhas(ResenhasUsuario)
     ).
 recuperaResenhasUsuario(Usuario, ResenhasUsuario):-
@@ -148,27 +179,21 @@ imprimeResenhas([]):-
     writeln("").
 imprimeResenhas([Resenha|ResenhasRestantes]):-
     writeln("---------------------------------"),
-    writeln(Resenha.titulo),
-    writeln(Resenha.autor),
-    writeln("Resenha:"),
-    writeln(Resenha.resenha),
+    format('Resenha de ~w~n', [Resenha.usuarioId]),
+    format('~w escrito por ~w~n',[Resenha.titulo, Resenha.autor]),
     writeln("---------------------------------"),
-    writeln("Curtidas:"),
+    format('Resenha: ~w~n', [Resenha.resenha]),
+    writeln("---------------------------------"),
     number_string(Resenha.curtidas, SCurtidas),
-    writeln(SCurtidas),
+    format('~w curtidas ~n', [SCurtidas]),
     writeln("Comentários:"),
     imprimeComentarios(Resenha.comentarios),
     writeln("---------------------------------"),
     imprimeResenhas(ResenhasRestantes).
 
-imprimeComentarios([]):-
-    writeln("").
-
+imprimeComentarios([]):-!.
 imprimeComentarios([Comentario|ComentariosRestantes]):-
-    writeln("Usuário: " ),
-    writeln(Comentario.usuario),
-    writeln("Comentário: "),
-    writeln(Comentario.comentario),
+    format("~w: ~w~n", [Comentario.usuario, Comentario.comentario]),
     imprimeComentarios(ComentariosRestantes).
 
     

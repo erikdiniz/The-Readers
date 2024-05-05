@@ -1,5 +1,32 @@
 [
   {
+    "autor_lido":"Jorge Amado",
+    "data":"12/12/2024",
+    "genero_lido":"Romance",
+    "id_usuario":"moab",
+    "nota":3,
+    "num_paginas":250,
+    "titulo_lido":"Tieta"
+  },
+  {
+    "autor_lido":"J R R Tolkien",
+    "data":"10/11/2011",
+    "genero_lido":"Aventura",
+    "id_usuario":"moab",
+    "nota":4,
+    "num_paginas":700,
+    "titulo_lido":"Senhor dos Aneis"
+  },
+  {
+    "autor_lido":"Haruki Murakami",
+    "data":"10/03/2024",
+    "genero_lido":"Ficção",
+    "id_usuario":"moab",
+    "nota":4,
+    "num_paginas":500,
+    "titulo_lido":"After Dark"
+  },
+  {
     "autor_lido":"Frank Herbert",
     "data":"03/05/2024",
     "genero_lido":"Ficção",
