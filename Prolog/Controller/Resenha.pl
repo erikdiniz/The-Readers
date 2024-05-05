@@ -12,15 +12,15 @@ feed(Usuario):-
     pegaResenhaDosSeguindo(SeguindoNomes, [], Resultado),
     iniciarFeed(Usuario, Resultado).
 
-iniciarFeed(Usuario, []):- tty_clear, writeln("Fim do Feed."), menuLogado(Usuario).
+iniciarFeed(Usuario, []):- clear, writeln("Fim do Feed."), menuLogado(Usuario).
 iniciarFeed(Usuario, [Atual|Resto]):-
-    tty_clear,
+    clear,
     imprimeResenhasFeed(Atual),
     imprimeOpcoesFeed(),
     nl,
     read_line_to_string(user_input, Opcao),
     (Opcao == "L" -> adicionaCurtidaResenha(Atual, Att), iniciarFeed(Usuario, [Att|Resto]);
-    Opcao == "S" -> tty_clear, menuLogado(Usuario);
+    Opcao == "S" -> clear, menuLogado(Usuario);
     Opcao == "P" -> iniciarFeed(Usuario, Resto);
     Opcao == "C" -> adicionaComentario(Usuario, Atual, Att), iniciarFeed(Usuario, [Att|Resto])).
 
@@ -48,7 +48,7 @@ pegaResenhaDosSeguindo([], Resultado, Resultado).
 
 %Interação com o usuário para cadastrar a resenha
 cadastrarResenha(Usuario):-
-    tty_clear,
+    clear,
     recuperaTitulosLidos(Usuario, Titulos),
     imprimeListaString(Titulos),
     writeln("Qual livro deseja avaliar: "),
@@ -57,11 +57,11 @@ cadastrarResenha(Usuario):-
     writeln("O que você achou da leitura: "),
     read_line_to_string(user_input, Resenha),
     criaResenha(Usuario, Livro, Resenha),
-    nl, tty_clear,
+    nl, clear,
     writeln("Resenha Cadastrada!"),
     nl,
     menuLogado(Usuario);
-    tty_clear,
+    clear,
     writeln("Livro não cadastrado"),
     nl,
     menuLogado(Usuario)
@@ -189,6 +189,7 @@ imprimeResenhas([Resenha|ResenhasRestantes]):-
     writeln("Comentários:"),
     imprimeComentarios(Resenha.comentarios),
     writeln("---------------------------------"),
+    nl,
     imprimeResenhas(ResenhasRestantes).
 
 imprimeComentarios([]):-!.
