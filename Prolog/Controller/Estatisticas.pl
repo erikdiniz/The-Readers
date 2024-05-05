@@ -99,7 +99,8 @@ visaoGeralUser(Usuario):-
 
 % Exibe a quantidade de livros por autor, gênero, ano ou qualquer outra propriedade de um livro
 % Recebe uma lista com os elemntos duplicados e uma lista com os elementos sem duplicata
-imprimeNumLivros(_, []).
+imprimeNumLivros(_, []):-
+    writeln("Nenhum livro encontrado.").
 imprimeNumLivros(ElementoDup, [Elemento]):-
     format("~w - 1 livro(s)", [Elemento]), nl.
 imprimeNumLivros(ElementosDup, [Elemento|Resto]):-
