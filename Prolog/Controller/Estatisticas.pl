@@ -229,6 +229,7 @@ melhoresLivros:-
         format("~w livros(s) com nota 5.", [TotalLivros]), nl
     ).
 
+% Exibe a quantidade de livros e leituras cadastradas no sistema 
 totalLivrosLeituras:-
     lerJSON("../Data/leituras.json", Leituras),
     lerJSON("../Data/livros.json", Livros),
