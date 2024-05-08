@@ -1,4 +1,4 @@
-:- module(util,[lerJSON/2, escreveJSON/2, notMember/4, imprimeListaString/1]).
+:- module(util,[lerJSON/2, escreveJSON/2, notMember/4, imprimeListaString/1, clear/0]).
 :- use_module(library(http/json)).
 
 % Regra genérica para ler um arquivo json e retornar ele em Lista
@@ -12,6 +12,9 @@ escreveJSON(Path, Objetos):-
     open(Path, write, Stream, [encoding(utf8)]),
     json_write(Stream, Objetos),
     close(Stream).
+
+clear:- shell('clear');
+        shell('cls').
 
 % Filtra uma Lista1 tirando todos os elementos que estejam na Lista 2
 % Na primeira chamada, passe uma lista vazia em Acc

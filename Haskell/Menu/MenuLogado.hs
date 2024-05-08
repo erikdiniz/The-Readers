@@ -240,7 +240,7 @@ exibeDashAdm adm = do
     putStrLn $ "|     Dashboard de Administrador     |" ++ "\n"
     putStrLn $ "-------------------------------------" ++ "\n"
 
-    putStrLn "\n [1] Estatísticas Gerais\n [2] Listar de usuários cadastrados\n [3] Listar livros cadastrados\n [+] Cadastrar novo adm\n [-] Excluir livro\n [S] Sair"
+    putStrLn "\n [1] Estatísticas Gerais\n [2] Lista de usuários cadastrados\n [3] Listar livros cadastrados\n [+] Cadastrar novo adm\n [-] Excluir livro\n [S] Sair"
 
     escolha <- getLine
     escolhaAdm adm escolha

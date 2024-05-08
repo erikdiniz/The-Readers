@@ -1,5 +1,17 @@
 [
   {
+    "autor":"J R R Tolkien",
+    "genero":"Aventura",
+    "n_paginas":1200,
+    "nome":"O Silmarillion"
+  },
+  {
+    "autor":"Jorge Amado",
+    "genero":"Romance",
+    "n_paginas":250,
+    "nome":"Tieta"
+  },
+  {
     "autor":"Brandon Sanderson",
     "genero":"Fantasia",
     "n_paginas":1064,
@@ -37,7 +49,7 @@
   },
   {
     "autor":"George R R Martin",
-    "genero":"Fantasia ",
+    "genero":"Fantasia",
     "n_paginas":680,
     "nome":"As Crônicas de Gelo e Fogo - Guerra dos Tronos"
   },

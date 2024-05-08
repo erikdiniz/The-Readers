@@ -1,6 +1,7 @@
 :- module(usuario,[criaUsuario/2, recuperaUsuario/2, procuraUsuario/3, imprimeUsuarios/0, imprimeLista/1, removeUsuario/1, seguir/2, listaUsuarios/1]).
 :- use_module(library(http/json)).
 :- use_module(library(lists)).
+:- use_module("../Util/util.pl").
 
 % Cria um novo usuário
 criaUsuario(Nome, Senha):-
@@ -36,13 +37,13 @@ remover_por_nome(Lista, Nome, Resultado) :-
 tem_nome(Nome, Usuario):- Nome == Usuario.nome.
 
 seguir(Usuario, UsuarioAtt):-
-    writeln("Usuarios Disponíveis: "),
+    writeln("Usuários Disponíveis: "),
     opcoesSeguir(Usuario, Disponiveis),
     imprimeListaString(Disponiveis),
     writeln("Digite o nome de usuário: "),
     read_line_to_string(user_input, Opcao),
-    (member(Opcao, Disponiveis) -> nl, writeln("Usuario seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
-                                   tty_clear,nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
+    (member(Opcao, Disponiveis) -> nl, writeln("Usuário seguido com sucesso!"), adicionarSeguidor(Usuario, Opcao, UsuarioAtt), menuLogado(UsuarioAtt);
+                                   nl, writeln("Opção Inválida!"), menuLogado(Usuario)). 
 
 opcoesSeguir(Usuario, Disponiveis):-
     listaUsuarios(NomesUsuarios),
@@ -68,11 +69,9 @@ imprimeUsuarios:-
     imprimeLista(IUsuarios).
 
 
-
 % Imprime uma lista com nomes de usuários
 imprimeLista([X|XS]):- writeln(X.nome), imprimeLista(XS).
-imprimeLista([]):- writeln("fim").
-
+imprimeLista([]):- writeln("- fim.").
 
 
 listaUsuarios(NomesUsuarios):-
